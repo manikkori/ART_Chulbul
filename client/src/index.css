@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #fdf7f1;
+    color: #3d2c33;
+    overflow-x: hidden;
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fredoka', system-ui, sans-serif;
+    color: #3d2c33;
+  }
+
+  ::selection {
+    background-color: #f8e4ed;
+    color: #b0456f;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fdf7f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #eadfd9;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b0456f;
+}
+
+/* Reference Eyebrow Heading style from artdiarium.com */
+.eyebrow {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: #b0456f;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* Artdiarium-style Progress Fill Animation */
+@keyframes fillProgress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.progress-active {
+  animation: fillProgress 2.8s linear forwards;
+}
+
+/* Paper / Canvas Texture Feel */
+.paper-pattern {
+  background-color: #fdf7f1;
+  background-image: radial-gradient(#eadfd9 0.75px, transparent 0.75px);
+  background-size: 16px 16px;
+}
