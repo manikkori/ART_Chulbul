@@ -22,7 +22,7 @@ export const formatDate = (dateString, includeTime = false) => {
     year: 'numeric',
     ...(includeTime && { hour: '2-digit', minute: '2-digit' })
   };
-  return date.toLocaleDateString('en-IN', options);
+  return includeTime ? date.toLocaleString('en-IN', options) : date.toLocaleDateString('en-IN', options);
 };
 
 /**

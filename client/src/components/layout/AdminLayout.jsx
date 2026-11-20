@@ -19,12 +19,14 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import Button from '../common/Button';
+import ConfirmDialog from '../common/ConfirmDialog';
 
 export const AdminLayout = () => {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { siteName } = useSettings();
+  const { settings, siteName } = useSettings();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   // If not admin, redirect
   if (!isAuthenticated || !isAdmin) {
@@ -75,9 +77,13 @@ export const AdminLayout = () => {
       {/* Mobile Header */}
       <div className="md:hidden bg-white border-b border-[#eadfd9] p-4 flex items-center justify-between">
         <Link to="/admin" className="font-display text-xl font-bold text-[#3d2c33] flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#b0456f] text-white flex items-center justify-center">
-            <Palette className="w-3.5 h-3.5" />
-          </div>
+          {settings?.logo?.url ? (
+            <img src={settings.logo.url} alt={siteName} className="w-7 h-7 object-contain rounded-full shadow-sm" />
+          ) : (
+            <div className="w-7 h-7 rounded-full bg-[#b0456f] text-white flex items-center justify-center">
+              <Palette className="w-3.5 h-3.5" />
+            </div>
+          )}
           <span>{siteName} Studio</span>
         </Link>
         <button
@@ -99,9 +105,13 @@ export const AdminLayout = () => {
         <div className="p-6 space-y-6 overflow-y-auto">
           {/* Studio Brand */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0]">
-              <Palette className="w-5 h-5" />
-            </div>
+            {settings?.logo?.url ? (
+              <img src={settings.logo.url} alt={siteName} className="w-9 h-9 object-contain rounded-full shadow-sm group-hover:scale-105 transition-transform" />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0]">
+                <Palette className="w-5 h-5" />
+              </div>
+            )}
             <div>
               <span className="font-display text-lg font-bold tracking-tight text-[#3d2c33] block group-hover:text-[#b0456f] transition-colors">
                 {siteName}
@@ -152,7 +162,7 @@ export const AdminLayout = () => {
           </Link>
 
           <button
-            onClick={handleLogout}
+            onClick={() => setLogoutConfirmOpen(true)}
             className="w-full flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-display font-medium text-rose-600 hover:bg-rose-50 transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -165,6 +175,18 @@ export const AdminLayout = () => {
       <main className="flex-1 p-4 sm:p-8 lg:p-10 overflow-y-auto">
         <Outlet />
       </main>
+
+      {/* Sign Out Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={logoutConfirmOpen}
+        onClose={() => setLogoutConfirmOpen(false)}
+        onConfirm={handleLogout}
+        title="Admin Sign Out"
+        message="Are you sure you want to exit the Admin Studio?"
+        confirmText="Yes, Sign Out"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
     </div>
   );
 };

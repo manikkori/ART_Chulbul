@@ -13,7 +13,7 @@ export const Login = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const { login, isAuthenticated, isAdmin } = useAuth();
-  const { setPageTitle, siteName } = useSettings();
+  const { setPageTitle, siteName, settings } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,9 +48,13 @@ export const Login = () => {
     <div className="max-w-md mx-auto px-4 py-12">
       <div className="bg-white rounded-3xl p-8 sm:p-10 border border-cream-200 shadow-card space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-full bg-terracotta-50 text-terracotta-500 mx-auto flex items-center justify-center border border-terracotta-100">
-            <Palette className="w-6 h-6" />
-          </div>
+          {settings?.logo?.url ? (
+            <img src={settings.logo.url} alt={siteName} className="w-12 h-12 rounded-full object-contain mx-auto shadow-sm" />
+          ) : (
+            <div className="w-12 h-12 rounded-full bg-terracotta-50 text-terracotta-500 mx-auto flex items-center justify-center border border-terracotta-100">
+              <Palette className="w-6 h-6" />
+            </div>
+          )}
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-900">
             Welcome Back
           </h1>

@@ -93,10 +93,10 @@ export const OrderDetail = () => {
     fetchOrder();
     fetchMessages();
 
-    // Poll chat messages every 10 seconds as specified in Section 4
+    // Poll chat messages every 3.5 seconds
     const interval = setInterval(() => {
       fetchMessages();
-    }, 10000);
+    }, 3500);
 
     return () => clearInterval(interval);
   }, [id]);
@@ -171,6 +171,7 @@ export const OrderDetail = () => {
       if (res.data?.success) {
         setChatText('');
         setMessages((prev) => [...prev, res.data.data]);
+        fetchMessages();
       }
     } catch (err) {
       toast.error('Failed to send message');
@@ -552,7 +553,7 @@ export const OrderDetail = () => {
               </div>
             ) : (
               messages.map((msg) => {
-                const isMe = msg.sender?._id === user?._id || msg.sender === user?._id;
+                const isMe = (msg.sender?._id || msg.sender)?.toString() === user?._id?.toString();
                 return (
                   <div
                     key={msg._id}

@@ -284,7 +284,17 @@ export const AdminOrderDetail = () => {
     );
   }
 
-  if (!order) return null;
+  if (!order) {
+    return (
+      <div className="space-y-6 text-center py-16 bg-white rounded-3xl p-8 border border-cream-200">
+        <h2 className="font-display text-2xl font-bold text-[#3d2c33]">Order Not Found</h2>
+        <p className="font-sans text-xs text-[#6e5a60]">This order could not be loaded or may have been deleted.</p>
+        <Button variant="primary" onClick={() => navigate('/admin/orders')}>
+          Back to Orders
+        </Button>
+      </div>
+    );
+  }
   const badgeStyle = getStatusBadgeStyle(order.status);
 
   return (
@@ -500,7 +510,7 @@ export const AdminOrderDetail = () => {
           <div className="bg-white rounded-3xl border border-cream-200 shadow-card overflow-hidden flex flex-col h-[520px]">
             <div className="p-4 border-b border-cream-200 bg-cream-100/60 flex items-center justify-between">
               <h3 className="font-serif text-sm font-bold text-charcoal-900">
-                Order Chat with {order.customer?.name}
+                Order Chat with {order.customer?.name || order.addressSnapshot?.recipientName || 'Customer'}
               </h3>
               <span className="text-[10px] text-charcoal-400">Live thread</span>
             </div>
@@ -513,13 +523,14 @@ export const AdminOrderDetail = () => {
               ) : (
                 messages.map((msg) => {
                   const isArtist = msg.sender?.role === 'admin';
+                  const senderName = isArtist ? 'You (Artist)' : (msg.sender?.name || order.customer?.name || order.addressSnapshot?.recipientName || 'Customer');
                   return (
                     <div
                       key={msg._id}
                       className={`flex flex-col ${isArtist ? 'items-end' : 'items-start'}`}
                     >
                       <div className="flex items-center gap-1.5 text-[10px] text-charcoal-400 mb-1 px-1">
-                        <span>{isArtist ? 'You (Artist)' : order.customer?.name}</span>
+                        <span>{senderName}</span>
                         <span>•</span>
                         <span>{formatDate(msg.createdAt, true)}</span>
                       </div>

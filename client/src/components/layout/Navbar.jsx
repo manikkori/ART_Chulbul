@@ -5,12 +5,14 @@ import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import { useNotifications } from '../../context/NotificationContext';
 import Button from '../common/Button';
+import ConfirmDialog from '../common/ConfirmDialog';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { settings, siteName } = useSettings();
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
@@ -55,18 +57,16 @@ export const Navbar = () => {
               <img
                 src={settings.logo.url}
                 alt={siteName}
-                className="h-9 w-auto object-contain"
+                className="h-9 w-9 object-contain rounded-full shadow-sm group-hover:scale-105 transition-transform"
               />
             ) : (
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0] group-hover:rotate-12 transition-transform duration-300">
-                  <Palette className="w-5 h-5" />
-                </div>
-                <span className="font-display text-2xl font-bold tracking-tight text-[#3d2c33] group-hover:text-[#b0456f] transition-colors">
-                  {siteName}
-                </span>
+              <div className="w-9 h-9 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0] group-hover:rotate-12 transition-transform duration-300">
+                <Palette className="w-5 h-5" />
               </div>
             )}
+            <span className="font-display text-2xl font-bold tracking-tight text-[#3d2c33] group-hover:text-[#b0456f] transition-colors">
+              {siteName}
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -224,7 +224,10 @@ export const Navbar = () => {
                     </Link>
 
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        setUserDropdownOpen(false);
+                        setLogoutConfirmOpen(true);
+                      }}
                       className="w-full text-left px-4 py-2 font-display text-xs text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5"
                     >
                       <LogOut className="w-3.5 h-3.5" />
@@ -333,7 +336,7 @@ export const Navbar = () => {
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    handleLogout();
+                    setLogoutConfirmOpen(true);
                   }}
                   className="w-full text-left px-3 py-2 text-sm text-rose-600 rounded-xl hover:bg-rose-50"
                 >
@@ -361,6 +364,18 @@ export const Navbar = () => {
           </div>
         </div>
       )}
+
+      {/* Logout Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={logoutConfirmOpen}
+        onClose={() => setLogoutConfirmOpen(false)}
+        onConfirm={handleLogout}
+        title="Sign Out Confirmation"
+        message="Are you sure you want to sign out from your account?"
+        confirmText="Yes, Sign Out"
+        cancelText="Cancel"
+        confirmVariant="danger"
+      />
     </header>
   );
 };

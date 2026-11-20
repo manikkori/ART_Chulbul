@@ -13,9 +13,17 @@ export const Footer = () => {
           {/* Brand Col */}
           <div className="md:col-span-1 space-y-4">
             <Link to="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0]">
-                <Palette className="w-4 h-4" />
-              </div>
+              {settings?.logo?.url ? (
+                <img
+                  src={settings.logo.url}
+                  alt={siteName}
+                  className="w-8 h-8 rounded-full object-contain shadow-sm"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0]">
+                  <Palette className="w-4 h-4" />
+                </div>
+              )}
               <span className="font-display text-2xl font-bold tracking-tight text-[#3d2c33]">
                 {siteName}
               </span>

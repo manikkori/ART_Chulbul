@@ -7,6 +7,8 @@ import Artwork from '../models/Artwork.js';
 import SiteSettings from '../models/SiteSettings.js';
 import ArtistProfile from '../models/ArtistProfile.js';
 import Review from '../models/Review.js';
+import CustomOrder from '../models/CustomOrder.js';
+import Message from '../models/Message.js';
 
 dotenv.config();
 
@@ -22,6 +24,8 @@ const seedData = async () => {
     await SiteSettings.deleteMany();
     await ArtistProfile.deleteMany();
     await Review.deleteMany();
+    await CustomOrder.deleteMany();
+    await Message.deleteMany();
 
     // 1. Seed Admin User
     const adminEmail = (process.env.ADMIN_EMAIL || 'admin@artchulbul.com').toLowerCase();
