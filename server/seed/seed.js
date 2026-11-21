@@ -71,7 +71,7 @@ const seedData = async () => {
         slug: 'charcoal-pencil-sketch-portraits',
         description: 'Deep contrast, fine expressive strokes, and timeless monochrome elegance captured in pure graphite and willow charcoal.',
         image: {
-          url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
+          url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80',
           publicId: 'cat_charcoal'
         },
         startingPrice: 1999,
@@ -95,7 +95,7 @@ const seedData = async () => {
         slug: 'oil-painting',
         description: 'Rich buttery textures, classical blending, archival permanence, and unmatched visual depth on stretched linen canvas.',
         image: {
-          url: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=800&q=80',
+          url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80',
           publicId: 'cat_oil'
         },
         startingPrice: 4999,
@@ -148,12 +148,12 @@ const seedData = async () => {
         timeTaken: '22 hours across 5 days',
         startingPrice: 2999,
         coverImage: {
-          url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=900&q=80',
+          url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=900&q=80',
           publicId: 'art_1_cover'
         },
         images: [
-          { url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=900&q=80', isCover: true, caption: 'Final completed commission' },
-          { url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=900&q=80', isCover: false, caption: 'Detailing work in progress' }
+          { url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=900&q=80', isCover: true, caption: 'Final completed commission' },
+          { url: 'https://images.unsplash.com/photo-1576769267415-9642010aa962?auto=format&fit=crop&w=900&q=80', isCover: false, caption: 'Detailing work in progress' }
         ],
         tags: ['Portrait', 'Charcoal', 'Generational', 'Realistic'],
         isFeatured: true,
@@ -189,11 +189,11 @@ const seedData = async () => {
         timeTaken: '36 hours across 2 weeks',
         startingPrice: 7999,
         coverImage: {
-          url: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=900&q=80',
+          url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=900&q=80',
           publicId: 'art_3_cover'
         },
         images: [
-          { url: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=900&q=80', isCover: true, caption: 'Stretched canvas view' }
+          { url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=900&q=80', isCover: true, caption: 'Stretched canvas view' }
         ],
         tags: ['Oil', 'Canvas', 'Floral', 'Classical'],
         isFeatured: true,
@@ -249,11 +249,11 @@ const seedData = async () => {
         timeTaken: '26 hours across 6 days',
         startingPrice: 3499,
         coverImage: {
-          url: 'https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?auto=format&fit=crop&w=900&q=80',
+          url: 'https://images.unsplash.com/photo-1576769267415-9642010aa962?auto=format&fit=crop&w=900&q=80',
           publicId: 'art_6_cover'
         },
         images: [
-          { url: 'https://images.unsplash.com/photo-1580927752452-89d86da3fa0a?auto=format&fit=crop&w=900&q=80', isCover: true, caption: 'Completed bridal piece' }
+          { url: 'https://images.unsplash.com/photo-1576769267415-9642010aa962?auto=format&fit=crop&w=900&q=80', isCover: true, caption: 'Completed bridal piece' }
         ],
         tags: ['Wedding', 'Bridal', 'Charcoal', 'Portrait'],
         isFeatured: false,

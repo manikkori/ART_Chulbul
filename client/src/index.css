@@ -5,24 +5,27 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'Nunito', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background-color: #fdf7f1;
-    color: #3d2c33;
+    background-color: #fdfcf9;
+    color: #2c2226;
     overflow-x: hidden;
-    font-family: 'Nunito', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Fredoka', system-ui, sans-serif;
-    color: #3d2c33;
+    font-family: 'Playfair Display', Georgia, serif;
+    color: #221a1d;
+    letter-spacing: -0.015em;
   }
 
   ::selection {
-    background-color: #f8e4ed;
-    color: #b0456f;
+    background-color: #f2cadb;
+    color: #5c2039;
   }
 }
 
@@ -45,13 +48,13 @@
   background: #b0456f;
 }
 
-/* Reference Eyebrow Heading style from artdiarium.com */
+/* Fine Art Atelier Eyebrow Heading style */
 .eyebrow {
-  font-family: 'Fredoka', system-ui, sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.14em;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
   color: #b0456f;
-  font-weight: 500;
+  font-weight: 700;
   text-transform: uppercase;
   display: inline-block;
   margin-bottom: 0.5rem;

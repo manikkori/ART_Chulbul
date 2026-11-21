@@ -22,6 +22,7 @@ import Badge from '../../components/common/Badge';
 import Input from '../../components/common/Input';
 import Modal from '../../components/common/Modal';
 import StatusTimeline from '../../components/common/StatusTimeline';
+import Skeleton from '../../components/common/Skeleton';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 

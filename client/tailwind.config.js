@@ -88,10 +88,13 @@ export default {
         }
       },
       fontFamily: {
-        display: ['Fredoka', 'system-ui', 'sans-serif'],
-        sans: ['Nunito', 'system-ui', 'sans-serif'],
-        serif: ['Fredoka', 'system-ui', 'sans-serif'],
-        handwriting: ['Caveat', 'cursive'],
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        editorial: ['"Playfair Display"', 'Georgia', 'serif'],
+        script: ['"Pinyon Script"', 'cursive'],
+        handwriting: ['"Pinyon Script"', 'cursive'],
+        cinzel: ['Cinzel', 'Georgia', 'serif'],
       },
       borderRadius: {
         'xl': '1rem',

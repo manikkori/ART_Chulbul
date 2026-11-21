@@ -35,10 +35,10 @@ const SHOWCASE_SLIDES = [
     dimensions: '12 x 16 inches (A3)',
     startingPrice: 3499,
     description: 'Delicate hand-blending capturing deep tonal depth, lifelike expressions, and fine skin textures.',
-    image: 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1000&q=80',
     sheetColor: '#d4b0e4', // Lilac
     sheetRotation: '-3deg',
-    label: 'Charcoal',
+    label: 'Charcoal Portrait',
     tag: '100% Hand-Drawn'
   },
   {
@@ -50,10 +50,10 @@ const SHOWCASE_SLIDES = [
     dimensions: '11 x 15 inches',
     startingPrice: 4299,
     description: 'Soft organic color bleeds and glowing luminosity that breathe poetic life into any memory.',
-    image: 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=1000&q=80',
     sheetColor: '#f6dcb0', // Peach Amber
     sheetRotation: '2.5deg',
-    label: 'Watercolor',
+    label: 'Archival Watercolor',
     tag: 'Cold-Pressed Cotton'
   },
   {
@@ -68,7 +68,7 @@ const SHOWCASE_SLIDES = [
     image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1000&q=80',
     sheetColor: '#f4c6d6', // Soft Rose Pink
     sheetRotation: '-2deg',
-    label: 'Oil Canvas',
+    label: 'Oil on Canvas',
     tag: 'Museum Stretched'
   },
   {
@@ -80,10 +80,10 @@ const SHOWCASE_SLIDES = [
     dimensions: '16 x 20 inches',
     startingPrice: 5499,
     description: 'Striking modern saturation, bold knife textures, and a protective UV satin varnish finish.',
-    image: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1000&q=80',
+    image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1000&q=80',
     sheetColor: '#c4e4f6', // Soft Sky Blue
     sheetRotation: '3deg',
-    label: 'Acrylic',
+    label: 'Textured Acrylic',
     tag: 'Vivid Contemporary'
   }
 ];
