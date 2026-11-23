@@ -26,19 +26,19 @@ export const SettingsProvider = ({ children }) => {
 
   const fetchSettings = async () => {
     try {
-      const [resSettings, resProfile] = await Promise.all([
+      const [settingsResult, profileResult] = await Promise.allSettled([
         api.get('/settings'),
         api.get('/settings/artist-profile')
       ]);
 
-      if (resSettings.data?.success && resSettings.data?.data) {
-        setSettings(resSettings.data.data);
+      if (settingsResult.status === 'fulfilled' && settingsResult.value.data?.data) {
+        setSettings(settingsResult.value.data.data);
       }
-      if (resProfile.data?.success && resProfile.data?.data) {
-        setArtistProfile(resProfile.data.data);
+      if (profileResult.status === 'fulfilled' && profileResult.value.data?.data) {
+        setArtistProfile(profileResult.value.data.data);
       }
     } catch (err) {
-      console.warn('Failed to load settings, using defaults:', err.message);
+      console.warn('Failed to load settings, using safe defaults:', err.message);
     } finally {
       setLoading(false);
     }

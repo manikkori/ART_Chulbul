@@ -13,15 +13,38 @@ export const connectDB = async () => {
   // 1. Try URI if defined and external (Atlas or remote)
   if (uri && !uri.includes('localhost') && !uri.includes('127.0.0.1')) {
     try {
-      const conn = await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+      const conn = await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000
+      });
       console.log(`[Database] Remote MongoDB Connected: ${conn.connection.host}`);
       return conn;
     } catch (err) {
       console.warn(`[Database] Remote MongoDB connection failed: ${err.message}`);
+      if (process.env.NODE_ENV === 'production') {
+        console.error('[Database Deployment Guide] In production, verify MONGODB_URI in Render environment variables.');
+        console.error('[Database Deployment Guide] Ensure MongoDB Atlas -> Network Access includes 0.0.0.0/0 (allow access from anywhere).');
+      }
     }
   }
 
-  // 2. Try localhost standard port 27017
+  // In production, do not attempt embedded memory server; retry remote URI once more
+  if (process.env.NODE_ENV === 'production' && uri) {
+    try {
+      console.log('[Database] Retrying remote MongoDB connection...');
+      const conn = await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 15000,
+        connectTimeoutMS: 15000
+      });
+      console.log(`[Database] Remote MongoDB Connected on retry: ${conn.connection.host}`);
+      return conn;
+    } catch (retryErr) {
+      console.error(`[Database] Retry failed: ${retryErr.message}`);
+      return null;
+    }
+  }
+
+  // 2. Try localhost standard port 27017 for local development
   try {
     const conn = await mongoose.connect(uri || 'mongodb://127.0.0.1:27017/artchulbul', {
       serverSelectionTimeoutMS: 2000,
@@ -29,8 +52,8 @@ export const connectDB = async () => {
     console.log(`[Database] Local MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (localErr) {
-    // 3. Fallback to embedded MongoDB with persistent disk storage in server/data/db
-    console.log(`[Database] Local mongod not running on 27017. Starting persistent embedded MongoDB...`);
+    // 3. Fallback to embedded MongoDB with persistent disk storage in server/data/db (development only)
+    console.log(`[Database] Local mongod not running on 27017. Starting persistent embedded MongoDB for dev...`);
     try {
       const { MongoMemoryServer } = await import('mongodb-memory-server');
       const dbPath = path.resolve(__dirname, '../data/db');
@@ -57,7 +80,7 @@ export const connectDB = async () => {
         return conn;
       } catch (finalErr) {
         console.error(`[Database] Failed to connect to any MongoDB: ${finalErr.message}`);
-        throw finalErr;
+        return null;
       }
     }
   }

@@ -5,9 +5,24 @@ export const notFound = (req, res, next) => {
 };
 
 export const errorHandler = (err, req, res, next) => {
+  // Ensure CORS headers are attached on error responses so browsers don't mask error details as CORS blocks
+  const origin = req.headers.origin;
+  if (origin) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+  }
+
   let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   let message = err.message || 'Internal Server Error';
   let errors = null;
+
+  // Explicit CORS errors
+  if (err.message && err.message.includes('CORS')) {
+    statusCode = 403;
+    message = 'Cross-Origin Request Blocked by CORS policy.';
+  }
 
   // Mongoose bad ObjectId (CastError)
   if (err.name === 'CastError') {

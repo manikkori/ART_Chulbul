@@ -47,27 +47,58 @@ app.use(cookieParser());
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
-// CORS configuration
-const allowedOrigins = [
-  process.env.CLIENT_URL,
+// Bulletproof CORS configuration for Vercel <-> Render deployment
+const rawClientUrls = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(u => u.trim()) : [];
+const normalizedAllowedOrigins = [
+  ...rawClientUrls,
   'http://localhost:5173',
   'http://localhost:3000',
-  'http://127.0.0.1:5173'
-].filter(Boolean);
+  'http://127.0.0.1:5173',
+  'http://localhost:4173'
+].filter(Boolean).map(url => url.replace(/\/+$/, '')); // strip trailing slashes
+
+const isOriginAllowed = (origin) => {
+  if (!origin) return true; // server-to-server, curl, Postman, health checks
+  const cleanOrigin = origin.replace(/\/+$/, '');
+
+  // Exact match with configured CLIENT_URL(s) or localhost
+  if (normalizedAllowedOrigins.includes(cleanOrigin)) return true;
+
+  // Allow all Vercel deployments (production domain, preview branches, etc.)
+  if (/^https:\/\/[a-zA-Z0-9_.-]+\.vercel\.app$/.test(cleanOrigin)) {
+    return true;
+  }
+
+  // Allow Render domains
+  if (/^https:\/\/[a-zA-Z0-9_.-]+\.onrender\.com$/.test(cleanOrigin)) {
+    return true;
+  }
+
+  // In non-production, allow all
+  if (process.env.NODE_ENV !== 'production') {
+    return true;
+  }
+
+  return false;
+};
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, server-to-server)
-    if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+    if (isOriginAllowed(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Blocked by CORS policy'));
+      console.warn(`[CORS] Rejected request from unauthorized origin: ${origin}`);
+      callback(null, false);
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Set-Cookie']
 }));
+
+// Explicit preflight handling
+app.options('*', cors());
 
 // Development logging
 if (process.env.NODE_ENV === 'development') {
