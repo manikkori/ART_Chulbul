@@ -29,10 +29,18 @@ const seedData = async () => {
 
     // 1. Seed Admin User
     const adminEmail = (process.env.ADMIN_EMAIL || 'admin@artchulbul.com').toLowerCase();
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminPassword) {
+      throw new Error(
+        '[Security] ADMIN_PASSWORD environment variable is not defined. Please set ADMIN_PASSWORD in your .env or deployment environment.'
+      );
+    }
+
     const adminUser = await User.create({
       name: process.env.ADMIN_NAME || 'Chulbul Admin',
       email: adminEmail,
-      password: process.env.ADMIN_PASSWORD || 'Admin@123456',
+      password: adminPassword,
       role: 'admin',
       avatar: {
         url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
@@ -45,7 +53,7 @@ const seedData = async () => {
     const sampleCustomer = await User.create({
       name: 'Aarav Sharma',
       email: 'customer@example.com',
-      password: 'Customer@123456',
+      password: process.env.SAMPLE_CUSTOMER_PASSWORD || 'CustomerSample123!',
       role: 'customer',
       avatar: {
         url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
