@@ -7,7 +7,8 @@ import {
   Clock,
   Sparkles,
   ArrowRight,
-  Filter
+  Filter,
+  Heart
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
@@ -61,38 +62,41 @@ export const MyOrders = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-20">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-20 pt-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#121212] pb-6">
         <div>
-          <span className="eyebrow">ORDER DASHBOARD</span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900">
-            My Custom Commissions
+          <div className="inline-flex items-center gap-1 font-script text-3xl text-[#121212]">
+            <span>Order Dashboard</span>
+            <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
+          </div>
+          <h1 className="font-montserrat font-extrabold text-2xl sm:text-4xl text-[#121212] uppercase tracking-[0.06em]">
+            MY CUSTOM COMMISSIONS
           </h1>
-          <p className="text-xs sm:text-sm text-charcoal-500 mt-1">
-            Track status, review quotes, chat with the artist, and inspect progress photos.
+          <p className="font-sans text-xs sm:text-sm text-gray-600 mt-1">
+            Track status, review quotes, chat with the artist, and inspect in-progress photos.
           </p>
         </div>
 
-        <Button
-          variant="primary"
-          icon={Paintbrush}
+        <button
           onClick={() => navigate('/custom-order')}
+          className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-wider px-6 py-3 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] flex items-center gap-2 shrink-0"
         >
-          New Custom Order
-        </Button>
+          <Paintbrush className="w-4 h-4 text-[#f7cbd7]" />
+          <span>New Custom Order</span>
+        </button>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none border-b border-cream-200">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {STATUS_FILTERS.map((f) => (
           <button
             key={f.value}
             onClick={() => setSelectedStatus(f.value)}
-            className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`px-4 py-1.5 text-xs font-montserrat font-bold uppercase tracking-wider whitespace-nowrap transition-all border-2 border-[#121212] ${
               selectedStatus === f.value
-                ? 'bg-terracotta-500 text-white shadow-sm'
-                : 'bg-white text-charcoal-700 hover:bg-cream-100 border border-cream-200'
+                ? 'bg-[#121212] text-white shadow-[2px_2px_0px_#f7cbd7]'
+                : 'bg-white text-gray-700 hover:bg-[#fde8ef]'
             }`}
           >
             {f.label}
@@ -103,122 +107,85 @@ export const MyOrders = () => {
       {/* Orders List */}
       {loading ? (
         <div className="space-y-4">
-          <Skeleton count={3} className="h-44" />
+          <Skeleton count={3} className="h-32 border-2 border-[#121212]" />
         </div>
       ) : orders.length === 0 ? (
         <EmptyState
           title="No custom orders found"
           description={
             selectedStatus === 'all'
-              ? "You haven't placed any custom art commissions yet. Turn your memories into handcrafted art today!"
-              : `You have no custom orders currently in "${selectedStatus}" status.`
+              ? 'You have not commissioned any custom artwork yet. Start by sharing your reference photograph!'
+              : `No orders currently in "${selectedStatus}" status.`
           }
-          actionText="Place Your First Order"
+          actionText="Commission Custom Artwork"
           onAction={() => navigate('/custom-order')}
         />
       ) : (
-        <div className="space-y-6">
-          {orders.map((order) => {
-            const badgeStyle = getStatusBadgeStyle(order.status);
-            const coverThumb = order.referenceImages?.[0]?.url;
-
-            return (
-              <div
-                key={order._id}
-                className="bg-white rounded-3xl p-6 sm:p-8 border border-cream-200 shadow-card hover:shadow-soft-hover transition-all space-y-6"
-              >
-                {/* Top Row: Order Number & Status Badge */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-cream-100 pb-4">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-serif text-lg font-bold text-charcoal-900">
-                        {order.orderNumber}
-                      </span>
-                      <span className="text-xs text-charcoal-400">
-                        • Placed {formatDate(order.createdAt, true)}
-                      </span>
-                    </div>
-                    <p className="text-xs text-charcoal-500">
-                      {order.medium} — {order.size}
-                    </p>
+        <div className="space-y-4">
+          {orders.map((ord) => (
+            <div
+              key={ord._id}
+              className="bg-white border-2 border-[#121212] p-6 shadow-[5px_5px_0px_#f7cbd7] hover:shadow-[7px_7px_0px_#ebb0c0] hover:-translate-y-0.5 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
+            >
+              {/* Order Info */}
+              <div className="flex items-start gap-4">
+                {ord.referenceImages?.[0]?.url ? (
+                  <img
+                    src={ord.referenceImages[0].url}
+                    alt="Reference"
+                    className="w-20 h-20 sm:w-24 sm:h-24 object-cover border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] shrink-0"
+                  />
+                ) : (
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#fde8ef] border-2 border-[#121212] flex items-center justify-center shrink-0">
+                    <Paintbrush className="w-8 h-8 text-[#121212]" />
                   </div>
+                )}
 
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${badgeStyle.bg}`}
-                    >
-                      <span className={`w-2 h-2 rounded-full ${badgeStyle.dot}`} />
-                      {badgeStyle.label}
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-montserrat font-extrabold text-sm uppercase text-[#121212]">
+                      Order #{ord.orderNumber || ord._id.substring(18)}
+                    </span>
+                    <span className="bg-[#fde8ef] border border-[#121212] font-montserrat text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 text-[#121212]">
+                      {ord.status}
                     </span>
                   </div>
-                </div>
 
-                {/* Middle Row: Reference Thumbnails & Details */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                  {/* Left: Thumbnail & Photos Count */}
-                  <div className="md:col-span-3 flex items-center gap-3">
-                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-cream-200 border border-cream-200 shrink-0">
-                      <img
-                        src={coverThumb}
-                        alt="Reference"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="space-y-1 text-xs">
-                      <p className="font-semibold text-charcoal-800">
-                        {order.referenceImages?.length || 1} Reference Photo(s)
-                      </p>
-                      <p className="text-charcoal-500">
-                        {order.preferences?.subjectsCount || 1} Subject(s)
-                      </p>
-                    </div>
-                  </div>
+                  <p className="font-montserrat text-xs font-bold text-gray-700">
+                    {ord.medium} • {ord.size}
+                  </p>
 
-                  {/* Center: Quote info if Quoted/Accepted */}
-                  <div className="md:col-span-5 bg-cream-100/50 p-4 rounded-2xl border border-cream-200 space-y-1">
-                    <p className="text-[11px] uppercase tracking-wider font-semibold text-charcoal-500">
-                      Quote Status
-                    </p>
-                    {order.quote?.amount ? (
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-serif text-xl font-bold text-terracotta-600">
-                          {formatPrice(order.quote.amount)}
-                        </span>
-                        <span className="text-xs text-charcoal-500">
-                          (Estimated: {order.quote.estimatedDays} days)
-                        </span>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-charcoal-600 italic">
-                        Artist is reviewing reference photos. Quote pending.
-                      </p>
-                    )}
-                  </div>
+                  <p className="font-sans text-xs text-gray-500 line-clamp-1 max-w-md">
+                    {ord.description}
+                  </p>
 
-                  {/* Right: Actions */}
-                  <div className="md:col-span-4 flex flex-col sm:flex-row md:flex-col gap-2 justify-end">
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      icon={Eye}
-                      onClick={() => navigate(`/my-orders/${order._id}`)}
-                    >
-                      View Details & Timeline
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={MessageSquare}
-                      onClick={() => navigate(`/my-orders/${order._id}#chat`)}
-                    >
-                      Chat with Artist
-                    </Button>
-                  </div>
+                  <p className="font-montserrat text-[11px] text-gray-400">
+                    Placed on {formatDate(ord.createdAt)}
+                  </p>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Status & Action */}
+              <div className="flex md:flex-col items-center md:items-end justify-between gap-2 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 border-[#f7cbd7]">
+                <div className="text-right">
+                  <span className="font-montserrat text-[10px] font-bold uppercase tracking-wider text-gray-500 block">
+                    {ord.finalPrice ? 'Agreed Price' : 'Estimated Quote'}
+                  </span>
+                  <span className="font-montserrat text-base sm:text-lg font-extrabold text-[#121212]">
+                    {ord.finalPrice ? formatPrice(ord.finalPrice) : 'Pending Review'}
+                  </span>
+                </div>
+
+                <Link
+                  to={`/my-orders/${ord._id}`}
+                  className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-wider px-4 py-2 border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] flex items-center gap-1.5"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Manage Order</span>
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>

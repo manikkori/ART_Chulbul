@@ -56,27 +56,29 @@ export const Wishlist = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-20">
-      <div className="space-y-1">
-        <span className="eyebrow">SAVED INSPIRATION</span>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900">
-          My Saved Showcase Artworks
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-20 pt-4">
+      <div className="border-b-2 border-[#121212] pb-6">
+        <div className="inline-flex items-center gap-1 font-script text-3xl text-[#121212]">
+          <span>Saved Favorites</span>
+          <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
+        </div>
+        <h1 className="font-montserrat font-extrabold text-2xl sm:text-4xl text-[#121212] uppercase tracking-[0.06em]">
+          MY ART WISHLIST
         </h1>
-        <p className="text-xs sm:text-sm text-charcoal-500">
-          Artworks you've saved for inspiration. Click any piece to commission something similar.
+        <p className="font-sans text-xs sm:text-sm text-gray-600 mt-1">
+          Artworks and mediums you have pinned for upcoming commissions.
         </p>
       </div>
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Skeleton count={3} className="h-80" />
+          <Skeleton count={3} className="h-80 border-2 border-[#121212]" />
         </div>
       ) : wishlist.length === 0 ? (
         <EmptyState
-          icon={Heart}
           title="Your wishlist is empty"
-          description="Browse our showcase gallery and tap the heart icon on any artwork to save it here."
-          actionText="Explore Gallery"
+          description="Browse our showcase gallery to heart pieces and mediums that inspire your vision."
+          actionText="Browse Gallery"
           onAction={() => navigate('/gallery')}
         />
       ) : (
@@ -84,59 +86,53 @@ export const Wishlist = () => {
           {wishlist.map((art) => (
             <div
               key={art._id}
-              className="group bg-white rounded-3xl overflow-hidden border border-cream-200 shadow-card hover:shadow-soft-hover transition-all flex flex-col"
+              className="group bg-white border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-1 transition-all overflow-hidden flex flex-col"
             >
-              <div className="relative aspect-[4/5] overflow-hidden bg-cream-200">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#fde8ef]">
                 <img
-                  src={art.coverImage?.url}
+                  src={art.coverImage?.url || art.images?.[0]?.url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'}
                   alt={art.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <button
                   onClick={() => handleRemoveFromWishlist(art._id)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-white/90 text-rose-500 hover:bg-white shadow-sm transition-all"
+                  className="absolute top-3 right-3 p-2 bg-white/95 border border-[#121212] text-rose-600 hover:bg-rose-50 shadow-sm"
                   aria-label="Remove from wishlist"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-serif text-lg font-bold text-charcoal-900 line-clamp-1">
-                      {art.title}
-                    </h3>
-                    <span className="text-sm font-bold text-terracotta-600 shrink-0">
-                      {formatPrice(art.startingPrice)}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-charcoal-500">
+              <div className="p-5 bg-[#fff7f9] border-t-2 border-[#121212] flex-1 flex flex-col justify-between space-y-3">
+                <div>
+                  <h3 className="font-montserrat text-sm font-extrabold uppercase text-[#121212] line-clamp-1">
+                    {art.title}
+                  </h3>
+                  <p className="font-montserrat text-xs text-gray-500 mt-0.5">
                     {art.medium} • {art.dimensions}
+                  </p>
+                  <p className="font-montserrat text-sm font-extrabold text-[#121212] mt-2">
+                    Starts at {formatPrice(art.startingPrice)}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-cream-100">
+                <div className="flex items-center gap-2 pt-2 border-t border-[#f7cbd7]">
                   <Link
                     to={`/artworks/${art.slug}`}
-                    className="text-xs font-semibold text-charcoal-600 hover:text-terracotta-600"
+                    className="font-montserrat text-xs font-bold uppercase text-[#121212] hover:underline"
                   >
-                    View Details
+                    Details
                   </Link>
-
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    icon={Paintbrush}
+                  <button
                     onClick={() =>
                       navigate(
                         `/custom-order?category=${art.category?.slug}&artwork=${art.slug}`
                       )
                     }
+                    className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-wider px-3 py-1.5 border border-[#121212] shadow-[2px_2px_0px_#f7cbd7] ml-auto"
                   >
                     Order Similar
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
