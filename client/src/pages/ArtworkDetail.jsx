@@ -11,7 +11,10 @@ import {
   Package,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Eye,
+  CheckCircle2,
+  Truck
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
@@ -87,13 +90,13 @@ export const ArtworkDetail = () => {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-        <div className="h-6 w-32 bg-cream-300 animate-pulse rounded-full" />
+        <div className="h-6 w-32 bg-[#fde8ef] animate-pulse rounded" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7 h-[500px] bg-cream-300 animate-pulse rounded-3xl" />
+          <div className="lg:col-span-7 h-[500px] bg-[#fde8ef] animate-pulse border-2 border-[#121212]" />
           <div className="lg:col-span-5 space-y-4">
-            <div className="h-10 bg-cream-300 animate-pulse rounded-full w-3/4" />
-            <div className="h-6 bg-cream-300 animate-pulse rounded-full w-1/3" />
-            <div className="h-32 bg-cream-300 animate-pulse rounded-2xl" />
+            <div className="h-10 bg-[#fde8ef] animate-pulse w-3/4 border-2 border-[#121212]" />
+            <div className="h-6 bg-[#fde8ef] animate-pulse w-1/3" />
+            <div className="h-32 bg-[#fde8ef] animate-pulse" />
           </div>
         </div>
       </div>
@@ -102,288 +105,224 @@ export const ArtworkDetail = () => {
 
   if (!artwork) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <div className="max-w-7xl mx-auto px-4 py-16">
         <EmptyState
-          title="Artwork Not Found"
-          description="The artwork you are looking for does not exist or has been unpublished."
-          actionText="Back to Gallery"
+          title="Artwork not found"
+          description="The requested artwork may have been moved or is no longer listed."
+          actionText="Browse Gallery"
           onAction={() => navigate('/gallery')}
         />
       </div>
     );
   }
 
-  const allImages = artwork.images && artwork.images.length > 0
+  const allImages = artwork.images?.length
     ? artwork.images
-    : [artwork.coverImage];
+    : artwork.coverImage
+    ? [artwork.coverImage]
+    : [];
+
+  const currentImgUrl = allImages[selectedImageIndex]?.url || allImages[0]?.url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1000&q=80';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-20">
-      {/* Breadcrumb / Back Link */}
-      <Link
-        to="/gallery"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal-600 hover:text-terracotta-600"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Showcase Gallery
-      </Link>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-20 pt-4">
+      {/* Back Button */}
+      <div>
+        <Link
+          to="/gallery"
+          className="inline-flex items-center gap-1.5 font-montserrat text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-[#121212] transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Showcase Gallery
+        </Link>
+      </div>
 
-      {/* Main Details Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14">
-        {/* Left: Gallery & Zoom Lightbox */}
+      {/* Main Artwork Showcase Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        {/* Left Column: Image Gallery & Lightbox Trigger */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-cream-200 border border-cream-200 shadow-lg group">
+          <div className="relative border-2 border-[#121212] bg-[#fff7f9] shadow-[6px_6px_0px_#f7cbd7] overflow-hidden group aspect-[4/5] flex items-center justify-center">
             <img
-              src={allImages[selectedImageIndex]?.url}
+              src={currentImgUrl}
               alt={artwork.title}
               className="w-full h-full object-cover cursor-zoom-in"
               onClick={() => setIsLightboxOpen(true)}
             />
 
-            {/* Lightbox Trigger Button */}
+            {/* Zoom Action Button */}
             <button
               onClick={() => setIsLightboxOpen(true)}
-              className="absolute bottom-4 right-4 p-2.5 rounded-full bg-white/90 backdrop-blur-md text-charcoal-700 hover:text-terracotta-600 hover:bg-white shadow-md transition-all"
-              aria-label="Enlarge image"
+              className="absolute bottom-4 right-4 bg-white/95 text-[#121212] p-2.5 border-2 border-[#121212] shadow-md hover:scale-105 transition-transform"
+              aria-label="Enlarge artwork"
             >
               <Maximize2 className="w-4 h-4" />
             </button>
-
-            {/* Wishlist Button */}
-            <button
-              onClick={handleToggleWishlist}
-              className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md shadow-md transition-all ${
-                isWishlisted
-                  ? 'bg-rose-50 text-rose-500 fill-rose-500'
-                  : 'bg-white/90 text-charcoal-600 hover:text-rose-500 hover:bg-white'
-              }`}
-              aria-label="Save to wishlist"
-            >
-              <Heart
-                className={`w-5 h-5 ${isWishlisted ? 'fill-rose-500' : ''}`}
-              />
-            </button>
           </div>
 
-          {/* Image Thumbnails Strip */}
+          {/* Thumbnail Strip */}
           {allImages.length > 1 && (
             <div className="flex items-center gap-3 overflow-x-auto pb-2">
               {allImages.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all ${
+                  className={`w-20 h-20 shrink-0 border-2 transition-all overflow-hidden ${
                     selectedImageIndex === idx
-                      ? 'border-terracotta-500 scale-95 shadow-sm'
-                      : 'border-transparent opacity-70 hover:opacity-100'
+                      ? 'border-[#121212] shadow-[3px_3px_0px_#f7cbd7] scale-105'
+                      : 'border-gray-200 opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <img
-                    src={img.url}
-                    alt={`${artwork.title} thumb ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={img.url} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Right: Artwork Metadata & Order CTA */}
+        {/* Right Column: Artwork Details & Commission CTA */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="space-y-2">
-            <Link
-              to={`/categories/${artwork.category?.slug}`}
-              className="inline-block"
-            >
-              <Badge variant="terracotta">{artwork.category?.name}</Badge>
-            </Link>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="font-montserrat text-xs font-bold uppercase tracking-widest text-gray-500 bg-[#fde8ef] px-3 py-1 border border-[#121212]">
+                {artwork.category?.name || 'Custom Commission'}
+              </span>
+              <button
+                onClick={handleToggleWishlist}
+                className="p-2 border-2 border-[#121212] bg-white shadow-[2px_2px_0px_#f7cbd7] hover:bg-[#fff7f9] transition-all"
+                aria-label="Wishlist artwork"
+              >
+                <Heart
+                  className={`w-4 h-4 ${
+                    isWishlisted ? 'fill-[#dc8da3] text-[#dc8da3]' : 'text-[#121212]'
+                  }`}
+                />
+              </button>
+            </div>
 
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900 leading-tight">
+            <h1 className="font-montserrat font-extrabold text-2xl sm:text-4xl text-[#121212] uppercase tracking-[0.06em] leading-tight">
               {artwork.title}
             </h1>
 
-            <div className="flex items-baseline gap-2 pt-1">
-              <span className="text-xs uppercase tracking-wider text-charcoal-500 font-semibold">
-                Starting Commission Price:
-              </span>
-              <span className="font-serif text-2xl sm:text-3xl font-bold text-terracotta-600">
-                {formatPrice(artwork.startingPrice)}
-              </span>
+            <div className="inline-block bg-[#121212] text-white px-4 py-1.5 font-montserrat text-base sm:text-lg font-extrabold shadow-[3px_3px_0px_#f7cbd7]">
+              Starting at {formatPrice(artwork.startingPrice)}
             </div>
           </div>
 
-          {/* Key Specifications Grid */}
-          <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-white border border-cream-200">
-            <div>
-              <p className="text-[11px] uppercase tracking-wider font-semibold text-charcoal-400">
-                Medium
-              </p>
-              <p className="text-xs sm:text-sm font-semibold text-charcoal-800 mt-0.5">
-                {artwork.medium}
-              </p>
-            </div>
-            <div>
-              <p className="text-[11px] uppercase tracking-wider font-semibold text-charcoal-400">
-                Dimensions
-              </p>
-              <p className="text-xs sm:text-sm font-semibold text-charcoal-800 mt-0.5">
-                {artwork.dimensions}
-              </p>
-            </div>
-            {artwork.timeTaken && (
-              <div className="col-span-2 pt-2 border-t border-cream-100 flex items-center gap-2 text-xs text-charcoal-600">
-                <Clock className="w-4 h-4 text-terracotta-500" />
-                <span>Handcrafted in: {artwork.timeTaken}</span>
-              </div>
-            )}
+          {/* Description */}
+          <div className="space-y-2 pt-2 border-t border-[#f7cbd7]">
+            <h3 className="font-montserrat font-bold text-xs uppercase tracking-wider text-[#121212]">
+              About This Piece
+            </h3>
+            <p className="font-sans text-xs sm:text-sm text-gray-700 leading-relaxed">
+              {artwork.description}
+            </p>
           </div>
 
-          {/* Prominent Commission CTA */}
-          <div className="space-y-3 pt-2">
-            <Button
-              variant="primary"
-              size="lg"
-              className="w-full shadow-md py-3.5 text-base"
-              icon={Paintbrush}
+          {/* Specifications Box */}
+          <div className="bg-[#fff7f9] border-2 border-[#121212] p-4 shadow-[3px_3px_0px_#f7cbd7] space-y-2 font-montserrat text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-[#f7cbd7]">
+              <span className="text-gray-500 font-bold uppercase">Medium</span>
+              <span className="text-[#121212] font-bold">{artwork.medium}</span>
+            </div>
+            <div className="flex items-center justify-between pb-2 border-b border-[#f7cbd7]">
+              <span className="text-gray-500 font-bold uppercase">Dimensions</span>
+              <span className="text-[#121212] font-bold">{artwork.dimensions}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-500 font-bold uppercase">Creation Timeline</span>
+              <span className="text-[#121212] font-bold">{artwork.completionTimeDays || 7-14} Business Days</span>
+            </div>
+          </div>
+
+          {/* Commission CTA Button */}
+          <div className="pt-2 space-y-3">
+            <button
               onClick={() =>
                 navigate(
                   `/custom-order?category=${artwork.category?.slug}&artwork=${artwork.slug}`
                 )
               }
+              className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs sm:text-sm font-bold uppercase tracking-[0.18em] py-4 border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
             >
-              Order Something Like This
-            </Button>
-            <p className="text-xs text-center text-charcoal-500 leading-relaxed">
-              Clicking above opens our commission builder pre-filled with this style. You will upload your own reference photo.
+              <Paintbrush className="w-4 h-4 text-[#f7cbd7]" />
+              <span>COMMISSION SIMILAR ARTWORK</span>
+            </button>
+            <p className="font-sans text-[11px] text-center text-gray-500">
+              Personalized size, framing, and custom color palettes available on request.
             </p>
           </div>
 
-          {/* Story & Description */}
-          <div className="space-y-3 pt-4 border-t border-cream-200">
-            <h3 className="font-serif text-lg font-bold text-charcoal-900">
-              The Story Behind This Piece
-            </h3>
-            <p className="text-xs sm:text-sm text-charcoal-600 leading-relaxed whitespace-pre-line">
-              {artwork.description}
-            </p>
-          </div>
-
-          {/* Tags */}
-          {artwork.tags && artwork.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-2">
-              {artwork.tags.map((tag, i) => (
-                <span
-                  key={i}
-                  className="px-3 py-1 bg-cream-100 rounded-full text-xs text-charcoal-600 border border-cream-200"
-                >
-                  #{tag}
-                </span>
-              ))}
+          {/* Value Badges */}
+          <div className="pt-4 border-t border-[#f7cbd7] grid grid-cols-2 gap-3 text-xs font-montserrat">
+            <div className="flex items-center gap-2 text-gray-700">
+              <ShieldCheck className="w-4 h-4 text-[#121212] shrink-0" />
+              <span className="font-bold">100% Hand-Painted</span>
             </div>
-          )}
-
-          {/* Guarantees Box */}
-          <div className="bg-cream-100/70 rounded-2xl p-4 border border-cream-200 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-semibold text-charcoal-800">
-              <ShieldCheck className="w-4 h-4 text-terracotta-500" />
-              <span>Original Artwork Guarantee</span>
+            <div className="flex items-center gap-2 text-gray-700">
+              <Truck className="w-4 h-4 text-[#121212] shrink-0" />
+              <span className="font-bold">Insured Crated Shipping</span>
             </div>
-            <p className="text-xs text-charcoal-500 leading-relaxed">
-              Every custom order is 100% hand-painted by the artist. We share progress photos during creation and use insured archival packaging.
-            </p>
           </div>
         </div>
       </div>
 
-      {/* Lightbox Modal */}
-      {isLightboxOpen && (
-        <div className="fixed inset-0 z-50 bg-charcoal-900/95 backdrop-blur-md flex items-center justify-center p-4">
-          <button
-            onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-6 right-6 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
-            aria-label="Close"
-          >
-            <X className="w-6 h-6" />
-          </button>
+      {/* Related Artworks */}
+      {related.length > 0 && (
+        <div className="space-y-6 pt-10 border-t-2 border-[#121212]">
+          <div className="space-y-1">
+            <span className="font-script text-3xl text-[#121212] block">More Inspirations</span>
+            <h2 className="font-montserrat font-extrabold text-2xl uppercase tracking-[0.08em] text-[#121212]">
+              SIMILAR COMMISSIONS
+            </h2>
+          </div>
 
-          <div className="relative max-w-5xl max-h-[85vh] flex items-center justify-center">
-            <img
-              src={allImages[selectedImageIndex]?.url}
-              alt={artwork.title}
-              className="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl"
-            />
-
-            {allImages.length > 1 && (
-              <>
-                <button
-                  onClick={() =>
-                    setSelectedImageIndex((prev) =>
-                      prev === 0 ? allImages.length - 1 : prev - 1
-                    )
-                  }
-                  className="absolute left-4 p-2.5 rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={() =>
-                    setSelectedImageIndex((prev) =>
-                      prev === allImages.length - 1 ? 0 : prev + 1
-                    )
-                  }
-                  className="absolute right-4 p-2.5 rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {related.slice(0, 3).map((art) => (
+              <div
+                key={art._id}
+                onClick={() => navigate(`/artworks/${art.slug}`)}
+                className="cursor-pointer group bg-white border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-1 transition-all overflow-hidden flex flex-col"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-[#fde8ef]">
+                  <img
+                    src={art.coverImage?.url || art.images?.[0]?.url}
+                    alt={art.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-4 bg-[#fff7f9] border-t-2 border-[#121212] flex items-center justify-between">
+                  <div>
+                    <h4 className="font-montserrat font-bold text-xs uppercase text-[#121212] line-clamp-1">
+                      {art.title}
+                    </h4>
+                    <span className="text-[10px] text-gray-500 font-montserrat">{art.medium}</span>
+                  </div>
+                  <span className="font-montserrat text-xs font-bold text-[#121212]">
+                    {formatPrice(art.startingPrice)}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      {/* Related Artworks Section */}
-      {related.length > 0 && (
-        <div className="space-y-8 pt-10 border-t border-cream-200">
-          <div>
-            <span className="eyebrow">MORE IN THIS CATEGORY</span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-900">
-              Related Showcase Commissions
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {related.map((rel) => (
-              <div
-                key={rel._id}
-                className="group bg-white rounded-3xl overflow-hidden border border-cream-200 shadow-card hover:shadow-soft-hover transition-all"
-              >
-                <div className="aspect-[4/5] overflow-hidden bg-cream-200">
-                  <img
-                    src={rel.coverImage?.url}
-                    alt={rel.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-4 space-y-2">
-                  <h4 className="font-serif text-sm font-bold text-charcoal-900 line-clamp-1 group-hover:text-terracotta-600 transition-colors">
-                    {rel.title}
-                  </h4>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-charcoal-500">{rel.dimensions}</span>
-                    <span className="font-bold text-terracotta-600">
-                      {formatPrice(rel.startingPrice)}
-                    </span>
-                  </div>
-                  <Link
-                    to={`/artworks/${rel.slug}`}
-                    className="block text-center text-xs font-semibold py-1.5 bg-cream-100 rounded-full text-charcoal-700 hover:bg-terracotta-50 hover:text-terracotta-600 transition-colors"
-                  >
-                    View Details
-                  </Link>
-                </div>
-              </div>
-            ))}
+      {/* Lightbox Modal */}
+      {isLightboxOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+          <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
+            <button
+              onClick={() => setIsLightboxOpen(false)}
+              className="absolute -top-10 right-0 text-white hover:text-[#f7cbd7] p-2"
+              aria-label="Close"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <img
+              src={currentImgUrl}
+              alt={artwork.title}
+              className="max-h-[85vh] w-auto object-contain border-2 border-white shadow-2xl"
+            />
           </div>
         </div>
       )}
