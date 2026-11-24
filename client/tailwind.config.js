@@ -7,6 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
+        blush: {
+          50: '#fff7f9',
+          100: '#fde8ef',
+          200: '#f7cbd7',
+          300: '#ebb0c0',
+          400: '#dc8da3',
+          500: '#c86a84',
+          600: '#b0526b',
+        },
+        noir: {
+          DEFAULT: '#121212',
+          light: '#242424',
+          muted: '#4a4a4a',
+        },
         cream: {
           50: '#fefcf9',
           100: '#fdf7f1', // Main base background from artdiarium
@@ -20,7 +34,7 @@ export default {
           200: '#f2cadb',
           300: '#e7a3c0',
           400: '#d7729d',
-          500: '#b0456f', // Artdiarium primary accent
+          500: '#b0456f',
           600: '#9d355f',
           700: '#83284e',
           800: '#6d2341',
@@ -33,10 +47,10 @@ export default {
           300: '#c3b7bc',
           400: '#a4939b',
           500: '#88747e',
-          600: '#6e5a60', // Artdiarium muted text
+          600: '#6e5a60',
           700: '#5b494f',
           800: '#4c3c41',
-          900: '#3d2c33', // Artdiarium deep plum dark
+          900: '#3d2c33',
         },
         sheet: {
           peach: '#f6dcb0',
@@ -92,8 +106,11 @@ export default {
         sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
         serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         editorial: ['"Playfair Display"', 'Georgia', 'serif'],
-        script: ['"Pinyon Script"', 'cursive'],
-        handwriting: ['"Pinyon Script"', 'cursive'],
+        script: ['"Alex Brush"', '"Allura"', '"Pinyon Script"', 'cursive'],
+        allura: ['"Allura"', 'cursive'],
+        condensed: ['"Oswald"', '"Montserrat"', 'sans-serif'],
+        montserrat: ['"Montserrat"', 'sans-serif'],
+        handwriting: ['"Alex Brush"', '"Pinyon Script"', 'cursive'],
         cinzel: ['Cinzel', 'Georgia', 'serif'],
       },
       borderRadius: {

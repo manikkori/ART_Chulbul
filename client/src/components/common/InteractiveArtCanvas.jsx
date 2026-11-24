@@ -29,14 +29,14 @@ export const InteractiveArtCanvas = () => {
       lastMoveTime: 0
     };
 
-    // Color palette inspired by fine art pigments
+    // Color palette inspired by fine art pigments and blush & black aesthetic
     const PIGMENT_COLORS = [
+      'rgba(247, 203, 215, ',  // Soft Blush Pink
+      'rgba(220, 141, 163, ',  // Rose Mauve
       'rgba(212, 175, 55, ',   // Imperial Gilding Gold
-      'rgba(176, 69, 111, ',   // Madder Lake / Crimson
-      'rgba(212, 176, 228, ',  // Soft Lilac Wash
-      'rgba(246, 220, 176, ',  // Ochre Peach
-      'rgba(196, 228, 246, ',  // Cerulean Bloom
-      'rgba(200, 75, 49, '     // Burnt Terracotta
+      'rgba(235, 176, 192, ',  // Dusty Rose
+      'rgba(30, 30, 30, ',     // Charcoal Pigment Mote
+      'rgba(253, 232, 239, '   // Pale Blush Glow
     ];
 
     // Ambient floating particles (sunlit atelier dust motes)

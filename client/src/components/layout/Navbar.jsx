@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Palette, Menu, X, User, LogOut, ChevronDown, Bell, Paintbrush } from 'lucide-react';
+import { Palette, Menu, X, User, LogOut, ChevronDown, Bell, Paintbrush, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import { useNotifications } from '../../context/NotificationContext';
@@ -20,19 +20,19 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'Gallery', path: '/gallery' },
-    { label: 'Categories', path: '/categories' },
-    { label: 'About', path: '/about' },
-    { label: 'Pricing', path: '/pricing' },
-    { label: 'Contact', path: '/contact' },
+    { label: 'HOME', path: '/' },
+    { label: 'PORTFOLIO', path: '/gallery' },
+    { label: 'MEDIUMS', path: '/categories' },
+    { label: 'PRICING', path: '/pricing' },
+    { label: 'ABOUT THE ARTIST', path: '/about' },
+    { label: 'CONTACT', path: '/contact' },
   ];
 
   const handleLogout = async () => {
@@ -42,252 +42,271 @@ export const Navbar = () => {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[#fdf7f1]/90 backdrop-blur-md shadow-sm border-b border-[#eadfd9] py-3'
-          : 'bg-[#fdf7f1]/70 backdrop-blur-sm py-4'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Logo / Wordmark */}
-          <Link to="/" className="flex items-center gap-2.5 group">
-            {settings?.logo?.url ? (
-              <img
-                src={settings.logo.url}
-                alt={siteName}
-                className="h-9 w-9 object-contain rounded-full shadow-sm group-hover:scale-105 transition-transform"
-              />
-            ) : (
-              <div className="w-9 h-9 rounded-full bg-[#b0456f] text-white flex items-center justify-center shadow-[2px_2px_0px_#f6dcb0] group-hover:rotate-12 transition-transform duration-300">
-                <Palette className="w-5 h-5" />
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+      {/* Top Announcement Bar - Blush Pink & Black tracking strip (as in mockup) */}
+      <div className="bg-[#fce4ec] border-b border-[#f7cbd7] text-[#121212] py-1.5 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-[11px] sm:text-xs font-montserrat tracking-[0.18em] uppercase font-semibold">
+          <Sparkles className="w-3 h-3 text-[#dc8da3] animate-pulse hidden sm:inline" />
+          <span>HANDCRAFTED CUSTOM ART • COMMISSION YOUR ORIGINAL PAINTING TODAY</span>
+          <span className="hidden md:inline text-[#dc8da3]">•</span>
+          <span className="hidden md:inline">FREE ART CONSULTATION & SAFE CRATED SHIPPING</span>
+          <Sparkles className="w-3 h-3 text-[#dc8da3] animate-pulse hidden sm:inline" />
+        </div>
+      </div>
+
+      {/* Main Navbar */}
+      <div
+        className={`transition-all duration-300 ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#f7cbd7] py-2.5'
+            : 'bg-[#fffdfd]/90 backdrop-blur-sm border-b border-[#fde8ef] py-3.5'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            {/* Logo / Wordmark in Blush & Black aesthetic */}
+            <Link to="/" className="flex items-center gap-2 group">
+              {settings?.logo?.url ? (
+                <img
+                  src={settings.logo.url}
+                  alt={siteName}
+                  className="h-9 w-9 object-contain rounded-full border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] group-hover:scale-105 transition-transform"
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full bg-[#121212] text-white flex items-center justify-center border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] group-hover:rotate-6 transition-transform">
+                  <Palette className="w-4 h-4 text-[#f7cbd7]" />
+                </div>
+              )}
+              <div className="flex items-baseline gap-1">
+                <span className="font-montserrat font-extrabold text-lg sm:text-xl tracking-tight text-[#121212]">
+                  {siteName ? siteName.toUpperCase() : "CHULBUL'S"}
+                </span>
+                <span className="font-script text-2xl sm:text-3xl text-[#121212] font-normal lowercase leading-none">
+                  : art
+                </span>
               </div>
-            )}
-            <span className="font-display text-2xl font-bold tracking-tight text-[#3d2c33] group-hover:text-[#b0456f] transition-colors">
-              {siteName}
-            </span>
-          </Link>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) =>
-                  `font-display text-sm transition-colors hover:text-[#b0456f] ${
-                    isActive ? 'text-[#b0456f] font-semibold' : 'text-[#3d2c33] font-medium'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3.5">
-            {isAuthenticated && (
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setNotifDropdownOpen(!notifDropdownOpen);
-                    setUserDropdownOpen(false);
-                  }}
-                  className="p-2 rounded-full border border-[#eadfd9] bg-white text-[#3d2c33] hover:text-[#b0456f] hover:border-[#b0456f] transition-all relative"
-                  aria-label="Notifications"
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `text-[12px] font-montserrat tracking-[0.14em] transition-all relative py-1 ${
+                      isActive
+                        ? 'text-[#121212] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#121212]'
+                        : 'text-[#555] font-medium hover:text-[#121212]'
+                    }`
+                  }
                 >
-                  <Bell className="w-4 h-4" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#b0456f] text-white rounded-full text-[10px] font-bold flex items-center justify-center">
-                      {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
-                  )}
-                </button>
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
 
-                {/* Notifications Dropdown */}
-                {notifDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-[#eadfd9] overflow-hidden z-50">
-                    <div className="p-3 bg-[#fdf7f1] border-b border-[#eadfd9] flex items-center justify-between">
-                      <span className="font-display text-xs font-bold text-[#3d2c33] uppercase tracking-wider">
-                        Notifications {unreadCount > 0 && `(${unreadCount})`}
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-3">
+              {isAuthenticated && (
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setNotifDropdownOpen(!notifDropdownOpen);
+                      setUserDropdownOpen(false);
+                    }}
+                    className="p-2 rounded-full border border-[#121212] bg-white text-[#121212] hover:bg-[#fde8ef] transition-colors relative"
+                    aria-label="Notifications"
+                  >
+                    <Bell className="w-4 h-4" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#121212] text-[#f7cbd7] rounded-full text-[10px] font-bold flex items-center justify-center">
+                        {unreadCount > 9 ? '9+' : unreadCount}
                       </span>
-                      {unreadCount > 0 && (
-                        <button
-                          onClick={markAllAsRead}
-                          className="font-display text-[11px] text-[#b0456f] hover:underline font-semibold"
-                        >
-                          Mark all as read
-                        </button>
-                      )}
-                    </div>
+                    )}
+                  </button>
 
-                    <div className="max-h-80 overflow-y-auto divide-y divide-[#f1e9e3]">
-                      {notifications.length === 0 ? (
-                        <div className="p-6 text-center text-xs text-[#6e5a60]">
-                          No notifications yet
-                        </div>
-                      ) : (
-                        notifications.slice(0, 6).map((notif) => (
-                          <div
-                            key={notif._id}
-                            onClick={() => {
-                              markAsRead(notif._id);
-                              setNotifDropdownOpen(false);
-                              if (notif.link) navigate(notif.link);
-                            }}
-                            className={`p-3.5 hover:bg-[#fdf7f1] cursor-pointer transition-colors space-y-1 ${
-                              !notif.isRead ? 'bg-[#f8e4ed]/40' : ''
-                            }`}
+                  {/* Notifications Dropdown */}
+                  {notifDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border-2 border-[#121212] overflow-hidden z-50">
+                      <div className="p-3 bg-[#fde8ef] border-b border-[#f7cbd7] flex items-center justify-between">
+                        <span className="font-montserrat text-xs font-bold text-[#121212] uppercase tracking-wider">
+                          Notifications {unreadCount > 0 && `(${unreadCount})`}
+                        </span>
+                        {unreadCount > 0 && (
+                          <button
+                            onClick={markAllAsRead}
+                            className="font-montserrat text-[11px] text-[#121212] hover:underline font-semibold"
                           >
-                            <div className="flex items-center justify-between">
-                              <span className="font-display text-xs font-bold text-[#3d2c33]">
-                                {notif.title}
-                              </span>
-                              {!notif.isRead && (
-                                <span className="w-2 h-2 rounded-full bg-[#b0456f] shrink-0" />
-                              )}
-                            </div>
-                            <p className="font-sans text-xs text-[#6e5a60] line-clamp-2 leading-relaxed">
-                              {notif.message}
-                            </p>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+                            Mark all read
+                          </button>
+                        )}
+                      </div>
 
-            {isAuthenticated ? (
-              <div className="relative">
-                <button
-                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 p-1.5 pl-3 pr-2 rounded-full border border-[#eadfd9] bg-white hover:border-[#b0456f] transition-all text-xs font-display font-semibold text-[#3d2c33] shadow-sm"
-                >
-                  {user.avatar?.url ? (
-                    <img
-                      src={user.avatar.url}
-                      alt={user.name}
-                      className="w-6 h-6 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-6 h-6 rounded-full bg-[#f8e4ed] text-[#b0456f] flex items-center justify-center text-xs font-bold">
-                      {user.name.charAt(0).toUpperCase()}
+                      <div className="max-h-80 overflow-y-auto divide-y divide-[#f7cbd7]/40">
+                        {notifications.length === 0 ? (
+                          <div className="p-6 text-center text-xs text-gray-500">
+                            No notifications yet
+                          </div>
+                        ) : (
+                          notifications.slice(0, 6).map((notif) => (
+                            <div
+                              key={notif._id}
+                              onClick={() => {
+                                markAsRead(notif._id);
+                                setNotifDropdownOpen(false);
+                                if (notif.link) navigate(notif.link);
+                              }}
+                              className={`p-3.5 hover:bg-[#fff7f9] cursor-pointer transition-colors space-y-1 ${
+                                !notif.isRead ? 'bg-[#fde8ef]/50' : ''
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-montserrat text-xs font-bold text-[#121212]">
+                                  {notif.title}
+                                </span>
+                                {!notif.isRead && (
+                                  <span className="w-2 h-2 rounded-full bg-[#121212] shrink-0" />
+                                )}
+                              </div>
+                              <p className="font-sans text-xs text-gray-600 line-clamp-2 leading-relaxed">
+                                {notif.message}
+                              </p>
+                            </div>
+                          ))
+                        )}
+                      </div>
                     </div>
                   )}
-                  <span className="max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-[#6e5a60]" />
-                </button>
+                </div>
+              )}
 
-                {userDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-[#eadfd9] py-2 z-50">
-                    <div className="px-4 py-2 border-b border-[#f1e9e3]">
-                      <p className="font-display text-xs font-semibold text-[#3d2c33] truncate">{user.name}</p>
-                      <p className="font-sans text-[11px] text-[#6e5a60] truncate">{user.email}</p>
-                    </div>
-
-                    {isAdmin && (
-                      <Link
-                        to="/admin"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block px-4 py-2 font-display text-xs font-semibold text-[#b0456f] hover:bg-[#f8e4ed] transition-colors"
-                      >
-                        Admin Dashboard
-                      </Link>
+              {isAuthenticated ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center gap-2 p-1.5 pl-3 pr-2 rounded-full border-2 border-[#121212] bg-white hover:bg-[#fde8ef] transition-all text-xs font-montserrat font-bold text-[#121212] shadow-[2px_2px_0px_#f7cbd7]"
+                  >
+                    {user.avatar?.url ? (
+                      <img
+                        src={user.avatar.url}
+                        alt={user.name}
+                        className="w-6 h-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-6 h-6 rounded-full bg-[#121212] text-white flex items-center justify-center text-xs font-bold">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
                     )}
+                    <span className="max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
+                    <ChevronDown className="w-3.5 h-3.5 text-[#121212]" />
+                  </button>
 
-                    <Link
-                      to="/my-orders"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="block px-4 py-2 font-display text-xs text-[#3d2c33] hover:bg-[#fdf7f1] transition-colors"
-                    >
-                      My Custom Orders
-                    </Link>
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border-2 border-[#121212] py-2 z-50">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="font-montserrat text-xs font-bold text-[#121212] truncate">{user.name}</p>
+                        <p className="font-sans text-[11px] text-gray-500 truncate">{user.email}</p>
+                      </div>
 
-                    <Link
-                      to="/profile"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="block px-4 py-2 font-display text-xs text-[#3d2c33] hover:bg-[#fdf7f1] transition-colors"
-                    >
-                      Profile & Saved Addresses
-                    </Link>
+                      {isAdmin && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="block px-4 py-2 font-montserrat text-xs font-bold text-[#121212] hover:bg-[#fde8ef] transition-colors"
+                        >
+                          Admin Studio
+                        </Link>
+                      )}
 
-                    <Link
-                      to="/wishlist"
-                      onClick={() => setUserDropdownOpen(false)}
-                      className="block px-4 py-2 font-display text-xs text-[#3d2c33] hover:bg-[#fdf7f1] transition-colors"
-                    >
-                      My Wishlist
-                    </Link>
+                      <Link
+                        to="/my-orders"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="block px-4 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef] transition-colors"
+                      >
+                        My Custom Orders
+                      </Link>
 
-                    <button
-                      onClick={() => {
-                        setUserDropdownOpen(false);
-                        setLogoutConfirmOpen(true);
-                      }}
-                      className="w-full text-left px-4 py-2 font-display text-xs text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                      Sign Out
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="font-display text-xs font-semibold uppercase tracking-wider text-[#3d2c33] hover:text-[#b0456f] px-3 py-2 transition-colors"
+                      <Link
+                        to="/profile"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="block px-4 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef] transition-colors"
+                      >
+                        Profile & Addresses
+                      </Link>
+
+                      <Link
+                        to="/wishlist"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="block px-4 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef] transition-colors"
+                      >
+                        My Wishlist
+                      </Link>
+
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          setLogoutConfirmOpen(true);
+                        }}
+                        className="w-full text-left px-4 py-2 font-montserrat text-xs text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5 font-semibold"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  to="/login"
+                  className="font-montserrat text-xs font-bold uppercase tracking-wider text-[#121212] hover:text-[#dc8da3] px-3 py-2 transition-colors"
+                >
+                  Sign In
+                </Link>
+              )}
+
+              {/* Commission Art Button - Blush & Black Noir Button */}
+              <button
+                onClick={() => navigate('/custom-order')}
+                className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.16em] px-5 py-2.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[4px_4px_0px_#ebb0c0] hover:-translate-y-0.5 transition-all flex items-center gap-2"
               >
-                Sign In
-              </Link>
-            )}
+                <Paintbrush className="w-3.5 h-3.5 text-[#f7cbd7]" />
+                <span>ORDER CUSTOM</span>
+              </button>
+            </div>
 
-            <Button
-              variant="primary"
-              size="sm"
-              icon={Paintbrush}
-              onClick={() => navigate('/custom-order')}
-            >
-              Order Custom Art
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
-            <Button
-              variant="primary"
-              size="sm"
-              className="px-3 py-1.5 text-xs"
-              onClick={() => navigate('/custom-order')}
-            >
-              Order Art
-            </Button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-full border border-[#eadfd9] bg-white text-[#3d2c33] hover:text-[#b0456f]"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            {/* Mobile Menu Button */}
+            <div className="flex md:hidden items-center gap-2">
+              <button
+                onClick={() => navigate('/custom-order')}
+                className="bg-[#121212] text-white font-montserrat text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 border border-[#121212] shadow-[2px_2px_0px_#f7cbd7]"
+              >
+                Order
+              </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 border-2 border-[#121212] bg-white text-[#121212] hover:bg-[#fde8ef]"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu Slide-out */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-md border-b border-cream-200 px-4 pt-3 pb-6 space-y-3 shadow-lg">
-          <nav className="flex flex-col space-y-2">
+        <div className="md:hidden bg-white border-b-2 border-[#121212] px-4 pt-3 pb-6 space-y-3 shadow-xl">
+          <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
                 className={({ isActive }) =>
-                  `px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
-                    isActive ? 'bg-terracotta-50 text-terracotta-600 font-semibold' : 'text-charcoal-800 hover:bg-cream-100'
+                  `px-3 py-2.5 font-montserrat text-xs font-bold tracking-wider transition-colors ${
+                    isActive ? 'bg-[#fde8ef] text-[#121212] border-l-4 border-[#121212]' : 'text-gray-700 hover:bg-gray-50'
                   }`
                 }
               >
@@ -296,40 +315,40 @@ export const Navbar = () => {
             ))}
           </nav>
 
-          <div className="pt-3 border-t border-cream-200">
+          <div className="pt-3 border-t border-[#f7cbd7]">
             {isAuthenticated ? (
               <div className="space-y-1">
                 <div className="px-3 py-2">
-                  <p className="text-xs font-semibold text-charcoal-900">{user.name}</p>
-                  <p className="text-[11px] text-charcoal-500">{user.email}</p>
+                  <p className="font-montserrat text-xs font-bold text-[#121212]">{user.name}</p>
+                  <p className="font-sans text-[11px] text-gray-500">{user.email}</p>
                 </div>
                 {isAdmin && (
                   <Link
                     to="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 text-sm text-terracotta-600 font-semibold rounded-xl hover:bg-terracotta-50"
+                    className="block px-3 py-2 font-montserrat text-xs font-bold text-[#121212] hover:bg-[#fde8ef]"
                   >
-                    Admin Dashboard
+                    Admin Studio
                   </Link>
                 )}
                 <Link
                   to="/my-orders"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-charcoal-800 rounded-xl hover:bg-cream-100"
+                  className="block px-3 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef]"
                 >
                   My Custom Orders
                 </Link>
                 <Link
                   to="/profile"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-charcoal-800 rounded-xl hover:bg-cream-100"
+                  className="block px-3 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef]"
                 >
                   Profile & Addresses
                 </Link>
                 <Link
                   to="/wishlist"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm text-charcoal-800 rounded-xl hover:bg-cream-100"
+                  className="block px-3 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef]"
                 >
                   Wishlist
                 </Link>
@@ -338,7 +357,7 @@ export const Navbar = () => {
                     setMobileMenuOpen(false);
                     setLogoutConfirmOpen(true);
                   }}
-                  className="w-full text-left px-3 py-2 text-sm text-rose-600 rounded-xl hover:bg-rose-50"
+                  className="w-full text-left px-3 py-2 font-montserrat text-xs text-rose-600 font-bold hover:bg-rose-50"
                 >
                   Sign Out
                 </button>
@@ -348,14 +367,14 @@ export const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2.5 text-sm font-semibold text-charcoal-800 border border-cream-300 rounded-full hover:bg-cream-100"
+                  className="text-center py-2.5 font-montserrat text-xs font-bold text-[#121212] border-2 border-[#121212] hover:bg-[#fde8ef]"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2.5 text-sm font-semibold bg-terracotta-500 text-white rounded-full hover:bg-terracotta-600"
+                  className="text-center py-2.5 font-montserrat text-xs font-bold bg-[#121212] text-white hover:bg-black"
                 >
                   Create Account
                 </Link>

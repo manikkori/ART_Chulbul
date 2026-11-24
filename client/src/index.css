@@ -80,3 +80,49 @@
   background-image: radial-gradient(#eadfd9 0.75px, transparent 0.75px);
   background-size: 16px 16px;
 }
+
+/* Blush & Black Aesthetic Styles */
+.blush-splash {
+  background: radial-gradient(circle at 65% 45%, rgba(247, 203, 215, 0.45) 0%, rgba(253, 232, 239, 0.25) 45%, rgba(255, 255, 255, 0) 70%);
+}
+
+.blush-brush {
+  background: linear-gradient(135deg, #fce8ee 0%, #f7cbd7 50%, #ebb0c0 100%);
+  border-radius: 9999px;
+  filter: blur(1px);
+}
+
+.noir-box {
+  background: #ffffff;
+  border: 2px solid #121212;
+  box-shadow: 4px 4px 0px #f7cbd7;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.noir-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 6px 6px 0px #ebb0c0;
+}
+
+.noir-box-accent {
+  background: #fff7f9;
+  border: 2px solid #121212;
+  box-shadow: 4px 4px 0px #121212;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.noir-box-accent:hover {
+  transform: translateY(-3px);
+  box-shadow: 6px 6px 0px #121212;
+}
+
+.scalloped-badge {
+  background: #fde8ef;
+  border: 1.5px dashed #dc8da3;
+  color: #121212;
+}
+
+.script-accent {
+  font-family: 'Alex Brush', 'Allura', 'Pinyon Script', cursive;
+  line-height: 1.1;
+}
