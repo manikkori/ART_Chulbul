@@ -9,6 +9,8 @@ export const Badge = ({
 }) => {
   const variants = {
     default: 'bg-cream-200 text-charcoal-700 border-cream-300',
+    blush: 'bg-[#fde8ef] text-[#121212] border-[#f7cbd7]',
+    noir: 'bg-[#121212] text-white border-[#121212]',
     terracotta: 'bg-terracotta-50 text-terracotta-700 border-terracotta-200',
     sage: 'bg-sage-50 text-sage-600 border-sage-200',
     amber: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -18,6 +20,8 @@ export const Badge = ({
 
   const dotColors = {
     default: 'bg-charcoal-400',
+    blush: 'bg-[#dc8da3]',
+    noir: 'bg-[#121212]',
     terracotta: 'bg-terracotta-500',
     sage: 'bg-sage-500',
     amber: 'bg-amber-500',
