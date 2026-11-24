@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, Palette } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Palette, Sparkles, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
 import Button from '../components/common/Button';
@@ -45,21 +45,22 @@ export const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12">
-      <div className="bg-white rounded-3xl p-8 sm:p-10 border border-cream-200 shadow-card space-y-6">
-        <div className="text-center space-y-2">
-          {settings?.logo?.url ? (
-            <img src={settings.logo.url} alt={siteName} className="w-12 h-12 rounded-full object-contain mx-auto shadow-sm" />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-terracotta-50 text-terracotta-500 mx-auto flex items-center justify-center border border-terracotta-100">
-              <Palette className="w-6 h-6" />
-            </div>
-          )}
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-900">
-            Welcome Back
+    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
+      {/* Decorative Blush Brush in background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
+
+      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
+        {/* Header with Romantic Script & Bold Sans */}
+        <div className="text-center space-y-1.5">
+          <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
+            <span>Welcome</span>
+            <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
+          </div>
+          <h1 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-[#121212] uppercase tracking-[0.08em]">
+            COLLECTOR SIGN IN
           </h1>
-          <p className="text-xs text-charcoal-500">
-            Sign in to track custom orders and chat with the artist at {siteName}
+          <p className="font-sans text-xs text-gray-600 max-w-xs mx-auto">
+            Sign in to track custom orders, preview progress sketches, and chat with the artist.
           </p>
         </div>
 
@@ -87,34 +88,31 @@ export const Login = () => {
             <div className="flex justify-end pt-1">
               <Link
                 to="/forgot-password"
-                className="text-xs text-charcoal-500 hover:text-terracotta-600 transition-colors"
+                className="font-montserrat text-xs text-gray-500 hover:text-[#121212] hover:underline transition-colors"
               >
                 Forgot your password?
               </Link>
             </div>
           </div>
 
-          <Button
+          <button
             type="submit"
-            variant="primary"
-            size="lg"
-            className="w-full mt-2"
-            loading={submitting}
-            icon={ArrowRight}
-            iconPosition="right"
+            disabled={submitting}
+            className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
-            Sign In
-          </Button>
+            {submitting ? 'SIGNING IN...' : 'SIGN IN TO STUDIO'}
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </form>
 
-        <div className="pt-4 border-t border-cream-200 text-center">
-          <p className="text-xs text-charcoal-600">
+        <div className="pt-4 border-t border-[#f7cbd7] text-center">
+          <p className="font-montserrat text-xs text-gray-600">
             Don't have an account yet?{' '}
             <Link
               to="/register"
-              className="font-semibold text-terracotta-600 hover:text-terracotta-700 underline"
+              className="font-bold text-[#121212] hover:underline underline-offset-4 inline-flex items-center gap-1"
             >
-              Create Account
+              Create Account →
             </Link>
           </p>
         </div>

@@ -19,15 +19,15 @@ export const Input = forwardRef(({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1.5"
+          className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5"
         >
-          {label} {required && <span className="text-terracotta-600">*</span>}
+          {label} {required && <span className="text-[#dc8da3]">*</span>}
         </label>
       )}
 
-      <div className="relative rounded-2xl">
+      <div className="relative">
         {Icon && (
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-charcoal-400">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500">
             <Icon className="w-4 h-4" />
           </div>
         )}
@@ -38,12 +38,12 @@ export const Input = forwardRef(({
           type={type}
           required={required}
           className={`
-            w-full rounded-2xl bg-white border text-sm text-charcoal-900 placeholder-charcoal-400
-            transition-all duration-200 focus:outline-none focus:ring-2
+            w-full bg-white border-2 text-sm text-[#121212] placeholder-gray-400 font-sans
+            transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#f7cbd7]
             ${Icon ? 'pl-10' : 'pl-4'} pr-4 py-2.5
             ${error
-              ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-200'
-              : 'border-cream-300 focus:border-terracotta-500 focus:ring-terracotta-100'}
+              ? 'border-rose-500 shadow-[2px_2px_0px_#fecdd3]'
+              : 'border-[#121212] shadow-[2px_2px_0px_#f7cbd7] focus:shadow-[3px_3px_0px_#ebb0c0]'}
             ${className}
           `}
           {...props}

@@ -46,14 +46,17 @@ export const ResetPassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12">
-      <div className="bg-white rounded-3xl p-8 sm:p-10 border border-cream-200 shadow-card space-y-6">
-        <div className="space-y-2 text-center">
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-charcoal-900">
-            Create New Password
+    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
+
+      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
+        <div className="space-y-1 text-center">
+          <span className="font-script text-3xl text-[#121212] block">Secure Account</span>
+          <h1 className="font-montserrat font-extrabold text-2xl text-[#121212] uppercase tracking-[0.08em]">
+            CREATE NEW PASSWORD
           </h1>
-          <p className="text-xs text-charcoal-500">
-            Choose a strong password to protect your account
+          <p className="font-sans text-xs text-gray-600">
+            Choose a strong password to protect your collector account
           </p>
         </div>
 
@@ -71,24 +74,21 @@ export const ResetPassword = () => {
           <Input
             label="Confirm New Password"
             type="password"
-            placeholder="Re-enter new password"
+            placeholder="Repeat new password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             icon={Lock}
             required
           />
 
-          <Button
+          <button
             type="submit"
-            variant="primary"
-            size="lg"
-            className="w-full mt-2"
-            loading={submitting}
-            icon={ArrowRight}
-            iconPosition="right"
+            disabled={submitting}
+            className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
-            Update Password & Login
-          </Button>
+            {submitting ? 'UPDATING...' : 'UPDATE PASSWORD'}
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </form>
       </div>
     </div>
