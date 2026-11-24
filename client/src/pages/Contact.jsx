@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Send, MessageSquare, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Send, MessageSquare, Clock, CheckCircle2, AlertCircle, Heart } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../utils/formatters';
@@ -76,42 +76,45 @@ export const Contact = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pb-20">
-      <div className="text-center space-y-3">
-        <span className="eyebrow">IN-SITE COLLABORATION</span>
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-charcoal-900">
-          Ask the Artist Directly
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pb-20 pt-4">
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
+          <span>Studio Inquiry</span>
+          <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
+        </div>
+        <h1 className="font-montserrat font-extrabold text-3xl sm:text-5xl text-[#121212] uppercase tracking-[0.08em]">
+          ASK THE ARTIST DIRECTLY
         </h1>
-        <p className="text-sm text-charcoal-600 max-w-xl mx-auto leading-relaxed">
+        <p className="font-sans text-xs sm:text-sm text-gray-600 max-w-xl mx-auto leading-relaxed">
           Have questions before commissioning an artwork? Send a message directly to the artist. All replies appear right inside your site dashboard.
         </p>
       </div>
 
       {/* Tabs if logged in */}
       {isAuthenticated && (
-        <div className="flex justify-center border-b border-cream-200">
+        <div className="flex justify-center border-b-2 border-[#121212]">
           <div className="flex gap-4">
             <button
               onClick={() => setActiveTab('new')}
-              className={`pb-3 text-sm font-semibold border-b-2 transition-all ${
+              className={`pb-3 text-xs font-montserrat font-bold uppercase tracking-wider border-b-4 transition-all ${
                 activeTab === 'new'
-                  ? 'border-terracotta-500 text-terracotta-600'
-                  : 'border-transparent text-charcoal-500 hover:text-charcoal-800'
+                  ? 'border-[#121212] text-[#121212]'
+                  : 'border-transparent text-gray-500 hover:text-[#121212]'
               }`}
             >
               Send New Inquiry
             </button>
             <button
               onClick={() => setActiveTab('history')}
-              className={`pb-3 text-sm font-semibold border-b-2 transition-all flex items-center gap-1.5 ${
+              className={`pb-3 text-xs font-montserrat font-bold uppercase tracking-wider border-b-4 transition-all flex items-center gap-2 ${
                 activeTab === 'history'
-                  ? 'border-terracotta-500 text-terracotta-600'
-                  : 'border-transparent text-charcoal-500 hover:text-charcoal-800'
+                  ? 'border-[#121212] text-[#121212]'
+                  : 'border-transparent text-gray-500 hover:text-[#121212]'
               }`}
             >
-              <span>My Inquiries & Replies</span>
+              <span>Past Inquiries</span>
               {myQueries.length > 0 && (
-                <span className="w-5 h-5 rounded-full bg-cream-200 text-charcoal-700 text-xs flex items-center justify-center font-bold">
+                <span className="bg-[#fde8ef] border border-[#121212] text-[#121212] text-[10px] px-1.5 py-0.2 rounded-full font-bold">
                   {myQueries.length}
                 </span>
               )}
@@ -120,22 +123,22 @@ export const Contact = () => {
         </div>
       )}
 
-      {/* Tab 1: Form */}
-      {activeTab === 'new' && (
-        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-cream-200 shadow-card">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {/* Form or History */}
+      {activeTab === 'new' ? (
+        <div className="bg-white border-2 border-[#121212] p-8 sm:p-12 shadow-[6px_6px_0px_#f7cbd7] space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Your Full Name"
-                placeholder="e.g. Priyanshu Roy"
+                label="Your Name"
+                placeholder="e.g. Radhika Verma"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
               <Input
-                label="Your Email Address"
+                label="Email Address"
                 type="email"
-                placeholder="e.g. name@example.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -143,101 +146,88 @@ export const Contact = () => {
             </div>
 
             <Input
-              label="Subject / Topic"
-              placeholder="e.g. Combining two vintage photos into one oil painting"
+              label="Subject / Medium Interest"
+              placeholder="e.g. Question about 18x24 Oil Painting of wedding couple"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               required
             />
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700 mb-1.5">
-                Your Message <span className="text-terracotta-600">*</span>
+              <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
+                Your Message / Reference Details <span className="text-[#dc8da3]">*</span>
               </label>
               <textarea
                 rows={5}
                 required
+                placeholder="Tell us about the photograph, sizing questions, delivery deadlines, or any special requests..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Describe your ideas, questions on dimensions, custom medium preferences, or timelines..."
-                className="w-full rounded-2xl bg-white border border-cream-300 p-4 text-sm text-charcoal-900 placeholder-charcoal-400 focus:outline-none focus:ring-2 focus:ring-terracotta-100 focus:border-terracotta-500 transition-all"
+                className="w-full bg-white border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] focus:shadow-[3px_3px_0px_#ebb0c0] focus:ring-2 focus:ring-[#f7cbd7] text-sm text-[#121212] p-3 font-sans focus:outline-none"
               />
             </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-xs text-charcoal-500">
-                <Clock className="w-4 h-4 text-terracotta-500" />
-                <span>The artist typically replies within 12-24 hours.</span>
-              </div>
-
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                icon={Send}
-                loading={submitting}
-              >
-                Send Inquiry
-              </Button>
-            </div>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] px-8 py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            >
+              <Send className="w-4 h-4 text-[#f7cbd7]" />
+              <span>{submitting ? 'SENDING INQUIRY...' : 'DISPATCH MESSAGE TO ARTIST'}</span>
+            </button>
           </form>
         </div>
-      )}
-
-      {/* Tab 2: My Query History */}
-      {activeTab === 'history' && (
-        <div className="space-y-6">
+      ) : (
+        <div className="space-y-4">
           {myQueries.length === 0 ? (
             <EmptyState
-              title="No previous inquiries"
-              description="You haven't submitted any questions yet. Use the 'Send New Inquiry' tab whenever you need guidance."
-              actionText="Ask a Question"
+              title="No past inquiries yet"
+              description="When you send inquiries to the artist, they will be archived here with their replies."
+              actionText="Send an inquiry"
               onAction={() => setActiveTab('new')}
             />
           ) : (
             myQueries.map((q) => (
               <div
                 key={q._id}
-                className="bg-white rounded-3xl p-6 sm:p-8 border border-cream-200 shadow-card space-y-4"
+                className="bg-white border-2 border-[#121212] p-6 shadow-[4px_4px_0px_#f7cbd7] space-y-4"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-cream-100 pb-3">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-serif text-lg font-bold text-charcoal-900">
+                    <h3 className="font-montserrat font-extrabold text-base text-[#121212]">
                       {q.subject}
                     </h3>
-                    <p className="text-xs text-charcoal-400">
-                      Sent on {formatDate(q.createdAt, true)}
+                    <p className="font-montserrat text-[11px] text-gray-500">
+                      Dispatched on {formatDate(q.createdAt)}
                     </p>
                   </div>
-                  <Badge variant={q.status === 'resolved' ? 'sage' : 'amber'}>
-                    {q.status === 'resolved' ? 'Replied / Resolved' : 'Pending Review'}
-                  </Badge>
+                  <span
+                    className={`font-montserrat text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 border border-[#121212] ${
+                      q.status === 'replied'
+                        ? 'bg-emerald-100 text-emerald-900'
+                        : 'bg-[#fde8ef] text-[#121212]'
+                    }`}
+                  >
+                    {q.status === 'replied' ? 'Replied by Artist' : 'Pending Review'}
+                  </span>
                 </div>
 
-                {/* Original Question */}
-                <div className="bg-cream-100/60 p-4 rounded-2xl text-xs sm:text-sm text-charcoal-700 whitespace-pre-line leading-relaxed">
-                  {q.message}
+                <div className="p-3 bg-[#fff7f9] border border-[#121212] text-xs font-sans text-gray-700">
+                  <p className="font-bold font-montserrat text-[10px] text-gray-500 uppercase mb-1">Your Message:</p>
+                  <p className="leading-relaxed">{q.message}</p>
                 </div>
 
-                {/* Replies Thread */}
-                {q.replies && q.replies.length > 0 && (
-                  <div className="space-y-3 pt-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-terracotta-600 flex items-center gap-1.5">
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      Artist Replies
-                    </h4>
-                    {q.replies.map((reply, idx) => (
-                      <div
-                        key={idx}
-                        className="p-4 rounded-2xl bg-terracotta-50/60 border border-terracotta-200 text-xs sm:text-sm text-charcoal-800 space-y-1.5"
-                      >
-                        <div className="flex items-center justify-between text-[11px] text-terracotta-700 font-semibold">
-                          <span>{reply.senderRole === 'admin' ? `${siteName} (Artist)` : 'You'}</span>
-                          <span>{formatDate(reply.sentAt, true)}</span>
-                        </div>
-                        <p className="leading-relaxed whitespace-pre-line">{reply.message}</p>
-                      </div>
-                    ))}
+                {q.reply && (
+                  <div className="p-4 bg-white border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#121212]" />
+                      <span className="font-montserrat text-xs font-extrabold text-[#121212] uppercase tracking-wider">
+                        Artist Reply
+                      </span>
+                    </div>
+                    <p className="text-xs font-sans text-gray-800 leading-relaxed whitespace-pre-line">
+                      {q.reply}
+                    </p>
                   </div>
                 )}
               </div>
