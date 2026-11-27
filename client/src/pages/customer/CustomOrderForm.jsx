@@ -263,21 +263,21 @@ export const CustomOrderForm = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 pb-20 pt-4">
       {/* Header */}
-      <div className="text-center space-y-2 pt-2">
-        <div className="inline-flex items-center gap-1.5 font-caveat text-3xl sm:text-4xl text-[#f19b72]">
-          <span>Custom Commissions ✦</span>
-          <Sparkles className="w-4 h-4 text-[#faa9b0] inline-block" />
+      <div className="text-center space-y-2">
+        <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
+          <span>Custom Commissions</span>
+          <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
         </div>
-        <h1 className="font-playfair text-3xl sm:text-5xl text-[#1c1a17]">
-          Commission Custom Artwork
+        <h1 className="font-montserrat font-extrabold text-3xl sm:text-5xl text-[#121212] uppercase tracking-[0.08em]">
+          COMMISSION CUSTOM ARTWORK
         </h1>
-        <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/70 max-w-xl mx-auto leading-relaxed">
+        <p className="font-sans text-xs sm:text-sm text-gray-600 max-w-xl mx-auto leading-relaxed">
           Share your reference photographs and personal vision. The artist will review your request and send a tailored quote before painting begins.
         </p>
       </div>
 
-      {/* Stepper Bar - Jhankoo Soft Butter Card */}
-      <div className="bg-white/80 backdrop-blur-md border border-[#1c1a17]/10 rounded-[2rem] p-3 sm:p-4 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+      {/* Stepper Bar - Blush & Black */}
+      <div className="bg-white border-2 border-[#121212] p-4 sm:p-5 shadow-[5px_5px_0px_#f7cbd7]">
         <div className="grid grid-cols-4 gap-2">
           {STEPS.map((s) => {
             const isDone = currentStep > s.step;
@@ -291,30 +291,30 @@ export const CustomOrderForm = () => {
                 onClick={() => {
                   if (s.step < currentStep) setCurrentStep(s.step);
                 }}
-                className={`flex flex-col sm:flex-row items-center gap-2 p-2 sm:px-4 sm:py-2.5 rounded-2xl transition-all text-center sm:text-left ${
+                className={`flex flex-col sm:flex-row items-center gap-2 p-2 transition-all text-center sm:text-left ${
                   isCurrent
-                    ? 'bg-[#1c1a17] text-white shadow-sm'
+                    ? 'bg-[#121212] text-white shadow-[2px_2px_0px_#f7cbd7]'
                     : isDone
-                    ? 'text-[#1c1a17] bg-[#f8f4ea] border border-[#d4a373]/30 cursor-pointer hover:bg-[#f1e8d6]'
-                    : 'text-[#1c1a17]/40 opacity-60 cursor-not-allowed'
+                    ? 'text-[#121212] bg-[#fde8ef] border border-[#121212] cursor-pointer'
+                    : 'text-gray-400 opacity-60 cursor-not-allowed'
                 }`}
               >
                 <div
-                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs shrink-0 ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-xs shrink-0 border border-[#121212] ${
                     isDone
-                      ? 'bg-white text-[#1c1a17]'
+                      ? 'bg-white text-[#121212]'
                       : isCurrent
-                      ? 'bg-[#faa9b0] text-[#1c1a17]'
-                      : 'bg-white/60 text-[#1c1a17]/50'
+                      ? 'bg-[#f7cbd7] text-[#121212]'
+                      : 'bg-gray-100 text-gray-500'
                   }`}
                 >
                   {isDone ? <Check className="w-4 h-4" /> : <StepIcon className="w-4 h-4" />}
                 </div>
                 <div className="hidden sm:block">
-                  <p className="text-[10px] font-sans font-medium uppercase tracking-wider text-[#1c1a17]/60">
+                  <p className="text-[9px] font-montserrat font-bold uppercase tracking-wider text-gray-400">
                     Step {s.step}
                   </p>
-                  <p className="font-sans text-xs font-semibold truncate">{s.title}</p>
+                  <p className="font-montserrat text-xs font-bold uppercase tracking-tight truncate">{s.title}</p>
                 </div>
               </button>
             );
@@ -323,49 +323,49 @@ export const CustomOrderForm = () => {
       </div>
 
       {/* Main Step Content Card */}
-      <div className="bg-white rounded-[2.5rem] border border-[#1c1a17]/10 p-6 sm:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.04)]">
+      <div className="bg-white border-2 border-[#121212] p-6 sm:p-10 shadow-[6px_6px_0px_#f7cbd7]">
         {/* STEP 1: Medium & Size */}
         {currentStep === 1 && (
           <div className="space-y-8">
-            <div className="space-y-1 border-b border-[#1c1a17]/10 pb-4">
-              <h2 className="font-playfair text-xl sm:text-2xl text-[#1c1a17]">
+            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
+              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
                 1. Choose Art Medium & Canvas Size
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/65">
+              <p className="font-sans text-xs sm:text-sm text-gray-600">
                 Select your preferred fine art medium and canvas dimensions.
               </p>
             </div>
 
             {/* Category Medium Selector */}
             <div className="space-y-3">
-              <label className="block text-xs font-sans font-semibold tracking-wide text-[#1c1a17]/80">
-                Select Art Category / Medium <span className="text-[#f19b72]">*</span>
+              <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212]">
+                Select Art Category / Medium <span className="text-[#dc8da3]">*</span>
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {categories.map((cat) => (
                   <div
                     key={cat._id}
                     onClick={() => handleCategoryChange(cat._id)}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`p-4 border-2 cursor-pointer transition-all ${
                       selectedCategory === cat._id
-                        ? 'border-[#1c1a17] bg-[#f8f4ea] ring-2 ring-[#faa9b0] shadow-sm'
-                        : 'border-[#1c1a17]/10 bg-white hover:border-[#1c1a17]/30'
+                        ? 'border-[#121212] bg-[#fde8ef] shadow-[3px_3px_0px_#121212]'
+                        : 'border-gray-200 bg-white hover:border-[#121212]'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <p className="font-playfair text-sm text-[#1c1a17]">
+                    <div className="flex items-center justify-between mb-1">
+                      <p className="font-montserrat text-xs sm:text-sm font-extrabold uppercase text-[#121212]">
                         {cat.name}
                       </p>
                       {selectedCategory === cat._id && (
-                        <span className="w-5 h-5 rounded-full bg-[#1c1a17] text-white flex items-center justify-center">
-                          <Check className="w-3 h-3 text-[#faa9b0]" />
+                        <span className="w-5 h-5 bg-[#121212] text-white flex items-center justify-center">
+                          <Check className="w-3 h-3 text-[#f7cbd7]" />
                         </span>
                       )}
                     </div>
-                    <p className="font-sans text-xs text-[#1c1a17]/65 line-clamp-2 leading-relaxed">
+                    <p className="font-sans text-xs text-gray-600 line-clamp-2 leading-relaxed">
                       {cat.description}
                     </p>
-                    <p className="font-sans text-xs font-semibold text-[#1c1a17] mt-2">
+                    <p className="font-montserrat text-xs font-extrabold text-[#121212] mt-2">
                       Starts from {formatPrice(cat.startingPrice)}
                     </p>
                   </div>
@@ -374,15 +374,15 @@ export const CustomOrderForm = () => {
             </div>
 
             {/* Size Selector */}
-            <div className="space-y-3 pt-4 border-t border-[#1c1a17]/10">
+            <div className="space-y-3 pt-4 border-t border-[#f7cbd7]">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-sans font-semibold tracking-wide text-[#1c1a17]/80">
-                  Select Artwork Size <span className="text-[#f19b72]">*</span>
+                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212]">
+                  Select Artwork Size <span className="text-[#dc8da3]">*</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => setUseCustomSize(!useCustomSize)}
-                  className="font-sans text-xs text-[#1c1a17] font-medium underline hover:text-[#f19b72]"
+                  className="font-montserrat text-xs text-[#121212] font-bold uppercase underline"
                 >
                   {useCustomSize ? 'Choose standard size' : 'Need a custom size?'}
                 </button>
@@ -394,23 +394,23 @@ export const CustomOrderForm = () => {
                     <div
                       key={item.size}
                       onClick={() => setSize(item.size)}
-                      className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                      className={`p-4 border-2 cursor-pointer transition-all ${
                         size === item.size
-                          ? 'border-[#1c1a17] bg-[#f8f4ea] ring-2 ring-[#faa9b0] shadow-sm'
-                          : 'border-[#1c1a17]/10 bg-white hover:border-[#1c1a17]/30'
+                          ? 'border-[#121212] bg-[#fde8ef] shadow-[3px_3px_0px_#121212]'
+                          : 'border-gray-200 bg-white hover:border-[#121212]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-sans text-xs sm:text-sm font-semibold text-[#1c1a17]">
+                        <span className="font-montserrat text-xs sm:text-sm font-extrabold uppercase text-[#121212]">
                           {item.size}
                         </span>
                         {size === item.size && (
-                          <span className="w-4 h-4 rounded-full bg-[#1c1a17] text-white flex items-center justify-center">
-                            <Check className="w-2.5 h-2.5 text-[#faa9b0]" />
+                          <span className="w-4 h-4 bg-[#121212] text-white flex items-center justify-center">
+                            <Check className="w-2.5 h-2.5 text-[#f7cbd7]" />
                           </span>
                         )}
                       </div>
-                      <p className="font-sans text-xs text-[#1c1a17]/60 mt-1">{item.desc}</p>
+                      <p className="font-sans text-xs text-gray-600 mt-1">{item.desc}</p>
                     </div>
                   ))}
                 </div>
@@ -431,11 +431,11 @@ export const CustomOrderForm = () => {
         {/* STEP 2: Reference Photos */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <div className="space-y-1 border-b border-[#1c1a17]/10 pb-4">
-              <h2 className="font-playfair text-xl sm:text-2xl text-[#1c1a17]">
+            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
+              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
                 2. Upload Your Reference Photographs
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/65">
+              <p className="font-sans text-xs sm:text-sm text-gray-600">
                 Upload up to 5 clear photos. You can upload multiple pictures if you want subjects combined from different photos.
               </p>
             </div>
@@ -449,9 +449,9 @@ export const CustomOrderForm = () => {
               description="Upload your high-res photos. Clear facial lighting produces the best realism."
             />
 
-            <div className="bg-[#f8f4ea] p-4 rounded-2xl border border-[#d4a373]/30 text-xs text-[#1c1a17]/80 space-y-1.5 shadow-2xs">
-              <div className="flex items-center gap-2 font-sans font-semibold text-[#1c1a17]">
-                <ShieldCheck className="w-4 h-4 text-[#d4a373]" />
+            <div className="bg-[#fff7f9] p-4 border border-[#121212] text-xs text-gray-700 space-y-1.5 shadow-[2px_2px_0px_#f7cbd7]">
+              <div className="flex items-center gap-2 font-montserrat font-bold uppercase text-[#121212]">
+                <ShieldCheck className="w-4 h-4 text-[#121212]" />
                 <span>Confidential Reference Handling</span>
               </div>
               <p className="leading-relaxed">
@@ -464,18 +464,18 @@ export const CustomOrderForm = () => {
         {/* STEP 3: Artwork Preferences & Description */}
         {currentStep === 3 && (
           <div className="space-y-6">
-            <div className="space-y-1 border-b border-[#1c1a17]/10 pb-4">
-              <h2 className="font-playfair text-xl sm:text-2xl text-[#1c1a17]">
+            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
+              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
                 3. Describe Your Vision & Preferences
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/65">
+              <p className="font-sans text-xs sm:text-sm text-gray-600">
                 Help the artist understand the emotional intent, focus, and timeline of your piece.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-sans font-semibold tracking-wide text-[#1c1a17]/80 mb-1.5">
-                Artwork Description & Story <span className="text-[#f19b72]">*</span>
+              <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
+                Artwork Description & Story <span className="text-[#dc8da3]">*</span>
               </label>
               <textarea
                 rows={5}
@@ -483,19 +483,19 @@ export const CustomOrderForm = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Tell the artist about the occasion, the emotions you want captured, what features are most important, or how subjects from different photos should be placed..."
-                className="w-full bg-white border border-[#1c1a17]/15 rounded-2xl p-4 text-sm text-[#1c1a17] focus:ring-2 focus:ring-[#faa9b0]/30 focus:border-[#faa9b0] focus:outline-none transition-all placeholder-[#1c1a17]/40"
+                className="w-full bg-white border-2 border-[#121212] p-4 text-sm text-[#121212] shadow-[2px_2px_0px_#f7cbd7] focus:shadow-[3px_3px_0px_#ebb0c0] focus:ring-2 focus:ring-[#f7cbd7] focus:outline-none"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label className="block text-xs font-sans font-semibold tracking-wide text-[#1c1a17]/80 mb-1.5">
+                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
                   Number of People / Pets
                 </label>
                 <select
                   value={subjectsCount}
                   onChange={(e) => setSubjectsCount(Number(e.target.value))}
-                  className="w-full bg-white border border-[#1c1a17]/15 rounded-2xl px-4 py-2.5 text-sm text-[#1c1a17] font-sans focus:outline-none focus:ring-2 focus:ring-[#faa9b0]/30"
+                  className="w-full bg-white border-2 border-[#121212] px-4 py-2.5 text-sm text-[#121212] shadow-[2px_2px_0px_#f7cbd7] font-montserrat"
                 >
                   <option value={1}>1 Subject (Single Person / Pet)</option>
                   <option value={2}>2 Subjects (Couple / Duo)</option>
@@ -506,13 +506,13 @@ export const CustomOrderForm = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-sans font-semibold tracking-wide text-[#1c1a17]/80 mb-1.5">
+                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
                   Background Preference
                 </label>
                 <select
                   value={background}
                   onChange={(e) => setBackground(e.target.value)}
-                  className="w-full bg-white border border-[#1c1a17]/15 rounded-2xl px-4 py-2.5 text-sm text-[#1c1a17] font-sans focus:outline-none focus:ring-2 focus:ring-[#faa9b0]/30"
+                  className="w-full bg-white border-2 border-[#121212] px-4 py-2.5 text-sm text-[#121212] shadow-[2px_2px_0px_#f7cbd7] font-montserrat"
                 >
                   <option value="Artist choice / natural soft blend">Artist Choice / Soft Vignette</option>
                   <option value="Plain monochromatic backdrop">Plain Monochromatic Backdrop</option>
@@ -551,11 +551,11 @@ export const CustomOrderForm = () => {
         {/* STEP 4: Delivery Address & Summary Review */}
         {currentStep === 4 && (
           <div className="space-y-8">
-            <div className="space-y-1 border-b border-[#1c1a17]/10 pb-4">
-              <h2 className="font-playfair text-xl sm:text-2xl text-[#1c1a17]">
+            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
+              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
                 4. Delivery Address & Order Summary
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/65">
+              <p className="font-sans text-xs sm:text-sm text-gray-600">
                 Provide the shipping address where the artwork will be safely delivered.
               </p>
             </div>
@@ -563,14 +563,14 @@ export const CustomOrderForm = () => {
             {/* Address Selection */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-sans font-semibold tracking-wide text-[#1c1a17]/80">
-                  Select Delivery Address <span className="text-[#f19b72]">*</span>
+                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212]">
+                  Select Delivery Address <span className="text-[#dc8da3]">*</span>
                 </label>
                 {savedAddresses.length > 0 && (
                   <button
                     type="button"
                     onClick={() => setUseNewAddress(!useNewAddress)}
-                    className="font-sans text-xs text-[#1c1a17] font-medium underline hover:text-[#f19b72]"
+                    className="font-montserrat text-xs text-[#121212] font-bold uppercase underline"
                   >
                     {useNewAddress ? 'Select from saved addresses' : '+ Deliver to another address'}
                   </button>
@@ -584,24 +584,24 @@ export const CustomOrderForm = () => {
                     <div
                       key={addr._id}
                       onClick={() => setSelectedAddressId(addr._id)}
-                      className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                      className={`p-4 border-2 cursor-pointer transition-all ${
                         selectedAddressId === addr._id
-                          ? 'border-[#1c1a17] bg-[#f8f4ea] ring-2 ring-[#faa9b0] shadow-sm'
-                          : 'border-[#1c1a17]/10 bg-white hover:border-[#1c1a17]/30'
+                          ? 'border-[#121212] bg-[#fde8ef] shadow-[3px_3px_0px_#121212]'
+                          : 'border-gray-200 bg-white hover:border-[#121212]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-sans text-xs font-semibold text-[#1c1a17]">
+                        <span className="font-montserrat text-xs font-bold uppercase text-[#121212]">
                           {addr.recipientName}
                         </span>
                         {selectedAddressId === addr._id && (
-                          <span className="w-4 h-4 rounded-full bg-[#1c1a17] text-white flex items-center justify-center">
-                            <Check className="w-2.5 h-2.5 text-[#faa9b0]" />
+                          <span className="w-4 h-4 bg-[#121212] text-white flex items-center justify-center">
+                            <Check className="w-2.5 h-2.5 text-[#f7cbd7]" />
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-[#1c1a17]/65 mt-1">{addr.phone}</p>
-                      <p className="text-xs text-[#1c1a17]/60 mt-1 leading-relaxed">
+                      <p className="text-xs text-gray-600 mt-1">{addr.phone}</p>
+                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">
                         {addr.street}, {addr.city}, {addr.state} - {addr.postalCode}
                       </p>
                     </div>
@@ -611,8 +611,8 @@ export const CustomOrderForm = () => {
 
               {/* Add New Address Form */}
               {(useNewAddress || savedAddresses.length === 0) && (
-                <div className="p-5 bg-[#f8f4ea] rounded-2xl border border-[#d4a373]/30 space-y-4">
-                  <p className="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1a17]">
+                <div className="p-5 bg-[#fff7f9] border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] space-y-4">
+                  <p className="font-montserrat text-xs font-bold uppercase tracking-wider text-[#121212]">
                     Enter Shipping Address
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -680,59 +680,59 @@ export const CustomOrderForm = () => {
             </div>
 
             {/* Commission Review Summary Card */}
-            <div className="p-6 bg-[#f8f4ea] rounded-2xl border border-[#d4a373]/30 space-y-4">
-              <h3 className="font-playfair text-base text-[#1c1a17] border-b border-[#1c1a17]/10 pb-2">
+            <div className="p-6 bg-[#fff7f9] border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] space-y-4">
+              <h3 className="font-montserrat text-sm font-extrabold uppercase tracking-wider text-[#121212] border-b border-[#f7cbd7] pb-2">
                 Order Review Summary
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-sans">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-montserrat">
                 <div>
-                  <span className="text-[#1c1a17]/60 font-medium block">
+                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
                     Medium
                   </span>
-                  <span className="text-[#1c1a17] font-semibold mt-0.5 block">
+                  <span className="text-[#121212] font-bold mt-0.5 block">
                     {medium}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#1c1a17]/60 font-medium block">
+                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
                     Size
                   </span>
-                  <span className="text-[#1c1a17] font-semibold mt-0.5 block">
+                  <span className="text-[#121212] font-bold mt-0.5 block">
                     {useCustomSize ? customSize : size}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#1c1a17]/60 font-medium block">
+                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
                     Subjects
                   </span>
-                  <span className="text-[#1c1a17] font-semibold mt-0.5 block">
+                  <span className="text-[#121212] font-bold mt-0.5 block">
                     {subjectsCount} Subject(s)
                   </span>
                 </div>
                 <div>
-                  <span className="text-[#1c1a17]/60 font-medium block">
+                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
                     Photos
                   </span>
-                  <span className="text-[#1c1a17] font-semibold mt-0.5 block">
+                  <span className="text-[#121212] font-bold mt-0.5 block">
                     {referenceFiles.length} Uploaded
                   </span>
                 </div>
               </div>
 
-              <div className="text-xs text-[#1c1a17]/80 bg-white/80 p-3.5 rounded-xl border border-[#1c1a17]/10 leading-relaxed">
-                <span className="font-semibold text-[#1c1a17]">Payment Note:</span> You do NOT pay right now. The artist will review your reference photos and provide a tailored INR quote with completion estimate. You can accept, negotiate in chat, or decline.
+              <div className="text-xs text-gray-700 bg-white p-3 border border-[#121212]">
+                <span className="font-bold font-montserrat text-[#121212] uppercase">Payment Note:</span> You do NOT pay right now. The artist will review your reference photos and provide a tailored INR quote with completion estimate. You can accept, negotiate in chat, or decline.
               </div>
             </div>
           </div>
         )}
 
         {/* Navigation Buttons */}
-        <div className="flex items-center justify-between pt-8 border-t border-[#1c1a17]/10 mt-8">
+        <div className="flex items-center justify-between pt-8 border-t border-[#f7cbd7] mt-8">
           {currentStep > 1 ? (
             <button
               onClick={handlePrevStep}
               disabled={submitting}
-              className="bg-white text-[#1c1a17] font-sans text-xs font-medium px-6 py-3 rounded-full border border-[#1c1a17]/15 shadow-2xs hover:bg-[#f8f4ea] transition-all flex items-center gap-2"
+              className="bg-white text-[#121212] font-montserrat text-xs font-bold uppercase tracking-wider px-6 py-3 border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Previous Step</span>
@@ -744,7 +744,7 @@ export const CustomOrderForm = () => {
           {currentStep < 4 ? (
             <button
               onClick={handleNextStep}
-              className="bg-[#1c1a17] text-white hover:bg-black font-sans text-xs font-medium px-8 py-3.5 rounded-full shadow-sm hover:shadow transition-all flex items-center gap-2"
+              className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.16em] px-8 py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] flex items-center gap-2"
             >
               <span>Continue to Step {currentStep + 1}</span>
               <ArrowRight className="w-4 h-4" />
@@ -753,9 +753,9 @@ export const CustomOrderForm = () => {
             <button
               disabled={submitting}
               onClick={handleSubmitOrder}
-              className="bg-[#faa9b0] text-[#1c1a17] hover:bg-[#f697a0] font-sans text-sm font-semibold px-8 py-3.5 rounded-full shadow-sm hover:shadow transition-all flex items-center gap-2 disabled:opacity-60"
+              className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.16em] px-8 py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] flex items-center gap-2 disabled:opacity-60"
             >
-              <Sparkles className="w-4 h-4 text-[#1c1a17]" />
+              <Sparkles className="w-4 h-4 text-[#f7cbd7]" />
               <span>{submitting ? 'Submitting Order...' : 'Submit Commission for Review'}</span>
             </button>
           )}

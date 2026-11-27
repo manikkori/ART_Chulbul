@@ -6,7 +6,7 @@ import InteractiveArtCanvas from '../common/InteractiveArtCanvas';
 
 export const MainLayout = () => {
   return (
-    <div className="relative min-h-screen flex flex-col bg-[#f8f4ea] text-[#1c1a17] selection:bg-[#faa9b0]/30 selection:text-[#1c1a17]">
+    <div className="relative min-h-screen flex flex-col bg-[#fdfcf9] text-[#2d2421] selection:bg-[#f2cadb] selection:text-[#5c2039]">
       {/* 60fps Ambient Interactive Canvas Background */}
       <InteractiveArtCanvas />
       

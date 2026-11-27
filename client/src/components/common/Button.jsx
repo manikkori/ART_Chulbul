@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 export const Button = ({
   children,
   type = 'button',
-  variant = 'primary', // 'primary', 'pink', 'secondary', 'outline', 'ghost', 'danger', 'white', 'dark'
+  variant = 'primary', // 'primary', 'dark', 'secondary', 'outline', 'ghost', 'danger', 'white'
   size = 'md', // 'sm', 'md', 'lg'
   loading = false,
   disabled = false,
@@ -14,17 +14,16 @@ export const Button = ({
   onClick,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-sans font-medium tracking-wide rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 disabled:shadow-none cursor-pointer';
+  const baseStyles = 'inline-flex items-center justify-center font-montserrat font-bold uppercase tracking-wider transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 disabled:shadow-none disabled:transform-none cursor-pointer';
 
   const variants = {
-    primary: 'bg-[#1c1a17] text-white hover:bg-[#33302b] shadow-sm focus:ring-[#1c1a17]',
-    dark: 'bg-[#1c1a17] text-white hover:bg-[#33302b] shadow-sm focus:ring-[#1c1a17]',
-    pink: 'bg-[#faa9b0] text-[#1c1a17] hover:bg-[#f697a0] font-semibold shadow-sm focus:ring-[#faa9b0]',
-    secondary: 'bg-[#f8f4ea] text-[#1c1a17] border border-[#d4a373]/30 hover:bg-[#f1e8d6] focus:ring-[#d4a373]',
-    outline: 'border border-[#1c1a17]/20 bg-white/80 hover:bg-[#f8f4ea] text-[#1c1a17] focus:ring-[#1c1a17]',
-    ghost: 'bg-transparent text-[#1c1a17] hover:bg-[#1c1a17]/5 focus:ring-[#1c1a17]',
-    danger: 'bg-rose-500 text-white hover:bg-rose-600 focus:ring-rose-400',
-    white: 'bg-white text-[#1c1a17] border border-[#1c1a17]/10 hover:bg-[#f8f4ea] shadow-sm focus:ring-[#faa9b0]'
+    primary: 'bg-[#121212] text-white border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 focus:ring-[#121212]',
+    dark: 'bg-[#121212] text-white border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 focus:ring-[#121212]',
+    secondary: 'bg-[#fde8ef] text-[#121212] border-2 border-[#121212] shadow-[2px_2px_0px_#121212] hover:bg-[#f7cbd7] hover:-translate-y-0.5 focus:ring-[#f7cbd7]',
+    outline: 'border-2 border-[#121212] bg-white text-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:bg-[#fff7f9] hover:-translate-y-0.5 focus:ring-[#121212]',
+    ghost: 'bg-transparent text-[#121212] hover:bg-[#fde8ef] focus:ring-[#f7cbd7]',
+    danger: 'bg-rose-500 text-white border-2 border-rose-600 shadow-[3px_3px_0px_#fecdd3] hover:bg-rose-600 hover:-translate-y-0.5 focus:ring-rose-400',
+    white: 'bg-white text-[#121212] border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#f7cbd7] hover:-translate-y-0.5 focus:ring-[#f7cbd7]'
   };
 
   const sizes = {

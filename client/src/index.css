@@ -2,40 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --creator-bg: #faf9f6;
-  --creator-bg-butter: #f8f4ea;
-  --creator-text: #1c1a17;
-  --creator-primary: #5f6f65;
-  --creator-accent: #d4a373;
-  --creator-pink: #faa9b0;
-  --creator-pink-hover: #e85c76;
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    background-color: var(--creator-bg-butter);
-    color: var(--creator-text);
+    background-color: #fdfcf9;
+    color: #2c2226;
     overflow-x: hidden;
-    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', Georgia, serif;
-    color: #1c1a17;
+    color: #221a1d;
     letter-spacing: -0.015em;
   }
 
   ::selection {
-    background-color: #faa9b0;
-    color: #1c1a17;
+    background-color: #f2cadb;
+    color: #5c2039;
   }
 }
 

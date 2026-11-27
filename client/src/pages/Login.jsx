@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, Heart, Sparkles } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Palette, Sparkles, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
+import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import toast from 'react-hot-toast';
 
@@ -44,26 +45,22 @@ export const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-12 sm:py-20 relative">
-      {/* Decorative Pastel Glows in background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#faa9b0]/25 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute top-1/3 right-1/4 w-60 h-60 bg-[#ffc96f]/20 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
+      {/* Decorative Blush Brush in background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
 
-      <div className="bg-white/95 backdrop-blur-md rounded-[2.5rem] border border-[#1c1a17]/10 p-8 sm:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.04)] space-y-6 relative">
-        {/* Jhankoo Washi Tape Accent */}
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-[#ffdda4]/85 backdrop-blur-sm -rotate-2 rounded-sm shadow-sm pointer-events-none border border-[#e5c58a]/40" />
-
-        {/* Header with Caveat Script & Playfair Serif */}
-        <div className="text-center space-y-2 pt-2">
-          <div className="inline-flex items-center gap-1 font-caveat text-3xl sm:text-4xl text-[#f19b72]">
-            <span>Welcome Back</span>
-            <Sparkles className="w-4 h-4 text-[#faa9b0] inline-block" />
+      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
+        {/* Header with Romantic Script & Bold Sans */}
+        <div className="text-center space-y-1.5">
+          <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
+            <span>Welcome</span>
+            <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
           </div>
-          <h1 className="font-playfair font-normal text-2xl sm:text-3xl text-[#1c1a17]">
-            Collector Sign In
+          <h1 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-[#121212] uppercase tracking-[0.08em]">
+            COLLECTOR SIGN IN
           </h1>
-          <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/65 max-w-xs mx-auto">
-            Sign in to track custom orders, review progress sketches, and chat with the artist.
+          <p className="font-sans text-xs text-gray-600 max-w-xs mx-auto">
+            Sign in to track custom orders, preview progress sketches, and chat with the artist.
           </p>
         </div>
 
@@ -78,7 +75,7 @@ export const Login = () => {
             required
           />
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <Input
               label="Password"
               type="password"
@@ -88,10 +85,10 @@ export const Login = () => {
               icon={Lock}
               required
             />
-            <div className="flex justify-end pt-0.5">
+            <div className="flex justify-end pt-1">
               <Link
                 to="/forgot-password"
-                className="font-sans text-xs text-[#1c1a17]/60 hover:text-[#1c1a17] hover:underline transition-colors"
+                className="font-montserrat text-xs text-gray-500 hover:text-[#121212] hover:underline transition-colors"
               >
                 Forgot your password?
               </Link>
@@ -101,19 +98,19 @@ export const Login = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-[#1c1a17] text-white hover:bg-black rounded-full py-3.5 px-6 font-sans text-sm font-medium tracking-wide shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 mt-2"
+            className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
-            {submitting ? 'Signing in...' : 'Sign In to Studio'}
+            {submitting ? 'SIGNING IN...' : 'SIGN IN TO STUDIO'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <div className="pt-4 border-t border-[#1c1a17]/10 text-center">
-          <p className="font-sans text-xs text-[#1c1a17]/70">
+        <div className="pt-4 border-t border-[#f7cbd7] text-center">
+          <p className="font-montserrat text-xs text-gray-600">
             Don't have an account yet?{' '}
             <Link
               to="/register"
-              className="font-semibold text-[#1c1a17] hover:text-[#f19b72] underline underline-offset-4 inline-flex items-center gap-1 transition-colors"
+              className="font-bold text-[#121212] hover:underline underline-offset-4 inline-flex items-center gap-1"
             >
               Create Account →
             </Link>
