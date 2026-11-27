@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
+import JhankooIntroLoader from './components/common/JhankooIntroLoader';
 import MainLayout from './components/layout/MainLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import Home from './pages/Home';
@@ -39,8 +40,12 @@ import AdminAboutManager from './pages/admin/AdminAboutManager';
 import AdminSiteSettings from './pages/admin/AdminSiteSettings';
 
 export const App = () => {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
     <>
+      {showIntro && <JhankooIntroLoader onComplete={() => setShowIntro(false)} />}
+
       <Toaster
         position="top-right"
         toastOptions={{

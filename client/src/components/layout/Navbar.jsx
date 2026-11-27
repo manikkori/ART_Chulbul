@@ -4,7 +4,6 @@ import { Palette, Menu, X, User, LogOut, ChevronDown, Bell, Paintbrush, Sparkles
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import { useNotifications } from '../../context/NotificationContext';
-import Button from '../common/Button';
 import ConfirmDialog from '../common/ConfirmDialog';
 
 export const Navbar = () => {
@@ -28,10 +27,10 @@ export const Navbar = () => {
 
   const navLinks = [
     { label: 'HOME', path: '/' },
-    { label: 'PORTFOLIO', path: '/gallery' },
+    { label: 'SHOWCASE', path: '/gallery' },
     { label: 'MEDIUMS', path: '/categories' },
     { label: 'PRICING', path: '/pricing' },
-    { label: 'ABOUT THE ARTIST', path: '/about' },
+    { label: 'OUR STORY', path: '/about' },
     { label: 'CONTACT', path: '/contact' },
   ];
 
@@ -43,61 +42,58 @@ export const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-      {/* Top Announcement Bar - Blush Pink & Black tracking strip (as in mockup) */}
-      <div className="bg-[#fce4ec] border-b border-[#f7cbd7] text-[#121212] py-1.5 px-4 text-center">
-        <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-[11px] sm:text-xs font-montserrat tracking-[0.18em] uppercase font-semibold">
-          <Sparkles className="w-3 h-3 text-[#dc8da3] animate-pulse hidden sm:inline" />
-          <span>HANDCRAFTED CUSTOM ART • COMMISSION YOUR ORIGINAL PAINTING TODAY</span>
-          <span className="hidden md:inline text-[#dc8da3]">•</span>
+      {/* Top Announcement Bar - Jhankoo Soft Pink Tint */}
+      <div className="bg-[#faa9b0]/25 border-b border-[#faa9b0]/40 text-[#1c1a17] py-1.5 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-[11px] sm:text-xs font-sans tracking-[0.16em] uppercase font-semibold">
+          <span className="text-[#e85c76] hidden sm:inline">✦</span>
+          <span>HANDCRAFTED CUSTOM ART • COMMISSION YOUR ORIGINAL HEIRLOOM TODAY</span>
+          <span className="hidden md:inline text-[#e85c76]">•</span>
           <span className="hidden md:inline">FREE ART CONSULTATION & SAFE CRATED SHIPPING</span>
-          <Sparkles className="w-3 h-3 text-[#dc8da3] animate-pulse hidden sm:inline" />
+          <span className="text-[#e85c76] hidden sm:inline">✧</span>
         </div>
       </div>
 
-      {/* Main Navbar */}
+      {/* Main Navbar - Jhankoo Warm Butter & Frosted Blur */}
       <div
         className={`transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#f7cbd7] py-2.5'
-            : 'bg-[#fffdfd]/90 backdrop-blur-sm border-b border-[#fde8ef] py-3.5'
+            ? 'bg-[#f8f4ea]/95 backdrop-blur-md shadow-sm border-b border-[#1c1a17]/10 py-2.5'
+            : 'bg-[#f8f4ea]/85 backdrop-blur-sm border-b border-[#1c1a17]/5 py-3.5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo / Wordmark in Blush & Black aesthetic */}
-            <Link to="/" className="flex items-center gap-2 group">
+            {/* Logo in Jhankoo Caveat Cursive */}
+            <Link to="/" className="flex items-center gap-2.5 group">
               {settings?.logo?.url ? (
                 <img
                   src={settings.logo.url}
                   alt={siteName}
-                  className="h-9 w-9 object-contain rounded-full border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] group-hover:scale-105 transition-transform"
+                  className="h-9 w-9 object-contain rounded-full shadow-sm group-hover:scale-105 transition-transform"
                 />
               ) : (
-                <div className="w-9 h-9 rounded-full bg-[#121212] text-white flex items-center justify-center border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] group-hover:rotate-6 transition-transform">
-                  <Palette className="w-4 h-4 text-[#f7cbd7]" />
+                <div className="w-8 h-8 rounded-full bg-[#faa9b0] text-white flex items-center justify-center shadow-xs group-hover:rotate-12 transition-transform">
+                  <Palette className="w-4 h-4 text-white" />
                 </div>
               )}
-              <div className="flex items-baseline gap-1">
-                <span className="font-montserrat font-extrabold text-lg sm:text-xl tracking-tight text-[#121212]">
-                  {siteName ? siteName.toUpperCase() : "CHULBUL'S"}
-                </span>
-                <span className="font-script text-2xl sm:text-3xl text-[#121212] font-normal lowercase leading-none">
-                  : art
+              <div className="flex items-baseline">
+                <span className="font-caveat text-3xl sm:text-4xl font-bold tracking-tight text-[#e85c76] group-hover:scale-105 transition-transform">
+                  Chulbul'<span className="text-[#f19b72]">s Art</span>
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+            <nav className="hidden lg:flex items-center gap-7 xl:gap-8">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.path}
                   to={link.path}
                   className={({ isActive }) =>
-                    `text-[12px] font-montserrat tracking-[0.14em] transition-all relative py-1 ${
+                    `text-[12px] font-sans tracking-[0.14em] transition-all relative py-1 font-semibold ${
                       isActive
-                        ? 'text-[#121212] font-bold after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#121212]'
-                        : 'text-[#555] font-medium hover:text-[#121212]'
+                        ? 'text-[#e85c76] after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#e85c76]'
+                        : 'text-[#1c1a17]/75 hover:text-[#e85c76]'
                     }`
                   }
                 >
@@ -115,12 +111,12 @@ export const Navbar = () => {
                       setNotifDropdownOpen(!notifDropdownOpen);
                       setUserDropdownOpen(false);
                     }}
-                    className="p-2 rounded-full border border-[#121212] bg-white text-[#121212] hover:bg-[#fde8ef] transition-colors relative"
+                    className="p-2 rounded-full border border-[#1c1a17]/15 bg-white/80 text-[#1c1a17] hover:bg-[#faa9b0]/20 transition-colors relative"
                     aria-label="Notifications"
                   >
                     <Bell className="w-4 h-4" />
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#121212] text-[#f7cbd7] rounded-full text-[10px] font-bold flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#e85c76] text-white rounded-full text-[10px] font-bold flex items-center justify-center">
                         {unreadCount > 9 ? '9+' : unreadCount}
                       </span>
                     )}
@@ -128,22 +124,22 @@ export const Navbar = () => {
 
                   {/* Notifications Dropdown */}
                   {notifDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border-2 border-[#121212] overflow-hidden z-50">
-                      <div className="p-3 bg-[#fde8ef] border-b border-[#f7cbd7] flex items-center justify-between">
-                        <span className="font-montserrat text-xs font-bold text-[#121212] uppercase tracking-wider">
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-[#1c1a17]/10 overflow-hidden z-50">
+                      <div className="p-3 bg-[#f8f4ea] border-b border-[#1c1a17]/10 flex items-center justify-between">
+                        <span className="font-sans text-xs font-bold text-[#1c1a17] uppercase tracking-wider">
                           Notifications {unreadCount > 0 && `(${unreadCount})`}
                         </span>
                         {unreadCount > 0 && (
                           <button
                             onClick={markAllAsRead}
-                            className="font-montserrat text-[11px] text-[#121212] hover:underline font-semibold"
+                            className="font-sans text-[11px] text-[#e85c76] hover:underline font-semibold"
                           >
                             Mark all read
                           </button>
                         )}
                       </div>
 
-                      <div className="max-h-80 overflow-y-auto divide-y divide-[#f7cbd7]/40">
+                      <div className="max-h-80 overflow-y-auto divide-y divide-gray-100">
                         {notifications.length === 0 ? (
                           <div className="p-6 text-center text-xs text-gray-500">
                             No notifications yet
@@ -157,16 +153,16 @@ export const Navbar = () => {
                                 setNotifDropdownOpen(false);
                                 if (notif.link) navigate(notif.link);
                               }}
-                              className={`p-3.5 hover:bg-[#fff7f9] cursor-pointer transition-colors space-y-1 ${
-                                !notif.isRead ? 'bg-[#fde8ef]/50' : ''
+                              className={`p-3.5 hover:bg-[#f8f4ea] cursor-pointer transition-colors space-y-1 ${
+                                !notif.isRead ? 'bg-[#faa9b0]/15' : ''
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                <span className="font-montserrat text-xs font-bold text-[#121212]">
+                                <span className="font-sans text-xs font-bold text-[#1c1a17]">
                                   {notif.title}
                                 </span>
                                 {!notif.isRead && (
-                                  <span className="w-2 h-2 rounded-full bg-[#121212] shrink-0" />
+                                  <span className="w-2 h-2 rounded-full bg-[#e85c76] shrink-0" />
                                 )}
                               </div>
                               <p className="font-sans text-xs text-gray-600 line-clamp-2 leading-relaxed">
@@ -185,7 +181,7 @@ export const Navbar = () => {
                 <div className="relative">
                   <button
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="flex items-center gap-2 p-1.5 pl-3 pr-2 rounded-full border-2 border-[#121212] bg-white hover:bg-[#fde8ef] transition-all text-xs font-montserrat font-bold text-[#121212] shadow-[2px_2px_0px_#f7cbd7]"
+                    className="flex items-center gap-2 p-1.5 pl-3 pr-2 rounded-full border border-[#1c1a17]/15 bg-white/90 hover:bg-[#faa9b0]/20 transition-all text-xs font-sans font-bold text-[#1c1a17] shadow-xs"
                   >
                     {user.avatar?.url ? (
                       <img
@@ -194,18 +190,18 @@ export const Navbar = () => {
                         className="w-6 h-6 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-6 h-6 rounded-full bg-[#121212] text-white flex items-center justify-center text-xs font-bold">
+                      <div className="w-6 h-6 rounded-full bg-[#faa9b0] text-white flex items-center justify-center text-xs font-bold">
                         {user.name.charAt(0).toUpperCase()}
                       </div>
                     )}
                     <span className="max-w-[100px] truncate">{user.name.split(' ')[0]}</span>
-                    <ChevronDown className="w-3.5 h-3.5 text-[#121212]" />
+                    <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
                   </button>
 
                   {userDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border-2 border-[#121212] py-2 z-50">
+                    <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-[#1c1a17]/10 py-2 z-50">
                       <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="font-montserrat text-xs font-bold text-[#121212] truncate">{user.name}</p>
+                        <p className="font-sans text-xs font-bold text-[#1c1a17] truncate">{user.name}</p>
                         <p className="font-sans text-[11px] text-gray-500 truncate">{user.email}</p>
                       </div>
 
@@ -213,7 +209,7 @@ export const Navbar = () => {
                         <Link
                           to="/admin"
                           onClick={() => setUserDropdownOpen(false)}
-                          className="block px-4 py-2 font-montserrat text-xs font-bold text-[#121212] hover:bg-[#fde8ef] transition-colors"
+                          className="block px-4 py-2 font-sans text-xs font-bold text-[#e85c76] hover:bg-[#faa9b0]/15 transition-colors"
                         >
                           Admin Studio
                         </Link>
@@ -222,7 +218,7 @@ export const Navbar = () => {
                       <Link
                         to="/my-orders"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="block px-4 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef] transition-colors"
+                        className="block px-4 py-2 font-sans text-xs text-gray-700 hover:bg-[#f8f4ea] transition-colors"
                       >
                         My Custom Orders
                       </Link>
@@ -230,7 +226,7 @@ export const Navbar = () => {
                       <Link
                         to="/profile"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="block px-4 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef] transition-colors"
+                        className="block px-4 py-2 font-sans text-xs text-gray-700 hover:bg-[#f8f4ea] transition-colors"
                       >
                         Profile & Addresses
                       </Link>
@@ -238,7 +234,7 @@ export const Navbar = () => {
                       <Link
                         to="/wishlist"
                         onClick={() => setUserDropdownOpen(false)}
-                        className="block px-4 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef] transition-colors"
+                        className="block px-4 py-2 font-sans text-xs text-gray-700 hover:bg-[#f8f4ea] transition-colors"
                       >
                         My Wishlist
                       </Link>
@@ -248,7 +244,7 @@ export const Navbar = () => {
                           setUserDropdownOpen(false);
                           setLogoutConfirmOpen(true);
                         }}
-                        className="w-full text-left px-4 py-2 font-montserrat text-xs text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5 font-semibold"
+                        className="w-full text-left px-4 py-2 font-sans text-xs text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5 font-semibold"
                       >
                         <LogOut className="w-3.5 h-3.5" />
                         Sign Out
@@ -259,18 +255,18 @@ export const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="font-montserrat text-xs font-bold uppercase tracking-wider text-[#121212] hover:text-[#dc8da3] px-3 py-2 transition-colors"
+                  className="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1a17] hover:text-[#e85c76] px-3 py-2 transition-colors"
                 >
                   Sign In
                 </Link>
               )}
 
-              {/* Commission Art Button - Blush & Black Noir Button */}
+              {/* Order Custom Button - Jhankoo Pink Rounded Pill */}
               <button
                 onClick={() => navigate('/custom-order')}
-                className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.16em] px-5 py-2.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[4px_4px_0px_#ebb0c0] hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                className="bg-[#faa9b0] hover:bg-[#e85c76] text-white font-sans text-xs font-bold uppercase tracking-[0.14em] px-5 py-2.5 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 cursor-pointer"
               >
-                <Paintbrush className="w-3.5 h-3.5 text-[#f7cbd7]" />
+                <Paintbrush className="w-3.5 h-3.5 text-white" />
                 <span>ORDER CUSTOM</span>
               </button>
             </div>
@@ -279,13 +275,13 @@ export const Navbar = () => {
             <div className="flex md:hidden items-center gap-2">
               <button
                 onClick={() => navigate('/custom-order')}
-                className="bg-[#121212] text-white font-montserrat text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 border border-[#121212] shadow-[2px_2px_0px_#f7cbd7]"
+                className="bg-[#faa9b0] text-white font-sans text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full"
               >
                 Order
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 border-2 border-[#121212] bg-white text-[#121212] hover:bg-[#fde8ef]"
+                className="p-2 rounded-full border border-[#1c1a17]/15 bg-white text-[#1c1a17] hover:bg-[#faa9b0]/20"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -297,7 +293,7 @@ export const Navbar = () => {
 
       {/* Mobile Menu Slide-out */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b-2 border-[#121212] px-4 pt-3 pb-6 space-y-3 shadow-xl">
+        <div className="md:hidden bg-[#f8f4ea] border-b border-[#1c1a17]/15 px-4 pt-3 pb-6 space-y-3 shadow-xl">
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <NavLink
@@ -305,8 +301,8 @@ export const Navbar = () => {
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
                 className={({ isActive }) =>
-                  `px-3 py-2.5 font-montserrat text-xs font-bold tracking-wider transition-colors ${
-                    isActive ? 'bg-[#fde8ef] text-[#121212] border-l-4 border-[#121212]' : 'text-gray-700 hover:bg-gray-50'
+                  `px-3 py-2.5 font-sans text-xs font-bold tracking-wider rounded-xl transition-colors ${
+                    isActive ? 'bg-[#faa9b0]/30 text-[#e85c76]' : 'text-gray-700 hover:bg-white/60'
                   }`
                 }
               >
@@ -315,18 +311,18 @@ export const Navbar = () => {
             ))}
           </nav>
 
-          <div className="pt-3 border-t border-[#f7cbd7]">
+          <div className="pt-3 border-t border-[#1c1a17]/10">
             {isAuthenticated ? (
               <div className="space-y-1">
                 <div className="px-3 py-2">
-                  <p className="font-montserrat text-xs font-bold text-[#121212]">{user.name}</p>
+                  <p className="font-sans text-xs font-bold text-[#1c1a17]">{user.name}</p>
                   <p className="font-sans text-[11px] text-gray-500">{user.email}</p>
                 </div>
                 {isAdmin && (
                   <Link
                     to="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-3 py-2 font-montserrat text-xs font-bold text-[#121212] hover:bg-[#fde8ef]"
+                    className="block px-3 py-2 font-sans text-xs font-bold text-[#e85c76] hover:bg-[#faa9b0]/20 rounded-xl"
                   >
                     Admin Studio
                   </Link>
@@ -334,21 +330,21 @@ export const Navbar = () => {
                 <Link
                   to="/my-orders"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef]"
+                  className="block px-3 py-2 font-sans text-xs text-gray-700 hover:bg-white/60 rounded-xl"
                 >
                   My Custom Orders
                 </Link>
                 <Link
                   to="/profile"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef]"
+                  className="block px-3 py-2 font-sans text-xs text-gray-700 hover:bg-white/60 rounded-xl"
                 >
                   Profile & Addresses
                 </Link>
                 <Link
                   to="/wishlist"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 font-montserrat text-xs text-gray-700 hover:bg-[#fde8ef]"
+                  className="block px-3 py-2 font-sans text-xs text-gray-700 hover:bg-white/60 rounded-xl"
                 >
                   Wishlist
                 </Link>
@@ -357,7 +353,7 @@ export const Navbar = () => {
                     setMobileMenuOpen(false);
                     setLogoutConfirmOpen(true);
                   }}
-                  className="w-full text-left px-3 py-2 font-montserrat text-xs text-rose-600 font-bold hover:bg-rose-50"
+                  className="w-full text-left px-3 py-2 font-sans text-xs text-rose-600 font-bold hover:bg-rose-50 rounded-xl"
                 >
                   Sign Out
                 </button>
@@ -367,14 +363,14 @@ export const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2.5 font-montserrat text-xs font-bold text-[#121212] border-2 border-[#121212] hover:bg-[#fde8ef]"
+                  className="text-center py-2.5 font-sans text-xs font-bold text-[#1c1a17] border border-[#1c1a17]/20 rounded-full hover:bg-white"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-center py-2.5 font-montserrat text-xs font-bold bg-[#121212] text-white hover:bg-black"
+                  className="text-center py-2.5 font-sans text-xs font-bold bg-[#faa9b0] text-white rounded-full hover:bg-[#e85c76]"
                 >
                   Create Account
                 </Link>

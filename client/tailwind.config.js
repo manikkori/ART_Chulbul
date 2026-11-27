@@ -7,6 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
+        creator: {
+          bg: '#faf9f6',
+          butter: '#f8f4ea',
+          text: '#1c1a17',
+          primary: '#5f6f65',
+          accent: '#d4a373',
+          pink: '#faa9b0',
+          'pink-hover': '#e85c76',
+          coral: '#f19b72',
+        },
         blush: {
           50: '#fff7f9',
           100: '#fde8ef',
@@ -102,8 +112,10 @@ export default {
         }
       },
       fontFamily: {
+        caveat: ['Caveat', 'cursive'],
+        playfair: ['"Playfair Display"', 'Georgia', 'serif'],
         display: ['"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
         serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         editorial: ['"Playfair Display"', 'Georgia', 'serif'],
         script: ['"Alex Brush"', '"Allura"', '"Pinyon Script"', 'cursive'],
