@@ -90,13 +90,13 @@ export const ArtworkDetail = () => {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-        <div className="h-6 w-32 bg-[#fde8ef] animate-pulse rounded" />
+        <div className="h-6 w-32 bg-[#f8f4ea] animate-pulse rounded-full" />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7 h-[500px] bg-[#fde8ef] animate-pulse border-2 border-[#121212]" />
+          <div className="lg:col-span-7 h-[500px] bg-[#f8f4ea] animate-pulse rounded-[2.5rem]" />
           <div className="lg:col-span-5 space-y-4">
-            <div className="h-10 bg-[#fde8ef] animate-pulse w-3/4 border-2 border-[#121212]" />
-            <div className="h-6 bg-[#fde8ef] animate-pulse w-1/3" />
-            <div className="h-32 bg-[#fde8ef] animate-pulse" />
+            <div className="h-10 bg-[#f8f4ea] animate-pulse w-3/4 rounded-2xl" />
+            <div className="h-6 bg-[#f8f4ea] animate-pulse w-1/3 rounded-full" />
+            <div className="h-32 bg-[#f8f4ea] animate-pulse rounded-2xl" />
           </div>
         </div>
       </div>
@@ -130,7 +130,7 @@ export const ArtworkDetail = () => {
       <div>
         <Link
           to="/gallery"
-          className="inline-flex items-center gap-1.5 font-montserrat text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-[#121212] transition-colors"
+          className="inline-flex items-center gap-1.5 font-sans text-xs font-medium text-[#1c1a17]/70 hover:text-[#1c1a17] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Showcase Gallery
@@ -141,18 +141,20 @@ export const ArtworkDetail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Left Column: Image Gallery & Lightbox Trigger */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative border-2 border-[#121212] bg-[#fff7f9] shadow-[6px_6px_0px_#f7cbd7] overflow-hidden group aspect-[4/5] flex items-center justify-center">
-            <img
-              src={currentImgUrl}
-              alt={artwork.title}
-              className="w-full h-full object-cover cursor-zoom-in"
-              onClick={() => setIsLightboxOpen(true)}
-            />
+          <div className="relative rounded-[2.5rem] border border-[#1c1a17]/10 bg-white p-4 shadow-[0_12px_40px_rgba(0,0,0,0.04)] overflow-hidden group">
+            <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-[#f8f4ea] flex items-center justify-center">
+              <img
+                src={currentImgUrl}
+                alt={artwork.title}
+                className="w-full h-full object-cover cursor-zoom-in group-hover:scale-[1.02] transition-transform duration-500"
+                onClick={() => setIsLightboxOpen(true)}
+              />
+            </div>
 
             {/* Zoom Action Button */}
             <button
               onClick={() => setIsLightboxOpen(true)}
-              className="absolute bottom-4 right-4 bg-white/95 text-[#121212] p-2.5 border-2 border-[#121212] shadow-md hover:scale-105 transition-transform"
+              className="absolute bottom-7 right-7 bg-white/95 text-[#1c1a17] p-2.5 rounded-full border border-[#1c1a17]/10 shadow-md hover:scale-110 transition-transform"
               aria-label="Enlarge artwork"
             >
               <Maximize2 className="w-4 h-4" />
@@ -166,10 +168,10 @@ export const ArtworkDetail = () => {
                 <button
                   key={idx}
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`w-20 h-20 shrink-0 border-2 transition-all overflow-hidden ${
+                  className={`w-20 h-20 shrink-0 rounded-2xl transition-all overflow-hidden border ${
                     selectedImageIndex === idx
-                      ? 'border-[#121212] shadow-[3px_3px_0px_#f7cbd7] scale-105'
-                      : 'border-gray-200 opacity-70 hover:opacity-100'
+                      ? 'border-[#1c1a17] ring-2 ring-[#faa9b0] scale-105 shadow-sm'
+                      : 'border-[#1c1a17]/10 opacity-70 hover:opacity-100'
                   }`}
                 >
                   <img src={img.url} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
@@ -183,54 +185,54 @@ export const ArtworkDetail = () => {
         <div className="lg:col-span-5 space-y-6">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-montserrat text-xs font-bold uppercase tracking-widest text-gray-500 bg-[#fde8ef] px-3 py-1 border border-[#121212]">
+              <span className="font-sans text-xs font-medium text-[#1c1a17] bg-[#f8f4ea] px-3.5 py-1 rounded-full border border-[#d4a373]/30">
                 {artwork.category?.name || 'Custom Commission'}
               </span>
               <button
                 onClick={handleToggleWishlist}
-                className="p-2 border-2 border-[#121212] bg-white shadow-[2px_2px_0px_#f7cbd7] hover:bg-[#fff7f9] transition-all"
+                className="p-2.5 rounded-full border border-[#1c1a17]/10 bg-white shadow-xs hover:bg-[#f8f4ea] transition-all"
                 aria-label="Wishlist artwork"
               >
                 <Heart
                   className={`w-4 h-4 ${
-                    isWishlisted ? 'fill-[#dc8da3] text-[#dc8da3]' : 'text-[#121212]'
+                    isWishlisted ? 'fill-[#faa9b0] text-[#f19b72]' : 'text-[#1c1a17]'
                   }`}
                 />
               </button>
             </div>
 
-            <h1 className="font-montserrat font-extrabold text-2xl sm:text-4xl text-[#121212] uppercase tracking-[0.06em] leading-tight">
+            <h1 className="font-playfair text-3xl sm:text-4xl text-[#1c1a17] leading-tight">
               {artwork.title}
             </h1>
 
-            <div className="inline-block bg-[#121212] text-white px-4 py-1.5 font-montserrat text-base sm:text-lg font-extrabold shadow-[3px_3px_0px_#f7cbd7]">
+            <div className="inline-block bg-[#1c1a17] text-white px-5 py-2 rounded-full font-sans text-base sm:text-lg font-semibold shadow-sm">
               Starting at {formatPrice(artwork.startingPrice)}
             </div>
           </div>
 
           {/* Description */}
-          <div className="space-y-2 pt-2 border-t border-[#f7cbd7]">
-            <h3 className="font-montserrat font-bold text-xs uppercase tracking-wider text-[#121212]">
+          <div className="space-y-2 pt-2 border-t border-[#1c1a17]/10">
+            <h3 className="font-sans font-semibold text-xs tracking-wider uppercase text-[#1c1a17]/70">
               About This Piece
             </h3>
-            <p className="font-sans text-xs sm:text-sm text-gray-700 leading-relaxed">
+            <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/75 leading-relaxed">
               {artwork.description}
             </p>
           </div>
 
           {/* Specifications Box */}
-          <div className="bg-[#fff7f9] border-2 border-[#121212] p-4 shadow-[3px_3px_0px_#f7cbd7] space-y-2 font-montserrat text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-[#f7cbd7]">
-              <span className="text-gray-500 font-bold uppercase">Medium</span>
-              <span className="text-[#121212] font-bold">{artwork.medium}</span>
+          <div className="bg-white/80 rounded-2xl border border-[#1c1a17]/10 p-5 shadow-xs space-y-2.5 font-sans text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-[#1c1a17]/10">
+              <span className="text-[#1c1a17]/60 font-medium">Medium</span>
+              <span className="text-[#1c1a17] font-semibold">{artwork.medium}</span>
             </div>
-            <div className="flex items-center justify-between pb-2 border-b border-[#f7cbd7]">
-              <span className="text-gray-500 font-bold uppercase">Dimensions</span>
-              <span className="text-[#121212] font-bold">{artwork.dimensions}</span>
+            <div className="flex items-center justify-between pb-2 border-b border-[#1c1a17]/10">
+              <span className="text-[#1c1a17]/60 font-medium">Dimensions</span>
+              <span className="text-[#1c1a17] font-semibold">{artwork.dimensions}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500 font-bold uppercase">Creation Timeline</span>
-              <span className="text-[#121212] font-bold">{artwork.completionTimeDays || 7-14} Business Days</span>
+              <span className="text-[#1c1a17]/60 font-medium">Creation Timeline</span>
+              <span className="text-[#1c1a17] font-semibold">{artwork.completionTimeDays || '7-14'} Business Days</span>
             </div>
           </div>
 
@@ -242,25 +244,25 @@ export const ArtworkDetail = () => {
                   `/custom-order?category=${artwork.category?.slug}&artwork=${artwork.slug}`
                 )
               }
-              className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs sm:text-sm font-bold uppercase tracking-[0.18em] py-4 border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
+              className="w-full bg-[#faa9b0] text-[#1c1a17] hover:bg-[#f697a0] font-sans text-sm font-semibold py-4 px-6 rounded-full shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2"
             >
-              <Paintbrush className="w-4 h-4 text-[#f7cbd7]" />
-              <span>COMMISSION SIMILAR ARTWORK</span>
+              <Paintbrush className="w-4 h-4 text-[#1c1a17]" />
+              <span>Commission Similar Artwork</span>
             </button>
-            <p className="font-sans text-[11px] text-center text-gray-500">
+            <p className="font-sans text-[11px] text-center text-[#1c1a17]/60">
               Personalized size, framing, and custom color palettes available on request.
             </p>
           </div>
 
           {/* Value Badges */}
-          <div className="pt-4 border-t border-[#f7cbd7] grid grid-cols-2 gap-3 text-xs font-montserrat">
-            <div className="flex items-center gap-2 text-gray-700">
-              <ShieldCheck className="w-4 h-4 text-[#121212] shrink-0" />
-              <span className="font-bold">100% Hand-Painted</span>
+          <div className="pt-4 border-t border-[#1c1a17]/10 grid grid-cols-2 gap-3 text-xs font-sans">
+            <div className="flex items-center gap-2 text-[#1c1a17]/80">
+              <ShieldCheck className="w-4 h-4 text-[#d4a373] shrink-0" />
+              <span className="font-medium">100% Hand-Painted</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Truck className="w-4 h-4 text-[#121212] shrink-0" />
-              <span className="font-bold">Insured Crated Shipping</span>
+            <div className="flex items-center gap-2 text-[#1c1a17]/80">
+              <Truck className="w-4 h-4 text-[#d4a373] shrink-0" />
+              <span className="font-medium">Insured Crated Shipping</span>
             </div>
           </div>
         </div>
@@ -268,11 +270,11 @@ export const ArtworkDetail = () => {
 
       {/* Related Artworks */}
       {related.length > 0 && (
-        <div className="space-y-6 pt-10 border-t-2 border-[#121212]">
+        <div className="space-y-6 pt-10 border-t border-[#1c1a17]/10">
           <div className="space-y-1">
-            <span className="font-script text-3xl text-[#121212] block">More Inspirations</span>
-            <h2 className="font-montserrat font-extrabold text-2xl uppercase tracking-[0.08em] text-[#121212]">
-              SIMILAR COMMISSIONS
+            <span className="font-caveat text-3xl text-[#f19b72] block">More Inspirations ✦</span>
+            <h2 className="font-playfair text-2xl sm:text-3xl text-[#1c1a17]">
+              Similar Commissions
             </h2>
           </div>
 
@@ -281,23 +283,23 @@ export const ArtworkDetail = () => {
               <div
                 key={art._id}
                 onClick={() => navigate(`/artworks/${art.slug}`)}
-                className="cursor-pointer group bg-white border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-1 transition-all overflow-hidden flex flex-col"
+                className="cursor-pointer group bg-white rounded-[2rem] border border-[#1c1a17]/10 p-4 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all overflow-hidden flex flex-col"
               >
-                <div className="aspect-[4/3] overflow-hidden bg-[#fde8ef]">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-[#f8f4ea]">
                   <img
                     src={art.coverImage?.url || art.images?.[0]?.url}
                     alt={art.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                <div className="p-4 bg-[#fff7f9] border-t-2 border-[#121212] flex items-center justify-between">
+                <div className="pt-4 px-1 flex items-center justify-between">
                   <div>
-                    <h4 className="font-montserrat font-bold text-xs uppercase text-[#121212] line-clamp-1">
+                    <h4 className="font-playfair text-sm text-[#1c1a17] line-clamp-1 group-hover:text-[#f19b72] transition-colors">
                       {art.title}
                     </h4>
-                    <span className="text-[10px] text-gray-500 font-montserrat">{art.medium}</span>
+                    <span className="text-[11px] text-[#1c1a17]/60 font-sans">{art.medium}</span>
                   </div>
-                  <span className="font-montserrat text-xs font-bold text-[#121212]">
+                  <span className="font-sans text-xs font-semibold text-[#1c1a17]">
                     {formatPrice(art.startingPrice)}
                   </span>
                 </div>
@@ -309,11 +311,11 @@ export const ArtworkDetail = () => {
 
       {/* Lightbox Modal */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm">
           <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
             <button
               onClick={() => setIsLightboxOpen(false)}
-              className="absolute -top-10 right-0 text-white hover:text-[#f7cbd7] p-2"
+              className="absolute -top-10 right-0 text-white hover:text-[#faa9b0] p-2"
               aria-label="Close"
             >
               <X className="w-6 h-6" />
@@ -321,7 +323,7 @@ export const ArtworkDetail = () => {
             <img
               src={currentImgUrl}
               alt={artwork.title}
-              className="max-h-[85vh] w-auto object-contain border-2 border-white shadow-2xl"
+              className="max-h-[85vh] w-auto object-contain rounded-2xl shadow-2xl"
             />
           </div>
         </div>

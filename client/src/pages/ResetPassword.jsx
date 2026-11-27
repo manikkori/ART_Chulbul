@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
-import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -46,16 +45,18 @@ export const ResetPassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
+    <div className="max-w-md mx-auto px-4 py-12 sm:py-20 relative">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#faa9b0]/25 rounded-full blur-3xl pointer-events-none -z-10" />
 
-      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
-        <div className="space-y-1 text-center">
-          <span className="font-script text-3xl text-[#121212] block">Secure Account</span>
-          <h1 className="font-montserrat font-extrabold text-2xl text-[#121212] uppercase tracking-[0.08em]">
-            CREATE NEW PASSWORD
+      <div className="bg-white/95 backdrop-blur-md rounded-[2.5rem] border border-[#1c1a17]/10 p-8 sm:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.04)] space-y-6 relative">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-28 h-6 bg-[#ffdda4]/85 backdrop-blur-sm -rotate-2 rounded-sm shadow-sm pointer-events-none border border-[#e5c58a]/40" />
+
+        <div className="space-y-2 text-center pt-2">
+          <span className="font-caveat text-3xl sm:text-4xl text-[#f19b72] block">Secure Account</span>
+          <h1 className="font-playfair text-2xl sm:text-3xl text-[#1c1a17]">
+            Create New Password
           </h1>
-          <p className="font-sans text-xs text-gray-600">
+          <p className="font-sans text-xs sm:text-sm text-[#1c1a17]/65">
             Choose a strong password to protect your collector account
           </p>
         </div>
@@ -84,9 +85,9 @@ export const ResetPassword = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            className="w-full bg-[#1c1a17] text-white hover:bg-black rounded-full py-3.5 px-6 font-sans text-sm font-medium tracking-wide shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
-            {submitting ? 'UPDATING...' : 'UPDATE PASSWORD'}
+            {submitting ? 'Updating...' : 'Update Password'}
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
