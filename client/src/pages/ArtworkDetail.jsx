@@ -3,25 +3,18 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Heart,
-  Paintbrush,
-  Clock,
-  Maximize2,
   Sparkles,
   ShieldCheck,
-  Package,
+  Maximize2,
   X,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  CheckCircle2,
-  Truck
+  Truck,
+  Clock,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import { useAuth } from '../context/AuthContext';
+import { useWishlist } from '../hooks/useWishlist';
 import { formatPrice } from '../utils/formatters';
-import Button from '../components/common/Button';
-import Badge from '../components/common/Badge';
-import Skeleton from '../components/common/Skeleton';
+import ArtworkCard from '../components/common/ArtworkCard';
 import EmptyState from '../components/common/EmptyState';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -30,6 +23,7 @@ export const ArtworkDetail = () => {
   const { slug } = useParams();
   const { setPageTitle } = useSettings();
   const { user, isAuthenticated, refreshUser } = useAuth();
+  const { wishlistedIds, toggleWishlist } = useWishlist();
   const navigate = useNavigate();
 
   const [artwork, setArtwork] = useState(null);
@@ -50,9 +44,10 @@ export const ArtworkDetail = () => {
           setRelated(res.data.data.related || []);
           setPageTitle(art.title);
           setSelectedImageIndex(0);
-
           if (user?.wishlist?.some((id) => (id._id || id) === art._id)) {
             setIsWishlisted(true);
+          } else {
+            setIsWishlisted(false);
           }
         }
       } catch (err) {
@@ -66,7 +61,7 @@ export const ArtworkDetail = () => {
 
   const handleToggleWishlist = async () => {
     if (!isAuthenticated) {
-      toast.error('Please log in to add artworks to your wishlist.');
+      toast.error('Please sign in to save artworks to your wishlist.');
       navigate('/login');
       return;
     }
@@ -76,9 +71,7 @@ export const ArtworkDetail = () => {
       if (res.data?.success) {
         setIsWishlisted(res.data.isWishlisted);
         toast.success(
-          res.data.isWishlisted
-            ? 'Added to your wishlist'
-            : 'Removed from your wishlist'
+          res.data.isWishlisted ? 'Saved to your wishlist' : 'Removed from wishlist'
         );
         refreshUser();
       }
@@ -89,14 +82,14 @@ export const ArtworkDetail = () => {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-        <div className="h-6 w-32 bg-[#fde8ef] animate-pulse rounded" />
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-7 h-[500px] bg-[#fde8ef] animate-pulse border-2 border-[#121212]" />
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-20 space-y-6">
+        <div className="h-5 w-36 scribble-shimmer rounded-full" />
+        <div className="rounded-[28px] bg-white p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7 aspect-square scribble-shimmer rounded-[20px]" />
           <div className="lg:col-span-5 space-y-4">
-            <div className="h-10 bg-[#fde8ef] animate-pulse w-3/4 border-2 border-[#121212]" />
-            <div className="h-6 bg-[#fde8ef] animate-pulse w-1/3" />
-            <div className="h-32 bg-[#fde8ef] animate-pulse" />
+            <div className="h-10 w-3/4 scribble-shimmer rounded-full" />
+            <div className="h-7 w-1/3 scribble-shimmer rounded-full" />
+            <div className="h-36 scribble-shimmer rounded-[18px]" />
           </div>
         </div>
       </div>
@@ -105,7 +98,7 @@ export const ArtworkDetail = () => {
 
   if (!artwork) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="max-w-[900px] mx-auto px-4 py-16">
         <EmptyState
           title="Artwork not found"
           description="The requested artwork may have been moved or is no longer listed."
@@ -122,54 +115,57 @@ export const ArtworkDetail = () => {
     ? [artwork.coverImage]
     : [];
 
-  const currentImgUrl = allImages[selectedImageIndex]?.url || allImages[0]?.url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1000&q=80';
+  const currentImgUrl =
+    allImages[selectedImageIndex]?.url ||
+    allImages[0]?.url ||
+    'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1000&q=80';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 pb-20 pt-4">
-      {/* Back Button */}
+    <div className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-6 pb-20 space-y-12">
+      {/* Back Breadcrumb */}
       <div>
         <Link
           to="/gallery"
-          className="inline-flex items-center gap-1.5 font-montserrat text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-[#121212] transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white border border-[#e2e2e7] text-[12px] font-semibold text-[#111827] hover:border-[#111827] transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Showcase Gallery
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Back to Gallery</span>
         </Link>
       </div>
 
-      {/* Main Artwork Showcase Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        {/* Left Column: Image Gallery & Lightbox Trigger */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="relative border-2 border-[#121212] bg-[#fff7f9] shadow-[6px_6px_0px_#f7cbd7] overflow-hidden group aspect-[4/5] flex items-center justify-center">
+      {/* Pure White Product Showcase Container */}
+      <div className="rounded-[28px] bg-white border border-[#eae9ee] p-4 sm:p-8 lg:p-10 shadow-[0_8px_36px_rgba(0,0,0,0.04)] grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* Left Media Column */}
+        <div className="lg:col-span-7 space-y-3.5">
+          <div className="relative rounded-[20px] overflow-hidden bg-[#f8f7fb] border border-[#f0eff4] aspect-[4/5] flex items-center justify-center group">
             <img
               src={currentImgUrl}
               alt={artwork.title}
-              className="w-full h-full object-cover cursor-zoom-in"
               onClick={() => setIsLightboxOpen(true)}
+              className="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-[1.02]"
             />
 
-            {/* Zoom Action Button */}
             <button
+              type="button"
               onClick={() => setIsLightboxOpen(true)}
-              className="absolute bottom-4 right-4 bg-white/95 text-[#121212] p-2.5 border-2 border-[#121212] shadow-md hover:scale-105 transition-transform"
               aria-label="Enlarge artwork"
+              className="absolute bottom-3.5 right-3.5 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-[#111827] shadow-md flex items-center justify-center hover:scale-105 transition-transform"
             >
               <Maximize2 className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Thumbnail Strip */}
           {allImages.length > 1 && (
-            <div className="flex items-center gap-3 overflow-x-auto pb-2">
+            <div className="flex items-center gap-2.5 overflow-x-auto pb-1">
               {allImages.map((img, idx) => (
                 <button
+                  type="button"
                   key={idx}
                   onClick={() => setSelectedImageIndex(idx)}
-                  className={`w-20 h-20 shrink-0 border-2 transition-all overflow-hidden ${
+                  className={`w-18 h-18 sm:w-20 sm:h-20 rounded-[14px] overflow-hidden shrink-0 border-2 transition-all ${
                     selectedImageIndex === idx
-                      ? 'border-[#121212] shadow-[3px_3px_0px_#f7cbd7] scale-105'
-                      : 'border-gray-200 opacity-70 hover:opacity-100'
+                      ? 'border-[#ff0457] ring-2 ring-[#ff0457]/20 scale-[1.03]'
+                      : 'border-transparent opacity-70 hover:opacity-100'
                   }`}
                 >
                   <img src={img.url} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
@@ -179,149 +175,147 @@ export const ArtworkDetail = () => {
           )}
         </div>
 
-        {/* Right Column: Artwork Details & Commission CTA */}
+        {/* Right Info Column matching myscribble product details */}
         <div className="lg:col-span-5 space-y-6">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-montserrat text-xs font-bold uppercase tracking-widest text-gray-500 bg-[#fde8ef] px-3 py-1 border border-[#121212]">
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#ffe5ee] text-[#ff0155] text-[11px] font-bold uppercase tracking-wider">
                 {artwork.category?.name || 'Custom Commission'}
               </span>
+
               <button
+                type="button"
                 onClick={handleToggleWishlist}
-                className="p-2 border-2 border-[#121212] bg-white shadow-[2px_2px_0px_#f7cbd7] hover:bg-[#fff7f9] transition-all"
                 aria-label="Wishlist artwork"
+                className={`w-10 h-10 rounded-full border border-[#eae9ee] bg-[#f8f7fb] flex items-center justify-center transition-all hover:scale-105 ${
+                  isWishlisted ? 'heart-pop-active text-[#ff0457] bg-[#ffe5ee]' : 'text-[#6e6e73]'
+                }`}
               >
                 <Heart
-                  className={`w-4 h-4 ${
-                    isWishlisted ? 'fill-[#dc8da3] text-[#dc8da3]' : 'text-[#121212]'
-                  }`}
+                  className="w-4 h-4"
+                  fill={isWishlisted ? '#ff0457' : 'none'}
+                  strokeWidth={2.2}
                 />
               </button>
             </div>
 
-            <h1 className="font-montserrat font-extrabold text-2xl sm:text-4xl text-[#121212] uppercase tracking-[0.06em] leading-tight">
+            <h1 className="editorial-serif text-4xl sm:text-5xl text-[#111827] font-normal leading-[1.03]">
               {artwork.title}
             </h1>
 
-            <div className="inline-block bg-[#121212] text-white px-4 py-1.5 font-montserrat text-base sm:text-lg font-extrabold shadow-[3px_3px_0px_#f7cbd7]">
-              Starting at {formatPrice(artwork.startingPrice)}
+            <div className="flex items-center gap-3 pt-1">
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#111827] text-white text-[15px] font-bold">
+                Starting at {formatPrice(artwork.startingPrice ?? artwork.price)}
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#6e6e73]">
+                <Clock className="w-3.5 h-3.5 text-[#ff0457]" />
+                {artwork.completionTimeDays || '7–14'} Days
+              </span>
             </div>
           </div>
 
-          {/* Description */}
-          <div className="space-y-2 pt-2 border-t border-[#f7cbd7]">
-            <h3 className="font-montserrat font-bold text-xs uppercase tracking-wider text-[#121212]">
+          <div className="space-y-2 pt-3 border-t border-[#f0eff4]">
+            <h3 className="text-[12px] font-bold uppercase tracking-wider text-[#8e8e93]">
               About This Piece
             </h3>
-            <p className="font-sans text-xs sm:text-sm text-gray-700 leading-relaxed">
+            <p className="text-[14px] text-[#3c3c43] leading-relaxed">
               {artwork.description}
             </p>
           </div>
 
-          {/* Specifications Box */}
-          <div className="bg-[#fff7f9] border-2 border-[#121212] p-4 shadow-[3px_3px_0px_#f7cbd7] space-y-2 font-montserrat text-xs">
-            <div className="flex items-center justify-between pb-2 border-b border-[#f7cbd7]">
-              <span className="text-gray-500 font-bold uppercase">Medium</span>
-              <span className="text-[#121212] font-bold">{artwork.medium}</span>
+          {/* Clean Specifications Card */}
+          <div className="rounded-[18px] bg-[#f8f7fb] border border-[#eae9ee] p-4 space-y-2.5 text-[13px]">
+            <div className="flex items-center justify-between pb-2 border-b border-[#eae9ee]">
+              <span className="text-[#8e8e93] font-medium">Medium</span>
+              <span className="font-semibold text-[#111827]">{artwork.medium}</span>
             </div>
-            <div className="flex items-center justify-between pb-2 border-b border-[#f7cbd7]">
-              <span className="text-gray-500 font-bold uppercase">Dimensions</span>
-              <span className="text-[#121212] font-bold">{artwork.dimensions}</span>
+            <div className="flex items-center justify-between pb-2 border-b border-[#eae9ee]">
+              <span className="text-[#8e8e93] font-medium">Dimensions</span>
+              <span className="font-semibold text-[#111827]">{artwork.dimensions}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500 font-bold uppercase">Creation Timeline</span>
-              <span className="text-[#121212] font-bold">{artwork.completionTimeDays || 7-14} Business Days</span>
+              <span className="text-[#8e8e93] font-medium">Finish</span>
+              <span className="font-semibold text-[#111827]">Signed & Varnished Archival</span>
             </div>
           </div>
 
-          {/* Commission CTA Button */}
-          <div className="pt-2 space-y-3">
+          {/* Action CTA */}
+          <div className="space-y-2.5 pt-1">
             <button
+              type="button"
               onClick={() =>
                 navigate(
-                  `/custom-order?category=${artwork.category?.slug}&artwork=${artwork.slug}`
+                  `/custom-order?category=${artwork.category?.slug || ''}&artwork=${artwork.slug || ''}`
                 )
               }
-              className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs sm:text-sm font-bold uppercase tracking-[0.18em] py-4 border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-full bg-[#ff0457] hover:bg-[#d90349] text-white text-[14px] font-bold shadow-[0_10px_28px_rgba(255,4,87,0.3)] transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
             >
-              <Paintbrush className="w-4 h-4 text-[#f7cbd7]" />
-              <span>COMMISSION SIMILAR ARTWORK</span>
+              <Sparkles className="w-4 h-4" />
+              <span>Commission Similar Artwork</span>
             </button>
-            <p className="font-sans text-[11px] text-center text-gray-500">
-              Personalized size, framing, and custom color palettes available on request.
+            <p className="text-[12px] text-center text-[#8e8e93]">
+              Custom canvas sizes, framing options, and multi-subject portraits available.
             </p>
           </div>
 
-          {/* Value Badges */}
-          <div className="pt-4 border-t border-[#f7cbd7] grid grid-cols-2 gap-3 text-xs font-montserrat">
-            <div className="flex items-center gap-2 text-gray-700">
-              <ShieldCheck className="w-4 h-4 text-[#121212] shrink-0" />
-              <span className="font-bold">100% Hand-Painted</span>
+          {/* Trust Pills */}
+          <div className="pt-3 border-t border-[#f0eff4] grid grid-cols-2 gap-2.5 text-[12px] font-semibold text-[#3c3c43]">
+            <div className="flex items-center gap-2 bg-[#f8f7fb] rounded-xl px-3 py-2">
+              <ShieldCheck className="w-4 h-4 text-[#ff0457] shrink-0" />
+              <span>100% Hand-Painted</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Truck className="w-4 h-4 text-[#121212] shrink-0" />
-              <span className="font-bold">Insured Crated Shipping</span>
+            <div className="flex items-center gap-2 bg-[#f8f7fb] rounded-xl px-3 py-2">
+              <Truck className="w-4 h-4 text-[#ff0457] shrink-0" />
+              <span>Insured Crating</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Related Artworks */}
+      {/* Similar Commissions */}
       {related.length > 0 && (
-        <div className="space-y-6 pt-10 border-t-2 border-[#121212]">
-          <div className="space-y-1">
-            <span className="font-script text-3xl text-[#121212] block">More Inspirations</span>
-            <h2 className="font-montserrat font-extrabold text-2xl uppercase tracking-[0.08em] text-[#121212]">
-              SIMILAR COMMISSIONS
+        <div className="space-y-5">
+          <div>
+            <span className="eyebrow">More Inspirations</span>
+            <h2 className="text-[24px] sm:text-[30px] font-bold tracking-[-0.025em] text-[#111827]">
+              Similar Commissions
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {related.slice(0, 3).map((art) => (
-              <div
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
+            {related.slice(0, 4).map((art, idx) => (
+              <ArtworkCard
                 key={art._id}
-                onClick={() => navigate(`/artworks/${art.slug}`)}
-                className="cursor-pointer group bg-white border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-1 transition-all overflow-hidden flex flex-col"
-              >
-                <div className="aspect-[4/3] overflow-hidden bg-[#fde8ef]">
-                  <img
-                    src={art.coverImage?.url || art.images?.[0]?.url}
-                    alt={art.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-4 bg-[#fff7f9] border-t-2 border-[#121212] flex items-center justify-between">
-                  <div>
-                    <h4 className="font-montserrat font-bold text-xs uppercase text-[#121212] line-clamp-1">
-                      {art.title}
-                    </h4>
-                    <span className="text-[10px] text-gray-500 font-montserrat">{art.medium}</span>
-                  </div>
-                  <span className="font-montserrat text-xs font-bold text-[#121212]">
-                    {formatPrice(art.startingPrice)}
-                  </span>
-                </div>
-              </div>
+                artwork={art}
+                index={idx}
+                isWishlisted={wishlistedIds.has(art._id)}
+                onToggleWishlist={toggleWishlist}
+              />
             ))}
           </div>
         </div>
       )}
 
-      {/* Lightbox Modal */}
+      {/* Lightbox Overlay */}
       {isLightboxOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
+        <div
+          className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+          onClick={() => setIsLightboxOpen(false)}
+        >
           <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
             <button
+              type="button"
               onClick={() => setIsLightboxOpen(false)}
-              className="absolute -top-10 right-0 text-white hover:text-[#f7cbd7] p-2"
-              aria-label="Close"
+              aria-label="Close lightbox"
+              className="absolute -top-12 right-0 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
             <img
               src={currentImgUrl}
               alt={artwork.title}
-              className="max-h-[85vh] w-auto object-contain border-2 border-white shadow-2xl"
+              className="max-h-[84vh] w-auto object-contain rounded-[18px] shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
         </div>

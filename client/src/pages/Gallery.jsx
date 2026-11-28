@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Filter, SlidersHorizontal, ArrowUpDown, X, Paintbrush, Eye, Heart, Sparkles } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { Search, SlidersHorizontal, X, ChevronDown, ArrowUpDown } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
-import { formatPrice } from '../utils/formatters';
-import Button from '../components/common/Button';
-import Badge from '../components/common/Badge';
-import Input from '../components/common/Input';
+import { useWishlist } from '../hooks/useWishlist';
+import ArtworkCard from '../components/common/ArtworkCard';
 import Pagination from '../components/common/Pagination';
 import EmptyState from '../components/common/EmptyState';
 import { ArtworkCardSkeleton } from '../components/common/Skeleton';
@@ -13,26 +11,31 @@ import api from '../services/api';
 
 export const Gallery = () => {
   const { setPageTitle } = useSettings();
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const { wishlistedIds, toggleWishlist } = useWishlist();
 
   const [artworks, setArtworks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paginationMeta, setPaginationMeta] = useState({ page: 1, pages: 1, total: 0 });
 
-  // Filters state initialized from URL search params
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [selectedMedium, setSelectedMedium] = useState(searchParams.get('medium') || 'all');
   const [sortOption, setSortOption] = useState(searchParams.get('sort') || 'newest');
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
-  const [showFiltersMobile, setShowFiltersMobile] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Sync URL query params when navigated from header / drawer
+  useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+    setSelectedCategory(searchParams.get('category') || 'all');
+    setSelectedMedium(searchParams.get('medium') || 'all');
+  }, [searchParams]);
 
   useEffect(() => {
     setPageTitle('Showcase Gallery');
-    // Load categories for filter pills
     api.get('/categories').then((res) => {
       if (res.data?.success) setCategories(res.data.data);
     });
@@ -43,7 +46,7 @@ export const Gallery = () => {
     try {
       const params = {
         page,
-        limit: 9,
+        limit: 12,
         sort: sortOption,
       };
       if (search.trim()) params.search = search.trim();
@@ -85,130 +88,168 @@ export const Gallery = () => {
     fetchArtworks(1);
   };
 
+  const hasActiveFilters =
+    Boolean(search) ||
+    selectedCategory !== 'all' ||
+    selectedMedium !== 'all' ||
+    Boolean(minPrice) ||
+    Boolean(maxPrice);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 pb-16">
-      {/* Header with Blush & Black Editorial Styling */}
-      <div className="text-center max-w-2xl mx-auto space-y-2 pt-4">
-        <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
-          <span>Portfolio</span>
-          <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
-        </div>
-        <h1 className="font-montserrat font-extrabold text-3xl sm:text-5xl text-[#121212] uppercase tracking-[0.08em]">
-          COMMISSION SHOWCASE
+    <div className="max-w-[1200px] mx-auto px-3 sm:px-6 lg:px-8 pt-6 pb-20 space-y-6 sm:space-y-8">
+      {/* Header matching ProductsSection typography */}
+      <div className="text-center max-w-2xl mx-auto space-y-2">
+        <span className="eyebrow">Original Art & Portfolio</span>
+        <h1 className="editorial-serif text-4xl sm:text-6xl text-[#111827] font-normal leading-none">
+          Commission Showcase
         </h1>
-        <p className="font-sans text-xs sm:text-sm text-gray-600 leading-relaxed">
-          Explore handcrafted bespoke paintings created for collectors. Every piece here was made-to-order from a customer's personal photograph.
+        <p className="text-[13px] sm:text-[14px] text-[#6e6e73] leading-relaxed">
+          Explore handcrafted bespoke paintings created for collectors. Tap the sparkle icon on any artwork to request your own custom version.
         </p>
       </div>
 
-      {/* Search & Filter Bar - Blush & Black Noir Box */}
-      <div className="bg-white border-2 border-[#121212] p-5 sm:p-6 shadow-[5px_5px_0px_#f7cbd7] space-y-4">
-        <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
-          {/* Search Form */}
-          <form onSubmit={handleSearchSubmit} className="w-full md:max-w-md relative flex items-center">
-            <Input
+      {/* Frosted Pill Control Bar */}
+      <div className="rounded-[22px] bg-white border border-[#eae9ee] p-3.5 sm:p-5 shadow-[0_6px_24px_rgba(0,0,0,0.03)] space-y-3.5">
+        <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+          {/* Search Pill */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="flex-1 max-w-md flex items-center gap-2 bg-[#f2f1f6] rounded-full px-4 py-2.5 border border-transparent focus-within:border-[#ff0457] focus-within:bg-white transition-all"
+          >
+            <Search className="w-4 h-4 text-[#8e8e93] shrink-0" />
+            <input
               type="text"
-              placeholder="Search by title, subject, medium..."
+              placeholder="Search portrait, charcoal, oil, floral..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              icon={Search}
-              className="py-2.5"
+              className="flex-1 bg-transparent text-[13px] sm:text-[14px] text-[#111827] placeholder-[#8e8e93] focus:outline-none"
             />
             {search && (
               <button
                 type="button"
-                onClick={() => setSearch('')}
-                className="absolute right-3 text-gray-400 hover:text-[#121212]"
+                onClick={() => {
+                  setSearch('');
+                  fetchArtworks(1);
+                }}
+                aria-label="Clear search"
+                className="text-[#8e8e93] hover:text-[#111827]"
               >
                 <X className="w-4 h-4" />
               </button>
             )}
           </form>
 
-          {/* Sort & Filter Toggle */}
-          <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-montserrat font-bold uppercase tracking-wider text-gray-600 hidden sm:inline">
-                Sort:
-              </span>
+          {/* Sort Pill & Price Bounds Toggle */}
+          <div className="flex items-center gap-2 justify-between md:justify-end">
+            <div className="relative inline-flex items-center">
+              <ArrowUpDown className="w-3.5 h-3.5 text-[#6e6e73] absolute left-3.5 pointer-events-none" />
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="bg-[#fff7f9] border-2 border-[#121212] px-4 py-2 text-xs font-montserrat font-bold text-[#121212] focus:outline-none focus:ring-2 focus:ring-[#f7cbd7]"
+                aria-label="Sort artworks"
+                className="appearance-none bg-[#f2f1f6] hover:bg-[#e8e7ed] rounded-full pl-9 pr-8 py-2 text-[12px] sm:text-[13px] font-semibold text-[#111827] focus:outline-none cursor-pointer transition-colors"
               >
                 <option value="newest">Newest First</option>
                 <option value="popular">Most Popular</option>
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
               </select>
+              <ChevronDown className="w-3.5 h-3.5 text-[#6e6e73] absolute right-3 pointer-events-none" />
             </div>
 
             <button
-              onClick={() => setShowFiltersMobile(!showFiltersMobile)}
-              className="md:hidden bg-[#fde8ef] border-2 border-[#121212] px-3 py-2 text-xs font-montserrat font-bold text-[#121212] flex items-center gap-1.5"
+              type="button"
+              onClick={() => setShowFilters((v) => !v)}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12px] sm:text-[13px] font-semibold border transition-colors ${
+                showFilters || minPrice || maxPrice
+                  ? 'bg-[#111827] text-white border-[#111827]'
+                  : 'bg-white text-[#111827] border-[#e2e2e7] hover:border-[#111827]'
+              }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
-              <span>Filters</span>
+              <span>Price</span>
             </button>
           </div>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none pt-2 border-t border-[#f7cbd7]">
+        {/* Category / Medium Horizontal Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
           <button
-            onClick={() => setSelectedCategory('all')}
-            className={`px-4 py-1.5 text-xs font-montserrat font-bold uppercase tracking-wider whitespace-nowrap transition-all border-2 border-[#121212] ${
-              selectedCategory === 'all'
-                ? 'bg-[#121212] text-white shadow-[2px_2px_0px_#f7cbd7]'
-                : 'bg-white text-gray-700 hover:bg-[#fde8ef]'
+            type="button"
+            onClick={() => {
+              setSelectedCategory('all');
+              setSelectedMedium('all');
+            }}
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold transition-all ${
+              selectedCategory === 'all' && selectedMedium === 'all'
+                ? 'bg-[#ff0457] text-white shadow-[0_4px_14px_rgba(255,4,87,0.25)]'
+                : 'bg-[#f2f1f6] text-[#3c3c43] hover:bg-[#e5e4ea]'
             }`}
           >
-            All Mediums
+            All Works
           </button>
+
           {categories.map((cat) => (
             <button
+              type="button"
               key={cat._id}
-              onClick={() => setSelectedCategory(cat.slug)}
-              className={`px-4 py-1.5 text-xs font-montserrat font-bold uppercase tracking-wider whitespace-nowrap transition-all border-2 border-[#121212] ${
+              onClick={() => {
+                setSelectedMedium('all');
+                setSelectedCategory(cat.slug);
+              }}
+              className={`shrink-0 px-3.5 py-1.5 rounded-full text-[12px] font-semibold transition-all ${
                 selectedCategory === cat.slug
-                  ? 'bg-[#121212] text-white shadow-[2px_2px_0px_#f7cbd7]'
-                  : 'bg-white text-gray-700 hover:bg-[#fde8ef]'
+                  ? 'bg-[#111827] text-white'
+                  : 'bg-[#f2f1f6] text-[#3c3c43] hover:bg-[#e5e4ea]'
               }`}
             >
               {cat.name}
             </button>
           ))}
+
+          {selectedMedium !== 'all' && (
+            <button
+              type="button"
+              onClick={() => setSelectedMedium('all')}
+              className="shrink-0 inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full text-[12px] font-bold bg-[#ffe5ee] text-[#ff0155]"
+            >
+              <span>Medium: {selectedMedium}</span>
+              <X className="w-3 h-3" />
+            </button>
+          )}
         </div>
 
-        {/* Expanded Price Filters */}
-        {(showFiltersMobile || minPrice || maxPrice) && (
-          <div className="pt-3 border-t border-[#f7cbd7] flex flex-wrap items-center gap-3">
-            <span className="text-xs font-montserrat font-bold uppercase text-gray-700">Price Range (₹):</span>
+        {/* Optional Price Range Drawer */}
+        {(showFilters || minPrice || maxPrice) && (
+          <div className="pt-3 border-t border-[#f2f1f6] flex flex-wrap items-center gap-2.5">
+            <span className="text-[12px] font-semibold text-[#6e6e73]">Budget (₹):</span>
             <input
               type="number"
               placeholder="Min ₹"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="w-28 px-3 py-1.5 bg-white border-2 border-[#121212] text-xs font-montserrat"
+              className="w-24 px-3 py-1.5 rounded-full bg-[#f2f1f6] text-[12px] font-medium text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#ff0457]/30"
             />
-            <span className="text-gray-400 text-xs">to</span>
+            <span className="text-[#8e8e93] text-xs">–</span>
             <input
               type="number"
               placeholder="Max ₹"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-28 px-3 py-1.5 bg-white border-2 border-[#121212] text-xs font-montserrat"
+              className="w-24 px-3 py-1.5 rounded-full bg-[#f2f1f6] text-[12px] font-medium text-[#111827] focus:outline-none focus:ring-2 focus:ring-[#ff0457]/30"
             />
             <button
+              type="button"
               onClick={() => fetchArtworks(1)}
-              className="bg-[#121212] text-white font-montserrat text-xs font-bold uppercase tracking-wider px-4 py-1.5 border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7]"
+              className="px-4 py-1.5 rounded-full bg-[#111827] text-white text-[12px] font-semibold hover:bg-black transition-colors"
             >
               Apply
             </button>
-            {(search || selectedCategory !== 'all' || minPrice || maxPrice) && (
+            {hasActiveFilters && (
               <button
+                type="button"
                 onClick={handleResetFilters}
-                className="font-montserrat text-xs font-bold text-gray-600 hover:text-[#121212] underline ml-2"
+                className="text-[12px] font-semibold text-[#ff0457] hover:underline ml-auto"
               >
                 Reset All
               </button>
@@ -217,96 +258,34 @@ export const Gallery = () => {
         )}
       </div>
 
-      {/* Artworks Grid */}
+      {/* Results Grid (Mobile 2-col, Tablet 3-col, Desktop 4-col) */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          {Array.from({ length: 8 }).map((_, i) => (
             <ArtworkCardSkeleton key={i} />
           ))}
         </div>
       ) : artworks.length === 0 ? (
         <EmptyState
           title="No artworks match your filters"
-          description="Try broadening your search keyword, removing price bounds, or exploring another medium."
+          description="Try broadening your search keyword, clearing price limits, or exploring all mediums."
           actionText="Clear Filters"
           onAction={handleResetFilters}
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {artworks.map((art) => (
-            <div
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          {artworks.map((art, idx) => (
+            <ArtworkCard
               key={art._id}
-              className="group bg-white border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] hover:shadow-[6px_6px_0px_#ebb0c0] hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden"
-            >
-              {/* Cover Image */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#fde8ef]">
-                <img
-                  src={art.coverImage?.url || art.images?.[0]?.url || 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80'}
-                  alt={art.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-3 right-3">
-                  <span className="bg-white/95 backdrop-blur-xs border border-[#121212] font-montserrat text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 text-[#121212]">
-                    {art.category?.name}
-                  </span>
-                </div>
-              </div>
-
-              {/* Info Card - Blush Strip */}
-              <div className="p-5 bg-[#fff7f9] border-t-2 border-[#121212] flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-1.5">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-montserrat text-base font-extrabold text-[#121212] line-clamp-1 group-hover:text-[#dc8da3] transition-colors">
-                      {art.title}
-                    </h3>
-                    <span className="font-montserrat text-xs font-extrabold text-[#121212] shrink-0">
-                      {formatPrice(art.startingPrice)}
-                    </span>
-                  </div>
-
-                  <p className="font-sans text-xs text-gray-600 line-clamp-2 leading-relaxed">
-                    {art.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    <span className="bg-white text-gray-700 text-[10px] font-montserrat font-bold px-2 py-0.5 border border-[#121212]">
-                      {art.medium}
-                    </span>
-                    <span className="bg-white text-gray-700 text-[10px] font-montserrat font-bold px-2 py-0.5 border border-[#121212]">
-                      {art.dimensions}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Card Actions */}
-                <div className="flex items-center justify-between pt-3 border-t border-[#f7cbd7]">
-                  <Link
-                    to={`/artworks/${art.slug}`}
-                    className="font-montserrat text-xs font-bold uppercase tracking-wider text-[#121212] hover:underline flex items-center gap-1"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    Details
-                  </Link>
-
-                  <button
-                    onClick={() =>
-                      navigate(
-                        `/custom-order?category=${art.category?.slug}&artwork=${art.slug}`
-                      )
-                    }
-                    className="bg-[#121212] text-white hover:bg-black font-montserrat text-[11px] font-bold uppercase tracking-wider px-3.5 py-1.5 border border-[#121212] shadow-[2px_2px_0px_#f7cbd7] flex items-center gap-1.5"
-                  >
-                    <Paintbrush className="w-3 h-3 text-[#f7cbd7]" />
-                    <span>Order Similar</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+              artwork={art}
+              index={idx}
+              isWishlisted={wishlistedIds.has(art._id)}
+              onToggleWishlist={toggleWishlist}
+            />
           ))}
         </div>
       )}
 
-      {/* Pagination */}
       {!loading && (
         <Pagination
           currentPage={paginationMeta.page}
