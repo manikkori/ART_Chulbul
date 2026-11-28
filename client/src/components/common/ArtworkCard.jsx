@@ -40,10 +40,12 @@ export const ArtworkCard = ({
   const [localSaved, setLocalSaved] = useState(isWishlisted);
 
   const primaryImg =
+    artwork?.coverImage?.url ||
     artwork?.images?.[0]?.url ||
     artwork?.image ||
     'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
-  const secondaryImg = artwork?.images?.[1]?.url || null;
+  const secondaryImg =
+    artwork?.images?.find((img) => img?.url && img.url !== (artwork?.coverImage?.url || artwork?.images?.[0]?.url))?.url || null;
 
   const slugOrId = artwork?.slug || artwork?._id;
   const detailPath = `/artworks/${slugOrId}`;
@@ -147,7 +149,7 @@ export const ArtworkCard = ({
             {artwork?.title}
           </h3>
           <span className="text-[12px] sm:text-[14px] font-bold tracking-[-0.02em] text-[#111827] shrink-0">
-            {formatPrice(artwork?.price)}
+            {formatPrice(artwork?.startingPrice ?? artwork?.price)}
           </span>
         </div>
 
