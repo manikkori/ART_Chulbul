@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, ArrowLeft, CheckCircle2, Heart } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
-import Button from '../components/common/Button';
+import ScribbleWordmark from '../components/common/ScribbleWordmark';
 import Input from '../components/common/Input';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -11,7 +11,8 @@ export const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const { setPageTitle } = useSettings();
+  const { setPageTitle, siteName } = useSettings();
+  const wordmarkShort = (siteName || "chulbul's").split(' ')[0].toLowerCase();
 
   useEffect(() => {
     setPageTitle('Forgot Password');
@@ -37,71 +38,73 @@ export const ForgotPassword = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
+    <div className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center px-4 py-10 bg-white">
+      <div className="w-full max-w-[420px] space-y-6">
+        <div className="flex justify-center">
+          <ScribbleWordmark text={wordmarkShort} variant="white" size="lg" />
+        </div>
 
-      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
-        <Link
-          to="/login"
-          className="inline-flex items-center gap-1.5 font-montserrat text-xs font-bold uppercase tracking-wider text-gray-700 hover:text-[#121212]"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Sign In
-        </Link>
+        <div className="rounded-[24px] bg-white border border-[#eae9ee] p-7 sm:p-9 shadow-[0_16px_48px_rgba(0,0,0,0.06)] space-y-6">
+          <Link
+            to="/login"
+            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#6e6e73] hover:text-[#111827] transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Sign In</span>
+          </Link>
 
-        {submitted ? (
-          <div className="text-center space-y-4 py-4">
-            <div className="w-12 h-12 rounded-full bg-[#fde8ef] text-[#121212] mx-auto flex items-center justify-center border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7]">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <h2 className="font-montserrat font-extrabold text-2xl text-[#121212] uppercase tracking-wide">
-              Check Your Inbox
-            </h2>
-            <p className="font-sans text-xs text-gray-600 leading-relaxed">
-              If an account is associated with <strong>{email}</strong>, we have dispatched instructions to reset your password.
-            </p>
-            <div className="pt-2">
+          {submitted ? (
+            <div className="text-center space-y-4 py-2">
+              <div className="w-12 h-12 rounded-full bg-[#ffe5ee] text-[#ff0457] mx-auto flex items-center justify-center">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <h2 className="editorial-serif text-3xl text-[#111827]">
+                Check Your Inbox
+              </h2>
+              <p className="text-[13px] text-[#6e6e73] leading-relaxed">
+                If an account is linked to <strong className="text-[#111827]">{email}</strong>, we have dispatched instructions to reset your password.
+              </p>
               <Link
                 to="/login"
-                className="inline-block bg-[#121212] text-white font-montserrat text-xs font-bold uppercase tracking-wider px-6 py-2.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7]"
+                className="inline-block w-full py-3 rounded-full bg-[#111827] text-white text-[13px] font-bold text-center"
               >
                 Return to Sign In
               </Link>
             </div>
-          </div>
-        ) : (
-          <>
-            <div className="text-center space-y-1">
-              <span className="font-script text-3xl text-[#121212] block">Recovery</span>
-              <h1 className="font-montserrat font-extrabold text-2xl text-[#121212] uppercase tracking-[0.08em]">
-                RESET PASSWORD
-              </h1>
-              <p className="font-sans text-xs text-gray-600 max-w-xs mx-auto">
-                Enter your account email and we will send you a secure link to create a new password.
-              </p>
-            </div>
+          ) : (
+            <>
+              <div className="text-center space-y-1.5">
+                <span className="eyebrow">Account Recovery</span>
+                <h1 className="editorial-serif text-4xl text-[#111827] font-normal">
+                  Reset Password
+                </h1>
+                <p className="text-[13px] text-[#6e6e73] leading-relaxed">
+                  Enter your account email and we will send you a secure reset link.
+                </p>
+              </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input
-                label="Email Address"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                icon={Mail}
-                required
-              />
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <Input
+                  label="Email Address"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  icon={Mail}
+                  required
+                />
 
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-              >
-                {submitting ? 'SENDING LINK...' : 'SEND RESET LINK'}
-              </button>
-            </form>
-          </>
-        )}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-3.5 rounded-full bg-[#111827] hover:bg-black text-white text-[14px] font-bold transition-all disabled:opacity-60"
+                >
+                  {submitting ? 'Sending Link...' : 'Send Reset Link'}
+                </button>
+              </form>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

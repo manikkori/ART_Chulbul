@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, ArrowRight, Palette, Sparkles, Heart } from 'lucide-react';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
-import Button from '../components/common/Button';
+import ScribbleWordmark from '../components/common/ScribbleWordmark';
 import Input from '../components/common/Input';
 import toast from 'react-hot-toast';
 
@@ -13,9 +13,10 @@ export const Login = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const { login, isAuthenticated, isAdmin } = useAuth();
-  const { setPageTitle, siteName, settings } = useSettings();
+  const { setPageTitle, siteName } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
+  const wordmarkShort = (siteName || "chulbul's").split(' ')[0].toLowerCase();
 
   useEffect(() => {
     setPageTitle('Sign In');
@@ -35,7 +36,8 @@ export const Login = () => {
     setSubmitting(true);
     try {
       const loggedUser = await login(email, password);
-      const destination = location.state?.from?.pathname || (loggedUser.role === 'admin' ? '/admin' : '/my-orders');
+      const destination =
+        location.state?.from?.pathname || (loggedUser.role === 'admin' ? '/admin' : '/my-orders');
       navigate(destination, { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || err.message || 'Login failed');
@@ -45,76 +47,78 @@ export const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
-      {/* Decorative Blush Brush in background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
+    <div className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center px-4 py-10 relative overflow-hidden bg-white">
+      {/* Subtle Ambient Soft Glow matching myscribble.in minimalist auth */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-[#ffe5ee]/55 blur-3xl pointer-events-none" />
 
-      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
-        {/* Header with Romantic Script & Bold Sans */}
-        <div className="text-center space-y-1.5">
-          <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
-            <span>Welcome</span>
-            <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
-          </div>
-          <h1 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-[#121212] uppercase tracking-[0.08em]">
-            COLLECTOR SIGN IN
-          </h1>
-          <p className="font-sans text-xs text-gray-600 max-w-xs mx-auto">
-            Sign in to track custom orders, preview progress sketches, and chat with the artist.
-          </p>
+      <div className="w-full max-w-[420px] relative z-10 space-y-6">
+        <div className="flex justify-center">
+          <ScribbleWordmark text={wordmarkShort} variant="white" size="lg" />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Email Address"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={Mail}
-            required
-          />
-
-          <div className="space-y-1">
-            <Input
-              label="Password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              icon={Lock}
-              required
-            />
-            <div className="flex justify-end pt-1">
-              <Link
-                to="/forgot-password"
-                className="font-montserrat text-xs text-gray-500 hover:text-[#121212] hover:underline transition-colors"
-              >
-                Forgot your password?
-              </Link>
-            </div>
+        <div className="rounded-[24px] bg-white border border-[#eae9ee] p-7 sm:p-9 shadow-[0_16px_48px_rgba(0,0,0,0.06)] space-y-6">
+          <div className="text-center space-y-1.5">
+            <span className="eyebrow">Collector Portal</span>
+            <h1 className="editorial-serif text-4xl text-[#111827] font-normal">
+              Welcome Back
+            </h1>
+            <p className="text-[13px] text-[#6e6e73] leading-relaxed">
+              Sign in to view custom quotes, preview progress sketches, and chat with the artist.
+            </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-          >
-            {submitting ? 'SIGNING IN...' : 'SIGN IN TO STUDIO'}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              icon={Mail}
+              required
+            />
 
-        <div className="pt-4 border-t border-[#f7cbd7] text-center">
-          <p className="font-montserrat text-xs text-gray-600">
-            Don't have an account yet?{' '}
-            <Link
-              to="/register"
-              className="font-bold text-[#121212] hover:underline underline-offset-4 inline-flex items-center gap-1"
+            <div className="space-y-1.5">
+              <Input
+                label="Password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                icon={Lock}
+                required
+              />
+              <div className="flex justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-[12px] font-medium text-[#6e6e73] hover:text-[#ff0457] transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3.5 rounded-full bg-[#111827] hover:bg-black text-white text-[14px] font-bold shadow-[0_8px_24px_rgba(17,24,39,0.18)] transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              Create Account →
-            </Link>
-          </p>
+              <span>{submitting ? 'Signing in...' : 'Sign In'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-[#f2f1f6] text-center">
+            <p className="text-[13px] text-[#6e6e73]">
+              New to {siteName || "Chulbul's Art"}?{' '}
+              <Link
+                to="/register"
+                className="font-bold text-[#ff0457] hover:underline"
+              >
+                Create Account
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

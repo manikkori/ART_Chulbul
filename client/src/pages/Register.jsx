@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, ArrowRight, Heart } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSettings } from '../context/SettingsContext';
-import Button from '../components/common/Button';
+import ScribbleWordmark from '../components/common/ScribbleWordmark';
 import Input from '../components/common/Input';
 import toast from 'react-hot-toast';
 
@@ -15,8 +15,9 @@ export const Register = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const { register, isAuthenticated } = useAuth();
-  const { setPageTitle, siteName, settings } = useSettings();
+  const { setPageTitle, siteName } = useSettings();
   const navigate = useNavigate();
+  const wordmarkShort = (siteName || "chulbul's").split(' ')[0].toLowerCase();
 
   useEffect(() => {
     setPageTitle('Create Account');
@@ -52,85 +53,83 @@ export const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-8 sm:py-16 relative">
-      {/* Decorative Blush Brush in background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#fde8ef] rounded-full blur-3xl opacity-70 pointer-events-none -z-10" />
+    <div className="min-h-[calc(100vh-7rem)] flex flex-col items-center justify-center px-4 py-10 relative overflow-hidden bg-white">
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-[#ffe5ee]/55 blur-3xl pointer-events-none" />
 
-      <div className="bg-white border-2 border-[#121212] p-8 sm:p-10 shadow-[6px_6px_0px_#f7cbd7] space-y-6 relative">
-        {/* Header with Romantic Script & Bold Sans */}
-        <div className="text-center space-y-1.5">
-          <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
-            <span>Join Us</span>
-            <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
-          </div>
-          <h1 className="font-montserrat font-extrabold text-2xl sm:text-3xl text-[#121212] uppercase tracking-[0.08em]">
-            CREATE ACCOUNT
-          </h1>
-          <p className="font-sans text-xs text-gray-600 max-w-xs mx-auto">
-            Commission bespoke paintings, upload reference photos, and track order progress in real time.
-          </p>
+      <div className="w-full max-w-[440px] relative z-10 space-y-6">
+        <div className="flex justify-center">
+          <ScribbleWordmark text={wordmarkShort} variant="white" size="lg" />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Your Full Name"
-            placeholder="e.g. Radhika Verma"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            icon={User}
-            required
-          />
+        <div className="rounded-[24px] bg-white border border-[#eae9ee] p-7 sm:p-9 shadow-[0_16px_48px_rgba(0,0,0,0.06)] space-y-6">
+          <div className="text-center space-y-1.5">
+            <span className="eyebrow">Join the Studio</span>
+            <h1 className="editorial-serif text-4xl text-[#111827] font-normal">
+              Create Account
+            </h1>
+            <p className="text-[13px] text-[#6e6e73] leading-relaxed">
+              Commission bespoke paintings, upload reference photos, and follow live brushstroke updates.
+            </p>
+          </div>
 
-          <Input
-            label="Email Address"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            icon={Mail}
-            required
-          />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              label="Full Name"
+              placeholder="e.g. Radhika Verma"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              icon={User}
+              required
+            />
 
-          <Input
-            label="Password"
-            type="password"
-            placeholder="At least 6 characters"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            icon={Lock}
-            required
-          />
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              icon={Mail}
+              required
+            />
 
-          <Input
-            label="Confirm Password"
-            type="password"
-            placeholder="Repeat password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            icon={Lock}
-            required
-          />
+            <Input
+              label="Password"
+              type="password"
+              placeholder="At least 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={Lock}
+              required
+            />
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.18em] py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-          >
-            {submitting ? 'CREATING ACCOUNT...' : 'CREATE MY ACCOUNT'}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+            <Input
+              label="Confirm Password"
+              type="password"
+              placeholder="Repeat password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              icon={Lock}
+              required
+            />
 
-        <div className="pt-4 border-t border-[#f7cbd7] text-center">
-          <p className="font-montserrat text-xs text-gray-600">
-            Already have a collector account?{' '}
-            <Link
-              to="/login"
-              className="font-bold text-[#121212] hover:underline underline-offset-4 inline-flex items-center gap-1"
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3.5 rounded-full bg-[#ff0457] hover:bg-[#d90349] text-white text-[14px] font-bold shadow-[0_8px_24px_rgba(255,4,87,0.28)] transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              Sign In →
-            </Link>
-          </p>
+              <span>{submitting ? 'Creating Account...' : 'Create Account'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-[#f2f1f6] text-center">
+            <p className="text-[13px] text-[#6e6e73]">
+              Already have an account?{' '}
+              <Link to="/login" className="font-bold text-[#111827] hover:text-[#ff0457] hover:underline">
+                Sign In
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

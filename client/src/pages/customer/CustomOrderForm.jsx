@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Paintbrush,
   Camera,
@@ -9,17 +9,12 @@ import {
   ArrowRight,
   ArrowLeft,
   Sparkles,
-  Calendar,
-  Plus,
   ShieldCheck,
-  Heart
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import { formatPrice } from '../../utils/formatters';
-import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
-import Badge from '../../components/common/Badge';
 import ImageUploader from '../../components/common/ImageUploader';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
@@ -32,26 +27,24 @@ const STEPS = [
 ];
 
 const STANDARD_SIZES = [
-  { size: 'A4 (8.3 x 11.7 in)', desc: 'Perfect for single face portrait or small desk display' },
-  { size: 'A3 (11.7 x 16.5 in)', desc: 'Most popular. Great for couple portraits and family walls' },
-  { size: 'A2 (16.5 x 23.4 in)', desc: 'Large statement piece for living rooms and wedding memories' },
-  { size: '16 x 20 inches', desc: 'Classical stretched canvas proportion for fine oils and acrylics' },
-  { size: '18 x 24 inches', desc: 'Gallery scale canvas with dramatic impact' },
-  { size: '24 x 36 inches', desc: 'Museum scale custom artwork for luxury spaces' }
+  { size: 'A4 (8.3 x 11.7 in)', desc: 'Ideal for a single portrait or bedside frame' },
+  { size: 'A3 (11.7 x 16.5 in)', desc: 'Most requested for couple portraits and living spaces' },
+  { size: 'A2 (16.5 x 23.4 in)', desc: 'Statement piece for weddings & milestone walls' },
+  { size: '16 x 20 inches', desc: 'Classic stretched proportion for fine oils & acrylics' },
+  { size: '18 x 24 inches', desc: 'Gallery canvas with commanding presence' },
+  { size: '24 x 36 inches', desc: 'Museum scale heirloom painting' },
 ];
 
 export const CustomOrderForm = () => {
   const { user, isAuthenticated } = useAuth();
-  const { setPageTitle, siteName } = useSettings();
+  const { setPageTitle } = useSettings();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [categories, setCategories] = useState([]);
-  const [loadingCats, setLoadingCats] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Form State
   const [selectedCategory, setSelectedCategory] = useState('');
   const [medium, setMedium] = useState('');
   const [size, setSize] = useState('A3 (11.7 x 16.5 in)');
@@ -67,7 +60,6 @@ export const CustomOrderForm = () => {
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [deadline, setDeadline] = useState('');
 
-  // Address State
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [newAddress, setNewAddress] = useState({
@@ -77,36 +69,38 @@ export const CustomOrderForm = () => {
     city: '',
     state: '',
     postalCode: '',
-    country: 'India'
+    country: 'India',
   });
   const [useNewAddress, setUseNewAddress] = useState(false);
 
   useEffect(() => {
     setPageTitle('Commission Custom Artwork');
 
-    // Fetch categories
     api.get('/categories').then((res) => {
       if (res.data?.success) {
-        setCategories(res.data.data);
+        const cats = res.data.data || [];
+        setCategories(cats);
         const queryCatSlug = searchParams.get('category');
         if (queryCatSlug) {
-          const match = res.data.data.find((c) => c.slug === queryCatSlug);
+          const match = cats.find((c) => c.slug === queryCatSlug);
           if (match) {
             setSelectedCategory(match._id);
             setMedium(match.name);
+            return;
           }
-        } else if (res.data.data.length > 0) {
-          setSelectedCategory(res.data.data[0]._id);
-          setMedium(res.data.data[0].name);
+        }
+        if (cats.length > 0) {
+          setSelectedCategory(cats[0]._id);
+          setMedium(cats[0].name);
         }
       }
-      setLoadingCats(false);
     });
 
-    // If pre-filled artwork
     const queryArtwork = searchParams.get('artwork');
     if (queryArtwork) {
-      setDescription(`I would like a custom artwork inspired by the style and atmosphere of "${queryArtwork}".`);
+      setDescription(
+        `I would like a custom artwork inspired by the style and atmosphere of "${queryArtwork}".`
+      );
     }
   }, [searchParams, setPageTitle]);
 
@@ -122,7 +116,7 @@ export const CustomOrderForm = () => {
         setNewAddress((prev) => ({
           ...prev,
           recipientName: user.name || '',
-          phone: user.phone || ''
+          phone: user.phone || '',
         }));
       }
     }
@@ -136,11 +130,10 @@ export const CustomOrderForm = () => {
     }
   };
 
-  // Step Validation
   const validateStep = (stepNum) => {
     if (stepNum === 1) {
       if (!selectedCategory) {
-        toast.error('Please select an art category/medium.');
+        toast.error('Please select an art medium.');
         return false;
       }
       if (useCustomSize && !customSize.trim()) {
@@ -158,7 +151,7 @@ export const CustomOrderForm = () => {
     }
     if (stepNum === 3) {
       if (!description.trim()) {
-        toast.error('Please describe what you would like the artist to create.');
+        toast.error('Please describe what you would like created.');
         return false;
       }
       return true;
@@ -168,31 +161,28 @@ export const CustomOrderForm = () => {
 
   const handleNextStep = () => {
     if (validateStep(currentStep)) {
-      // Check auth before step 4 if user isn't logged in
       if (currentStep === 3 && !isAuthenticated) {
         toast.error('Please sign in or create an account to submit your commission.');
         navigate('/login', { state: { from: { pathname: '/custom-order' } } });
         return;
       }
       setCurrentStep((prev) => Math.min(prev + 1, 4));
-      window.scrollTo({ top: 120, behavior: 'smooth' });
+      window.scrollTo({ top: 100, behavior: 'smooth' });
     }
   };
 
   const handlePrevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
-    window.scrollTo({ top: 120, behavior: 'smooth' });
+    window.scrollTo({ top: 100, behavior: 'smooth' });
   };
 
-  // Final Submit
   const handleSubmitOrder = async () => {
     if (!isAuthenticated) {
-      toast.error('Please log in to submit your custom order.');
+      toast.error('Please sign in to submit your custom order.');
       navigate('/login');
       return;
     }
 
-    // Determine address snapshot
     let addressSnapshot = null;
     if (useNewAddress || savedAddresses.length === 0) {
       if (
@@ -220,7 +210,7 @@ export const CustomOrderForm = () => {
         city: selected.city,
         state: selected.state,
         postalCode: selected.postalCode,
-        country: selected.country || 'India'
+        country: selected.country || 'India',
       };
     }
 
@@ -238,7 +228,6 @@ export const CustomOrderForm = () => {
       if (deadline) formData.append('deadline', deadline);
       formData.append('addressSnapshot', JSON.stringify(addressSnapshot));
 
-      // Append files
       referenceFiles.forEach((item) => {
         if (item.file) {
           formData.append('images', item.file);
@@ -246,7 +235,7 @@ export const CustomOrderForm = () => {
       });
 
       const res = await api.post('/orders', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       if (res.data?.success) {
@@ -261,23 +250,19 @@ export const CustomOrderForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 pb-20 pt-4">
-      {/* Header */}
+    <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 pb-20 space-y-6 sm:space-y-8">
       <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-1 font-script text-3xl sm:text-4xl text-[#121212]">
-          <span>Custom Commissions</span>
-          <Heart className="w-4 h-4 text-[#dc8da3] fill-[#f7cbd7] inline-block" />
-        </div>
-        <h1 className="font-montserrat font-extrabold text-3xl sm:text-5xl text-[#121212] uppercase tracking-[0.08em]">
-          COMMISSION CUSTOM ARTWORK
+        <span className="eyebrow">Bespoke Art Studio</span>
+        <h1 className="editorial-serif text-4xl sm:text-6xl text-[#111827] font-normal leading-none">
+          Commission Custom Artwork
         </h1>
-        <p className="font-sans text-xs sm:text-sm text-gray-600 max-w-xl mx-auto leading-relaxed">
-          Share your reference photographs and personal vision. The artist will review your request and send a tailored quote before painting begins.
+        <p className="text-[13px] sm:text-[14px] text-[#6e6e73] max-w-xl mx-auto leading-relaxed">
+          Share your reference photos and personal story. Chulbul will review your details and reply with an INR quote before painting starts.
         </p>
       </div>
 
-      {/* Stepper Bar - Blush & Black */}
-      <div className="bg-white border-2 border-[#121212] p-4 sm:p-5 shadow-[5px_5px_0px_#f7cbd7]">
+      {/* Rounded Pill Stepper Bar */}
+      <div className="rounded-[24px] bg-white border border-[#eae9ee] p-3 sm:p-4 shadow-[0_6px_24px_rgba(0,0,0,0.03)]">
         <div className="grid grid-cols-4 gap-2">
           {STEPS.map((s) => {
             const isDone = currentStep > s.step;
@@ -291,30 +276,30 @@ export const CustomOrderForm = () => {
                 onClick={() => {
                   if (s.step < currentStep) setCurrentStep(s.step);
                 }}
-                className={`flex flex-col sm:flex-row items-center gap-2 p-2 transition-all text-center sm:text-left ${
+                className={`flex flex-col sm:flex-row items-center gap-2 p-2.5 rounded-[16px] transition-all text-center sm:text-left ${
                   isCurrent
-                    ? 'bg-[#121212] text-white shadow-[2px_2px_0px_#f7cbd7]'
+                    ? 'bg-[#111827] text-white'
                     : isDone
-                    ? 'text-[#121212] bg-[#fde8ef] border border-[#121212] cursor-pointer'
-                    : 'text-gray-400 opacity-60 cursor-not-allowed'
+                    ? 'bg-[#ffe5ee] text-[#ff0155] cursor-pointer'
+                    : 'text-[#8e8e93] opacity-65 cursor-not-allowed'
                 }`}
               >
                 <div
-                  className={`w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-xs shrink-0 border border-[#121212] ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                     isDone
-                      ? 'bg-white text-[#121212]'
+                      ? 'bg-[#ff0457] text-white'
                       : isCurrent
-                      ? 'bg-[#f7cbd7] text-[#121212]'
-                      : 'bg-gray-100 text-gray-500'
+                      ? 'bg-white text-[#111827]'
+                      : 'bg-[#f2f1f6] text-[#8e8e93]'
                   }`}
                 >
                   {isDone ? <Check className="w-4 h-4" /> : <StepIcon className="w-4 h-4" />}
                 </div>
-                <div className="hidden sm:block">
-                  <p className="text-[9px] font-montserrat font-bold uppercase tracking-wider text-gray-400">
+                <div className="hidden sm:block min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">
                     Step {s.step}
                   </p>
-                  <p className="font-montserrat text-xs font-bold uppercase tracking-tight truncate">{s.title}</p>
+                  <p className="text-[12px] font-bold truncate">{s.title}</p>
                 </div>
               </button>
             );
@@ -322,67 +307,64 @@ export const CustomOrderForm = () => {
         </div>
       </div>
 
-      {/* Main Step Content Card */}
-      <div className="bg-white border-2 border-[#121212] p-6 sm:p-10 shadow-[6px_6px_0px_#f7cbd7]">
-        {/* STEP 1: Medium & Size */}
+      {/* Step Card */}
+      <div className="rounded-[28px] bg-white border border-[#eae9ee] p-5 sm:p-9 shadow-[0_10px_36px_rgba(0,0,0,0.04)]">
         {currentStep === 1 && (
-          <div className="space-y-8">
-            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
-              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
-                1. Choose Art Medium & Canvas Size
+          <div className="space-y-7">
+            <div className="space-y-1 border-b border-[#f2f1f6] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-[-0.02em]">
+                1. Choose Medium &amp; Canvas Dimensions
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-gray-600">
-                Select your preferred fine art medium and canvas dimensions.
+              <p className="text-[13px] text-[#6e6e73]">
+                Pick your preferred medium surface and artwork proportions.
               </p>
             </div>
 
-            {/* Category Medium Selector */}
             <div className="space-y-3">
-              <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212]">
-                Select Art Category / Medium <span className="text-[#dc8da3]">*</span>
+              <label className="block text-[12px] font-bold uppercase tracking-wider text-[#111827]">
+                Select Art Medium <span className="text-[#ff0457]">*</span>
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {categories.map((cat) => (
                   <div
                     key={cat._id}
                     onClick={() => handleCategoryChange(cat._id)}
-                    className={`p-4 border-2 cursor-pointer transition-all ${
+                    className={`p-4 rounded-[18px] border cursor-pointer transition-all ${
                       selectedCategory === cat._id
-                        ? 'border-[#121212] bg-[#fde8ef] shadow-[3px_3px_0px_#121212]'
-                        : 'border-gray-200 bg-white hover:border-[#121212]'
+                        ? 'border-[#ff0457] bg-[#ffe5ee]/45 ring-2 ring-[#ff0457]/15'
+                        : 'border-[#eae9ee] bg-[#f8f7fb] hover:border-[#c8c8d0]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <p className="font-montserrat text-xs sm:text-sm font-extrabold uppercase text-[#121212]">
+                      <p className="text-[14px] font-bold text-[#111827]">
                         {cat.name}
                       </p>
                       {selectedCategory === cat._id && (
-                        <span className="w-5 h-5 bg-[#121212] text-white flex items-center justify-center">
-                          <Check className="w-3 h-3 text-[#f7cbd7]" />
+                        <span className="w-5 h-5 rounded-full bg-[#ff0457] text-white flex items-center justify-center">
+                          <Check className="w-3 h-3" />
                         </span>
                       )}
                     </div>
-                    <p className="font-sans text-xs text-gray-600 line-clamp-2 leading-relaxed">
+                    <p className="text-[12px] text-[#6e6e73] line-clamp-2 leading-relaxed">
                       {cat.description}
                     </p>
-                    <p className="font-montserrat text-xs font-extrabold text-[#121212] mt-2">
-                      Starts from {formatPrice(cat.startingPrice)}
+                    <p className="text-[12px] font-bold text-[#111827] mt-2">
+                      Starts at {formatPrice(cat.startingPrice)}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Size Selector */}
-            <div className="space-y-3 pt-4 border-t border-[#f7cbd7]">
+            <div className="space-y-3 pt-4 border-t border-[#f2f1f6]">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212]">
-                  Select Artwork Size <span className="text-[#dc8da3]">*</span>
+                <label className="block text-[12px] font-bold uppercase tracking-wider text-[#111827]">
+                  Select Canvas Size <span className="text-[#ff0457]">*</span>
                 </label>
                 <button
                   type="button"
                   onClick={() => setUseCustomSize(!useCustomSize)}
-                  className="font-montserrat text-xs text-[#121212] font-bold uppercase underline"
+                  className="text-[12px] text-[#ff0457] font-semibold hover:underline"
                 >
                   {useCustomSize ? 'Choose standard size' : 'Need a custom size?'}
                 </button>
@@ -394,49 +376,46 @@ export const CustomOrderForm = () => {
                     <div
                       key={item.size}
                       onClick={() => setSize(item.size)}
-                      className={`p-4 border-2 cursor-pointer transition-all ${
+                      className={`p-4 rounded-[18px] border cursor-pointer transition-all ${
                         size === item.size
-                          ? 'border-[#121212] bg-[#fde8ef] shadow-[3px_3px_0px_#121212]'
-                          : 'border-gray-200 bg-white hover:border-[#121212]'
+                          ? 'border-[#ff0457] bg-[#ffe5ee]/45 ring-2 ring-[#ff0457]/15'
+                          : 'border-[#eae9ee] bg-[#f8f7fb] hover:border-[#c8c8d0]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-montserrat text-xs sm:text-sm font-extrabold uppercase text-[#121212]">
+                        <span className="text-[14px] font-bold text-[#111827]">
                           {item.size}
                         </span>
                         {size === item.size && (
-                          <span className="w-4 h-4 bg-[#121212] text-white flex items-center justify-center">
-                            <Check className="w-2.5 h-2.5 text-[#f7cbd7]" />
+                          <span className="w-4 h-4 rounded-full bg-[#ff0457] text-white flex items-center justify-center">
+                            <Check className="w-2.5 h-2.5" />
                           </span>
                         )}
                       </div>
-                      <p className="font-sans text-xs text-gray-600 mt-1">{item.desc}</p>
+                      <p className="text-[12px] text-[#6e6e73] mt-1">{item.desc}</p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <Input
-                    placeholder="e.g. 20 x 30 inches, or 50 x 70 cm"
-                    value={customSize}
-                    onChange={(e) => setCustomSize(e.target.value)}
-                    helperText="Specify custom dimensions with unit (inches or cm)"
-                  />
-                </div>
+                <Input
+                  placeholder="e.g. 20 x 30 inches, or 50 x 70 cm"
+                  value={customSize}
+                  onChange={(e) => setCustomSize(e.target.value)}
+                  helperText="Specify custom dimensions with inches or cm"
+                />
               )}
             </div>
           </div>
         )}
 
-        {/* STEP 2: Reference Photos */}
         {currentStep === 2 && (
           <div className="space-y-6">
-            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
-              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
-                2. Upload Your Reference Photographs
+            <div className="space-y-1 border-b border-[#f2f1f6] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-[-0.02em]">
+                2. Upload Reference Photographs
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-gray-600">
-                Upload up to 5 clear photos. You can upload multiple pictures if you want subjects combined from different photos.
+              <p className="text-[13px] text-[#6e6e73]">
+                Upload up to 5 clear photos. We can also combine people or pets from separate photos onto one portrait.
               </p>
             </div>
 
@@ -446,56 +425,55 @@ export const CustomOrderForm = () => {
               maxFiles={5}
               maxSizeMB={5}
               label="Reference Photos (1 to 5 images)"
-              description="Upload your high-res photos. Clear facial lighting produces the best realism."
+              description="Clear facial lighting produces the richest realism."
             />
 
-            <div className="bg-[#fff7f9] p-4 border border-[#121212] text-xs text-gray-700 space-y-1.5 shadow-[2px_2px_0px_#f7cbd7]">
-              <div className="flex items-center gap-2 font-montserrat font-bold uppercase text-[#121212]">
-                <ShieldCheck className="w-4 h-4 text-[#121212]" />
-                <span>Confidential Reference Handling</span>
+            <div className="rounded-[18px] bg-[#ffe5ee]/40 border border-[#ffc6da] p-4 text-[12px] text-[#3c3c43] space-y-1">
+              <div className="flex items-center gap-2 font-bold text-[#ff0155]">
+                <ShieldCheck className="w-4 h-4" />
+                <span>Private Studio Guarantee</span>
               </div>
               <p className="leading-relaxed">
-                Your photos are strictly used by the artist to compose and paint your commission. They are never published without your explicit consent.
+                Your uploaded reference photos are strictly private to Chulbul and never shared publicly without your consent.
               </p>
             </div>
           </div>
         )}
 
-        {/* STEP 3: Artwork Preferences & Description */}
         {currentStep === 3 && (
           <div className="space-y-6">
-            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
-              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
-                3. Describe Your Vision & Preferences
+            <div className="space-y-1 border-b border-[#f2f1f6] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-[-0.02em]">
+                3. Describe Your Vision
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-gray-600">
-                Help the artist understand the emotional intent, focus, and timeline of your piece.
+              <p className="text-[13px] text-[#6e6e73]">
+                Share mood, subjects count, background preferences, and gift deadline details.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
-                Artwork Description & Story <span className="text-[#dc8da3]">*</span>
+              <label className="block text-[12px] font-semibold text-[#111827] mb-1.5 pl-1">
+                Artwork Description &amp; Story <span className="text-[#ff0457]">*</span>
               </label>
               <textarea
                 rows={5}
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Tell the artist about the occasion, the emotions you want captured, what features are most important, or how subjects from different photos should be placed..."
-                className="w-full bg-white border-2 border-[#121212] p-4 text-sm text-[#121212] shadow-[2px_2px_0px_#f7cbd7] focus:shadow-[3px_3px_0px_#ebb0c0] focus:ring-2 focus:ring-[#f7cbd7] focus:outline-none"
+                placeholder="Tell the artist about the occasion, emotion, expressions, or how separate reference photos should be merged..."
+                className="w-full bg-white rounded-[16px] border border-[#e2e2e7] p-3.5 text-[14px] text-[#111827] focus:border-[#ff0457] focus:ring-4 focus:ring-[#ff0457]/12 focus:outline-none transition-all"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
-                  Number of People / Pets
+                <label className="block text-[12px] font-semibold text-[#111827] mb-1.5 pl-1">
+                  Subjects Count
                 </label>
                 <select
                   value={subjectsCount}
                   onChange={(e) => setSubjectsCount(Number(e.target.value))}
-                  className="w-full bg-white border-2 border-[#121212] px-4 py-2.5 text-sm text-[#121212] shadow-[2px_2px_0px_#f7cbd7] font-montserrat"
+                  className="w-full bg-white rounded-[14px] border border-[#e2e2e7] px-4 py-2.5 text-[14px] text-[#111827] focus:border-[#ff0457] focus:outline-none"
                 >
                   <option value={1}>1 Subject (Single Person / Pet)</option>
                   <option value={2}>2 Subjects (Couple / Duo)</option>
@@ -506,102 +484,98 @@ export const CustomOrderForm = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212] mb-1.5">
+                <label className="block text-[12px] font-semibold text-[#111827] mb-1.5 pl-1">
                   Background Preference
                 </label>
                 <select
                   value={background}
                   onChange={(e) => setBackground(e.target.value)}
-                  className="w-full bg-white border-2 border-[#121212] px-4 py-2.5 text-sm text-[#121212] shadow-[2px_2px_0px_#f7cbd7] font-montserrat"
+                  className="w-full bg-white rounded-[14px] border border-[#e2e2e7] px-4 py-2.5 text-[14px] text-[#111827] focus:border-[#ff0457] focus:outline-none"
                 >
                   <option value="Artist choice / natural soft blend">Artist Choice / Soft Vignette</option>
                   <option value="Plain monochromatic backdrop">Plain Monochromatic Backdrop</option>
-                  <option value="Keep original background from photo">Keep Original Background from Photo</option>
-                  <option value="Custom landscape or floral background">Custom Landscape / Floral Background</option>
+                  <option value="Keep original background from photo">Keep Original Photo Backdrop</option>
+                  <option value="Custom landscape or floral background">Custom Landscape / Floral Backdrop</option>
                 </select>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Color Palette Preferences (Optional)"
-                placeholder="e.g. Warm sepia, cool blues, vibrant autumn tones"
+                label="Color Palette Notes (Optional)"
+                placeholder="e.g. Warm sepia, muted pastels"
                 value={colors}
                 onChange={(e) => setColors(e.target.value)}
               />
-
               <Input
-                label="Preferred Target Date / Deadline (Optional)"
+                label="Target Gift Date (Optional)"
                 type="date"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                helperText="If ordering for a birthday or anniversary, let us know"
+                helperText="Let us know if timed for a celebration"
               />
             </div>
 
             <Input
-              label="Special Instructions / Framing Notes (Optional)"
-              placeholder="e.g. Leave 1 inch margin for custom framing, brighten smile in photo 2"
+              label="Special Framing / Margin Notes (Optional)"
+              placeholder="e.g. Keep 1 inch clean margin for framing"
               value={specialInstructions}
               onChange={(e) => setSpecialInstructions(e.target.value)}
             />
           </div>
         )}
 
-        {/* STEP 4: Delivery Address & Summary Review */}
         {currentStep === 4 && (
-          <div className="space-y-8">
-            <div className="space-y-1 border-b border-[#f7cbd7] pb-4">
-              <h2 className="font-montserrat font-extrabold text-xl sm:text-2xl text-[#121212] uppercase tracking-wide">
-                4. Delivery Address & Order Summary
+          <div className="space-y-7">
+            <div className="space-y-1 border-b border-[#f2f1f6] pb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-[-0.02em]">
+                4. Shipping Address &amp; Final Review
               </h2>
-              <p className="font-sans text-xs sm:text-sm text-gray-600">
-                Provide the shipping address where the artwork will be safely delivered.
+              <p className="text-[13px] text-[#6e6e73]">
+                Confirm where your crated finished artwork should be delivered.
               </p>
             </div>
 
-            {/* Address Selection */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-montserrat font-bold uppercase tracking-wider text-[#121212]">
-                  Select Delivery Address <span className="text-[#dc8da3]">*</span>
+                <label className="block text-[12px] font-bold uppercase tracking-wider text-[#111827]">
+                  Delivery Address <span className="text-[#ff0457]">*</span>
                 </label>
                 {savedAddresses.length > 0 && (
                   <button
                     type="button"
                     onClick={() => setUseNewAddress(!useNewAddress)}
-                    className="font-montserrat text-xs text-[#121212] font-bold uppercase underline"
+                    className="text-[12px] text-[#ff0457] font-semibold hover:underline"
                   >
-                    {useNewAddress ? 'Select from saved addresses' : '+ Deliver to another address'}
+                    {useNewAddress ? 'Choose saved address' : '+ Use new address'}
                   </button>
                 )}
               </div>
 
-              {/* Saved Addresses list */}
               {!useNewAddress && savedAddresses.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {savedAddresses.map((addr) => (
                     <div
                       key={addr._id}
                       onClick={() => setSelectedAddressId(addr._id)}
-                      className={`p-4 border-2 cursor-pointer transition-all ${
+                      className={`p-4 rounded-[18px] border cursor-pointer transition-all ${
                         selectedAddressId === addr._id
-                          ? 'border-[#121212] bg-[#fde8ef] shadow-[3px_3px_0px_#121212]'
-                          : 'border-gray-200 bg-white hover:border-[#121212]'
+                          ? 'border-[#ff0457] bg-[#ffe5ee]/45'
+                          : 'border-[#eae9ee] bg-[#f8f7fb]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-montserrat text-xs font-bold uppercase text-[#121212]">
+                        <span className="text-[13px] font-bold text-[#111827]">
                           {addr.recipientName}
                         </span>
                         {selectedAddressId === addr._id && (
-                          <span className="w-4 h-4 bg-[#121212] text-white flex items-center justify-center">
-                            <Check className="w-2.5 h-2.5 text-[#f7cbd7]" />
+                          <span className="w-4 h-4 rounded-full bg-[#ff0457] text-white flex items-center justify-center">
+                            <Check className="w-2.5 h-2.5" />
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-600 mt-1">{addr.phone}</p>
-                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                      <p className="text-[12px] text-[#6e6e73] mt-1">{addr.phone}</p>
+                      <p className="text-[12px] text-[#6e6e73] mt-0.5 leading-relaxed">
                         {addr.street}, {addr.city}, {addr.state} - {addr.postalCode}
                       </p>
                     </div>
@@ -609,15 +583,11 @@ export const CustomOrderForm = () => {
                 </div>
               )}
 
-              {/* Add New Address Form */}
               {(useNewAddress || savedAddresses.length === 0) && (
-                <div className="p-5 bg-[#fff7f9] border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] space-y-4">
-                  <p className="font-montserrat text-xs font-bold uppercase tracking-wider text-[#121212]">
-                    Enter Shipping Address
-                  </p>
+                <div className="rounded-[20px] bg-[#f8f7fb] border border-[#eae9ee] p-5 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Input
-                      label="Recipient Full Name"
+                      label="Recipient Name"
                       placeholder="e.g. Aarav Sharma"
                       value={newAddress.recipientName}
                       onChange={(e) =>
@@ -637,8 +607,8 @@ export const CustomOrderForm = () => {
                   </div>
 
                   <Input
-                    label="Street Address / House No. / Building"
-                    placeholder="e.g. Flat 302, Green Meadows, 5th Cross"
+                    label="Street Address / Flat"
+                    placeholder="e.g. Flat 302, Green Meadows"
                     value={newAddress.street}
                     onChange={(e) =>
                       setNewAddress({ ...newAddress, street: e.target.value })
@@ -649,7 +619,7 @@ export const CustomOrderForm = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Input
                       label="City"
-                      placeholder="e.g. Mumbai"
+                      placeholder="Mumbai"
                       value={newAddress.city}
                       onChange={(e) =>
                         setNewAddress({ ...newAddress, city: e.target.value })
@@ -658,7 +628,7 @@ export const CustomOrderForm = () => {
                     />
                     <Input
                       label="State"
-                      placeholder="e.g. Maharashtra"
+                      placeholder="Maharashtra"
                       value={newAddress.state}
                       onChange={(e) =>
                         setNewAddress({ ...newAddress, state: e.target.value })
@@ -666,8 +636,8 @@ export const CustomOrderForm = () => {
                       required
                     />
                     <Input
-                      label="Postal Code (PIN)"
-                      placeholder="e.g. 400001"
+                      label="PIN Code"
+                      placeholder="400001"
                       value={newAddress.postalCode}
                       onChange={(e) =>
                         setNewAddress({ ...newAddress, postalCode: e.target.value })
@@ -679,63 +649,49 @@ export const CustomOrderForm = () => {
               )}
             </div>
 
-            {/* Commission Review Summary Card */}
-            <div className="p-6 bg-[#fff7f9] border-2 border-[#121212] shadow-[4px_4px_0px_#f7cbd7] space-y-4">
-              <h3 className="font-montserrat text-sm font-extrabold uppercase tracking-wider text-[#121212] border-b border-[#f7cbd7] pb-2">
-                Order Review Summary
+            <div className="rounded-[20px] bg-[#f8f7fb] border border-[#eae9ee] p-5 space-y-4">
+              <h3 className="text-[14px] font-bold text-[#111827] border-b border-[#eae9ee] pb-2">
+                Commission Summary
               </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-montserrat">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-[12px]">
                 <div>
-                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
-                    Medium
-                  </span>
-                  <span className="text-[#121212] font-bold mt-0.5 block">
-                    {medium}
-                  </span>
+                  <span className="text-[#8e8e93] block">Medium</span>
+                  <span className="font-bold text-[#111827]">{medium}</span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
-                    Size
-                  </span>
-                  <span className="text-[#121212] font-bold mt-0.5 block">
+                  <span className="text-[#8e8e93] block">Size</span>
+                  <span className="font-bold text-[#111827]">
                     {useCustomSize ? customSize : size}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
-                    Subjects
-                  </span>
-                  <span className="text-[#121212] font-bold mt-0.5 block">
-                    {subjectsCount} Subject(s)
-                  </span>
+                  <span className="text-[#8e8e93] block">Subjects</span>
+                  <span className="font-bold text-[#111827]">{subjectsCount} Subject(s)</span>
                 </div>
                 <div>
-                  <span className="text-gray-500 font-bold uppercase tracking-wider block">
-                    Photos
-                  </span>
-                  <span className="text-[#121212] font-bold mt-0.5 block">
-                    {referenceFiles.length} Uploaded
-                  </span>
+                  <span className="text-[#8e8e93] block">Photos</span>
+                  <span className="font-bold text-[#111827]">{referenceFiles.length} Uploaded</span>
                 </div>
               </div>
 
-              <div className="text-xs text-gray-700 bg-white p-3 border border-[#121212]">
-                <span className="font-bold font-montserrat text-[#121212] uppercase">Payment Note:</span> You do NOT pay right now. The artist will review your reference photos and provide a tailored INR quote with completion estimate. You can accept, negotiate in chat, or decline.
-              </div>
+              <p className="text-[12px] text-[#3c3c43] bg-white rounded-xl p-3 border border-[#eae9ee]">
+                <strong className="text-[#ff0457]">No upfront payment required.</strong> Chulbul reviews your photo and replies with your bespoke INR quote first.
+              </p>
             </div>
           </div>
         )}
 
-        {/* Navigation Buttons */}
-        <div className="flex items-center justify-between pt-8 border-t border-[#f7cbd7] mt-8">
+        {/* Footer Controls */}
+        <div className="flex items-center justify-between pt-6 border-t border-[#f2f1f6] mt-8 gap-3">
           {currentStep > 1 ? (
             <button
+              type="button"
               onClick={handlePrevStep}
               disabled={submitting}
-              className="bg-white text-[#121212] font-montserrat text-xs font-bold uppercase tracking-wider px-6 py-3 border-2 border-[#121212] shadow-[2px_2px_0px_#f7cbd7] flex items-center gap-2"
+              className="px-5 py-3 rounded-full bg-[#f2f1f6] hover:bg-[#e5e4ea] text-[#111827] text-[13px] font-semibold inline-flex items-center gap-2 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Previous Step</span>
+              <span>Back</span>
             </button>
           ) : (
             <div />
@@ -743,20 +699,22 @@ export const CustomOrderForm = () => {
 
           {currentStep < 4 ? (
             <button
+              type="button"
               onClick={handleNextStep}
-              className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.16em] px-8 py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] flex items-center gap-2"
+              className="px-7 py-3 rounded-full bg-[#111827] hover:bg-black text-white text-[13px] font-bold inline-flex items-center gap-2 transition-all hover:-translate-y-0.5"
             >
               <span>Continue to Step {currentStep + 1}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
             <button
+              type="button"
               disabled={submitting}
               onClick={handleSubmitOrder}
-              className="bg-[#121212] text-white hover:bg-black font-montserrat text-xs font-bold uppercase tracking-[0.16em] px-8 py-3.5 border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] flex items-center gap-2 disabled:opacity-60"
+              className="px-7 py-3.5 rounded-full bg-[#ff0457] hover:bg-[#d90349] text-white text-[13px] font-bold shadow-[0_8px_22px_rgba(255,4,87,0.28)] inline-flex items-center gap-2 disabled:opacity-60 transition-all hover:-translate-y-0.5"
             >
-              <Sparkles className="w-4 h-4 text-[#f7cbd7]" />
-              <span>{submitting ? 'Submitting Order...' : 'Submit Commission for Review'}</span>
+              <Sparkles className="w-4 h-4" />
+              <span>{submitting ? 'Submitting...' : 'Submit Commission Request'}</span>
             </button>
           )}
         </div>

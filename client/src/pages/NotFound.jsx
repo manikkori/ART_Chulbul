@@ -1,40 +1,38 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Palette, Home, ArrowLeft } from 'lucide-react';
-import { useSettings } from '../context/SettingsContext';
-import Button from '../components/common/Button';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Home, ArrowRight } from 'lucide-react';
+import ScribbleWordmark from '../components/common/ScribbleWordmark';
 
 export const NotFound = () => {
-  const { setPageTitle } = useSettings();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setPageTitle('404 Page Not Found');
-  }, [setPageTitle]);
-
   return (
-    <div className="max-w-lg mx-auto px-4 py-20 text-center space-y-6">
-      <div className="w-20 h-20 rounded-full bg-terracotta-50 text-terracotta-500 mx-auto flex items-center justify-center border border-terracotta-100 shadow-sm">
-        <Palette className="w-10 h-10" />
-      </div>
-
-      <div className="space-y-2">
-        <span className="eyebrow">LOST CANVAS</span>
-        <h1 className="font-serif text-4xl sm:text-5xl font-bold text-charcoal-900">
-          Page Not Found
+    <div className="min-h-[75vh] flex items-center justify-center px-4 py-12">
+      <div className="rounded-[28px] bg-white border border-[#eae9ee] p-8 sm:p-12 shadow-[0_14px_40px_rgba(0,0,0,0.04)] text-center max-w-md w-full space-y-5">
+        <div className="flex justify-center">
+          <ScribbleWordmark text="404" variant="pink" size="lg" />
+        </div>
+        <h1 className="editorial-serif text-4xl text-[#111827] font-normal">
+          Canvas Not Found
         </h1>
-        <p className="text-sm text-charcoal-600 leading-relaxed max-w-sm mx-auto">
-          The artwork or page you are searching for might have been moved, renamed, or does not exist.
+        <p className="text-[13px] text-[#6e6e73] leading-relaxed">
+          The page or painting you are looking for appears to have moved elsewhere in our studio.
         </p>
-      </div>
 
-      <div className="flex justify-center gap-4 pt-2">
-        <Button variant="primary" icon={Home} onClick={() => navigate('/')}>
-          Return Home
-        </Button>
-        <Button variant="outline" icon={ArrowLeft} onClick={() => navigate(-1)}>
-          Go Back
-        </Button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <Link
+            to="/"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#111827] text-white text-[13px] font-bold hover:bg-black transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            <span>Back Home</span>
+          </Link>
+          <Link
+            to="/gallery"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#ffe5ee] text-[#ff0155] text-[13px] font-bold hover:bg-[#ffc6da] transition-colors"
+          >
+            <span>Explore Gallery</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </div>
   );
