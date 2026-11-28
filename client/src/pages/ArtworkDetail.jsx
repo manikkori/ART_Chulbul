@@ -16,6 +16,7 @@ import { useWishlist } from '../hooks/useWishlist';
 import { formatPrice } from '../utils/formatters';
 import ArtworkCard from '../components/common/ArtworkCard';
 import EmptyState from '../components/common/EmptyState';
+import { STUDIO_ARTWORKS } from '../data/studioFallbacks';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -34,11 +35,22 @@ export const ArtworkDetail = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   useEffect(() => {
+    const loadFallback = () => {
+      const match =
+        STUDIO_ARTWORKS.find((a) => a.slug === slug || a._id === slug) ||
+        STUDIO_ARTWORKS[0];
+      if (match) {
+        setArtwork(match);
+        setRelated(STUDIO_ARTWORKS.filter((a) => a._id !== match._id).slice(0, 4));
+        setPageTitle(match.title);
+      }
+    };
+
     const fetchArtwork = async () => {
       setLoading(true);
       try {
         const res = await api.get(`/artworks/${slug}`);
-        if (res.data?.success) {
+        if (res.data?.success && res.data.data?.artwork) {
           const art = res.data.data.artwork;
           setArtwork(art);
           setRelated(res.data.data.related || []);
@@ -49,9 +61,11 @@ export const ArtworkDetail = () => {
           } else {
             setIsWishlisted(false);
           }
+        } else {
+          loadFallback();
         }
       } catch (err) {
-        console.error('Failed to load artwork:', err);
+        loadFallback();
       } finally {
         setLoading(false);
       }

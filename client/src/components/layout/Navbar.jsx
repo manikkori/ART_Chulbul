@@ -461,20 +461,20 @@ export const Navbar = () => {
                 </span>
               </div>
 
-              <div className="flex items-center gap-1.5 bg-[#f2f1f6] p-1 rounded-full">
+              <div className="flex flex-wrap items-center justify-center gap-1 bg-[#f2f1f6] p-1 rounded-full">
                 {[
                   { label: 'Gallery', to: '/gallery' },
                   { label: 'Mediums', to: '/categories' },
-                  { label: 'Pricing Guide', to: '/pricing' },
-                  { label: 'About Artist', to: '/about' },
+                  { label: 'Pricing', to: '/pricing' },
+                  { label: 'About', to: '/about' },
                   { label: 'Contact', to: '/contact' },
-                  { label: 'My Orders', to: '/my-orders' },
+                  { label: 'Orders', to: '/my-orders' },
                 ].map((item) => (
                   <Link
                     key={item.to}
                     to={item.to}
                     onClick={() => setExploreOpen(false)}
-                    className="px-3.5 py-1.5 rounded-full text-[13px] font-medium text-[#111827] hover:bg-white transition-colors"
+                    className="whitespace-nowrap px-3.5 py-1.5 rounded-full text-[13px] font-medium text-[#111827] hover:bg-white transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -532,12 +532,12 @@ export const Navbar = () => {
                   <img
                     src={card.img}
                     alt={card.title}
-                    className="absolute right-3 bottom-3 w-28 h-32 object-cover rounded-[12px] shadow-xl rotate-3 opacity-85 group-hover:rotate-6 group-hover:scale-105 transition-all duration-300 border border-white/20"
+                    className="absolute right-2.5 bottom-2.5 w-20 lg:w-24 h-24 lg:h-28 object-cover rounded-[12px] shadow-xl rotate-3 opacity-85 group-hover:rotate-6 group-hover:scale-105 transition-all duration-300 border border-white/20"
                   />
                   <span className="relative z-10 self-start px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-[11px] font-semibold tracking-wide">
                     {card.tag}
                   </span>
-                  <div className="relative z-10 max-w-[65%]">
+                  <div className="relative z-10 pr-20 lg:pr-24">
                     <h3 className="editorial-serif text-2xl text-white font-normal leading-tight">
                       {card.title}
                     </h3>

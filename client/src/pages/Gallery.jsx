@@ -7,6 +7,7 @@ import ArtworkCard from '../components/common/ArtworkCard';
 import Pagination from '../components/common/Pagination';
 import EmptyState from '../components/common/EmptyState';
 import { ArtworkCardSkeleton } from '../components/common/Skeleton';
+import { STUDIO_ARTWORKS, STUDIO_CATEGORIES } from '../data/studioFallbacks';
 import api from '../services/api';
 
 export const Gallery = () => {
@@ -36,10 +37,51 @@ export const Gallery = () => {
 
   useEffect(() => {
     setPageTitle('Showcase Gallery');
-    api.get('/categories').then((res) => {
-      if (res.data?.success) setCategories(res.data.data);
-    });
+    api
+      .get('/categories')
+      .then((res) => {
+        if (res.data?.success && res.data.data?.length > 0) {
+          setCategories(res.data.data);
+        } else {
+          setCategories(STUDIO_CATEGORIES);
+        }
+      })
+      .catch(() => {
+        setCategories(STUDIO_CATEGORIES);
+      });
   }, [setPageTitle]);
+
+  const applyOfflineFilters = () => {
+    let list = [...STUDIO_ARTWORKS];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      list = list.filter((a) =>
+        `${a.title} ${a.medium} ${a.description} ${a.category?.name}`.toLowerCase().includes(q)
+      );
+    }
+    if (selectedCategory && selectedCategory !== 'all') {
+      list = list.filter((a) => a.category?.slug === selectedCategory);
+    }
+    if (selectedMedium && selectedMedium !== 'all') {
+      const m = selectedMedium.toLowerCase();
+      list = list.filter((a) =>
+        `${a.medium} ${a.category?.name}`.toLowerCase().includes(m)
+      );
+    }
+    if (minPrice) {
+      list = list.filter((a) => (a.startingPrice ?? a.price) >= Number(minPrice));
+    }
+    if (maxPrice) {
+      list = list.filter((a) => (a.startingPrice ?? a.price) <= Number(maxPrice));
+    }
+    if (sortOption === 'price-asc') {
+      list.sort((a, b) => (a.startingPrice ?? a.price) - (b.startingPrice ?? b.price));
+    } else if (sortOption === 'price-desc') {
+      list.sort((a, b) => (b.startingPrice ?? b.price) - (a.startingPrice ?? a.price));
+    }
+    setArtworks(list);
+    setPaginationMeta({ page: 1, pages: 1, total: list.length });
+  };
 
   const fetchArtworks = async (page = 1) => {
     setLoading(true);
@@ -56,14 +98,29 @@ export const Gallery = () => {
       if (maxPrice) params.maxPrice = maxPrice;
 
       const res = await api.get('/artworks', { params });
-      if (res.data?.success) {
+      if (res.data?.success && Array.isArray(res.data.data) && res.data.data.length > 0) {
         setArtworks(res.data.data);
         if (res.data.meta) {
           setPaginationMeta(res.data.meta);
         }
+      } else if (
+        res.data?.success &&
+        Array.isArray(res.data.data) &&
+        res.data.data.length === 0 &&
+        !search.trim() &&
+        selectedCategory === 'all' &&
+        selectedMedium === 'all' &&
+        !minPrice &&
+        !maxPrice
+      ) {
+        applyOfflineFilters();
+      } else if (res.data?.success) {
+        setArtworks(res.data.data || []);
+      } else {
+        applyOfflineFilters();
       }
     } catch (err) {
-      console.error('Failed to fetch artworks:', err);
+      applyOfflineFilters();
     } finally {
       setLoading(false);
     }
@@ -273,7 +330,7 @@ export const Gallery = () => {
           onAction={handleResetFilters}
         />
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
           {artworks.map((art, idx) => (
             <ArtworkCard
               key={art._id}

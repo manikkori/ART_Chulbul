@@ -44,7 +44,9 @@ import AdminAboutManager from './pages/admin/AdminAboutManager';
 import AdminSiteSettings from './pages/admin/AdminSiteSettings';
 
 export const App = () => {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(
+    () => typeof window !== 'undefined' && window.location.pathname === '/'
+  );
 
   return (
     <>

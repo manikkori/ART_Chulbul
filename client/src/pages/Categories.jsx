@@ -5,6 +5,7 @@ import { useSettings } from '../context/SettingsContext';
 import { formatPrice } from '../utils/formatters';
 import { Skeleton } from '../components/common/Skeleton';
 import EmptyState from '../components/common/EmptyState';
+import { STUDIO_CATEGORIES } from '../data/studioFallbacks';
 import api from '../services/api';
 
 export const Categories = () => {
@@ -17,11 +18,13 @@ export const Categories = () => {
     const loadCategories = async () => {
       try {
         const res = await api.get('/categories');
-        if (res.data?.success) {
-          setCategories(res.data.data || []);
+        if (res.data?.success && res.data.data?.length > 0) {
+          setCategories(res.data.data);
+        } else {
+          setCategories(STUDIO_CATEGORIES);
         }
       } catch (err) {
-        console.error('Categories fetch error:', err);
+        setCategories(STUDIO_CATEGORIES);
       } finally {
         setLoading(false);
       }

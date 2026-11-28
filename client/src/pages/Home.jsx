@@ -21,113 +21,12 @@ import { useSettings } from '../context/SettingsContext';
 import { useWishlist } from '../hooks/useWishlist';
 import ArtworkCard from '../components/common/ArtworkCard';
 import ScribbleWordmark from '../components/common/ScribbleWordmark';
+import { STUDIO_ARTWORKS } from '../data/studioFallbacks';
 import api from '../services/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CURATED_PICKS_FALLBACK = [
-  {
-    _id: 'pick-1',
-    slug: 'serene-charcoal-heirloom-portrait',
-    title: 'Serene Charcoal Portrait',
-    category: { name: 'Charcoal Sketch' },
-    medium: 'Charcoal on Paper',
-    dimensions: '12 x 16 in',
-    price: 3499,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80' },
-      { url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-2',
-    slug: 'blooming-botanical-watercolor',
-    title: 'Botanical Watercolor',
-    category: { name: 'Watercolor' },
-    medium: 'Cold-Pressed Watercolor',
-    dimensions: '11 x 14 in',
-    price: 2999,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1582561424760-0321d75e81fa?auto=format&fit=crop&w=800&q=80' },
-      { url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-3',
-    slug: 'timeless-floral-oil-canvas',
-    title: 'Timeless Floral Oil',
-    category: { name: 'Oil Painting' },
-    medium: 'Oil on Canvas',
-    dimensions: '16 x 20 in',
-    price: 7499,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80' },
-      { url: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-4',
-    slug: 'vibrant-palette-knife-acrylic',
-    title: 'Palette Knife Abstract',
-    category: { name: 'Acrylic Painting' },
-    medium: 'Heavy Body Acrylic',
-    dimensions: '18 x 24 in',
-    price: 6499,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=800&q=80' },
-      { url: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-5',
-    slug: 'vintage-couple-portrait-oil',
-    title: 'Couple Portrait in Oil',
-    category: { name: 'Oil on Canvas' },
-    medium: 'Oil on Belgian Canvas',
-    dimensions: '20 x 24 in',
-    price: 8999,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=800&q=80' },
-      { url: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-6',
-    slug: 'monochrome-architectural-ink',
-    title: 'Architectural Ink Wash',
-    category: { name: 'Charcoal Sketch' },
-    medium: 'Archival Carbon Ink',
-    dimensions: '10 x 14 in',
-    price: 2999,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-7',
-    slug: 'golden-hour-pet-watercolor',
-    title: 'Pet Portrait Study',
-    category: { name: 'Watercolor' },
-    medium: 'Watercolor & Gouache',
-    dimensions: '12 x 12 in',
-    price: 3999,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-  {
-    _id: 'pick-8',
-    slug: 'pastel-garden-impression',
-    title: 'Garden Impression',
-    category: { name: 'Acrylic Painting' },
-    medium: 'Textured Acrylic',
-    dimensions: '16 x 20 in',
-    price: 5499,
-    images: [
-      { url: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&w=800&q=80' },
-    ],
-  },
-];
+const CURATED_PICKS_FALLBACK = STUDIO_ARTWORKS;
 
 const SIGNATURE_MEDIUMS = [
   {
@@ -325,13 +224,13 @@ export const Home = () => {
           0.45
         );
 
-      // Phase 1 -> Phase 2 (Dark Maroon "For Collectors" + 3 Fanned Frames)
-      tl.to(phase1Ref.current, { autoAlpha: 0, scale: 0.94, duration: 0.7 }, 1.9)
+      // Phase 1 -> Phase 2 (Fade Phase 1 cleanly before Dark Maroon enters to prevent text bleed)
+      tl.to(phase1Ref.current, { autoAlpha: 0, scale: 0.94, duration: 0.5 }, 1.6)
         .fromTo(
           phase2Ref.current,
           { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.8, ease: 'power2.out' },
-          2.05
+          { autoAlpha: 1, duration: 0.65, ease: 'power2.out' },
+          2.15
         )
         .fromTo(
           '.phase2-fan-card',
@@ -725,7 +624,7 @@ export const Home = () => {
                   </div>
 
                   <div className="relative z-10 space-y-2 pb-12">
-                    <h3 className="text-[14px] font-bold tracking-[0.16em] text-white">
+                    <h3 className="text-[11px] xl:text-[14px] font-bold tracking-[0.08em] xl:tracking-[0.14em] text-white">
                       {med.name}
                     </h3>
                     <p className="text-[12px] text-white/80 leading-snug">
@@ -1042,7 +941,7 @@ export const Home = () => {
           </div>
 
           {/* Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+          <div className="flex flex-wrap items-center gap-1.5 pb-1">
             {['All', 'Charcoal', 'Watercolor', 'Oil', 'Acrylic'].map((tab) => {
               const active = activeFilter === tab;
               return (
@@ -1064,7 +963,7 @@ export const Home = () => {
         </div>
 
         {/* 2-Col Mobile / 4-Col Desktop Cards matching ProductCard grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4">
           {filteredArtworks.slice(0, 8).map((art, idx) => (
             <ArtworkCard
               key={art._id || idx}
@@ -1176,7 +1075,7 @@ export const Home = () => {
                     {rev.city || 'Verified Collector'}
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-[#ffe5ee] text-[#ff0155] text-[11px] font-bold">
+                <span className="shrink-0 whitespace-nowrap px-2.5 py-1 rounded-full bg-[#ffe5ee] text-[#ff0155] text-[11px] font-bold">
                   {rev.medium || 'Custom Art'}
                 </span>
               </div>

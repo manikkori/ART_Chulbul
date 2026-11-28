@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { Heart, Sparkles } from 'lucide-react';
 import { formatPrice } from '../../utils/formatters';
 
+const SAFE_FALLBACK_IMG =
+  'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80';
+
 const MEDIUM_SWATCHES = {
   charcoal: ['#1f2937', '#9ca3af'],
   watercolor: ['#60a5fa', '#f472b6', '#fbbf24'],
@@ -38,20 +41,31 @@ export const ArtworkCard = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const [localSaved, setLocalSaved] = useState(isWishlisted);
+  const [imgError, setImgError] = useState(false);
 
   const primaryImg =
-    artwork?.coverImage?.url ||
-    artwork?.images?.[0]?.url ||
-    artwork?.image ||
-    'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
+    (!imgError &&
+      (artwork?.coverImage?.url ||
+        artwork?.images?.[0]?.url ||
+        artwork?.image)) ||
+    SAFE_FALLBACK_IMG;
   const secondaryImg =
-    artwork?.images?.find((img) => img?.url && img.url !== (artwork?.coverImage?.url || artwork?.images?.[0]?.url))?.url || null;
+    artwork?.images?.find(
+      (img) =>
+        img?.url &&
+        img.url !== (artwork?.coverImage?.url || artwork?.images?.[0]?.url)
+    )?.url || null;
 
   const slugOrId = artwork?.slug || artwork?._id;
   const detailPath = `/artworks/${slugOrId}`;
-  const customOrderPath = `/custom-order?artwork=${encodeURIComponent(artwork?.title || '')}&ref=${encodeURIComponent(slugOrId || '')}`;
+  const customOrderPath = `/custom-order?artwork=${encodeURIComponent(
+    artwork?.title || ''
+  )}&ref=${encodeURIComponent(slugOrId || '')}`;
 
-  const activeWishlisted = typeof isWishlisted === 'boolean' && onToggleWishlist ? isWishlisted : localSaved;
+  const activeWishlisted =
+    typeof isWishlisted === 'boolean' && onToggleWishlist
+      ? isWishlisted
+      : localSaved;
   const swatches = getSwatchesForArtwork(artwork);
 
   const handleWishlistClick = (e) => {
@@ -80,6 +94,9 @@ export const ArtworkCard = ({
           src={primaryImg}
           alt={artwork?.title || 'Original Artwork'}
           loading="lazy"
+          onError={() => {
+            if (!imgError) setImgError(true);
+          }}
           className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
             hovered && !secondaryImg ? 'scale-[1.06]' : 'scale-100'
           }`}
@@ -91,7 +108,7 @@ export const ArtworkCard = ({
             src={secondaryImg}
             alt={`${artwork?.title || 'Artwork'} alternate view`}
             loading="lazy"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            className={`hidden md:block absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
               hovered ? 'opacity-100' : 'opacity-0'
             }`}
           />
@@ -109,13 +126,15 @@ export const ArtworkCard = ({
           />
         </div>
 
-        {/* Top-Left Wishlist Heart Button (31x31 white circle) */}
+        {/* Top-Left Wishlist Heart Button */}
         <button
           type="button"
           onClick={handleWishlistClick}
           aria-label={activeWishlisted ? 'Remove from saved' : 'Save artwork'}
           className={`absolute top-2.5 left-2.5 z-20 w-[31px] h-[31px] rounded-full bg-white/95 backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.08)] flex items-center justify-center transition-transform duration-200 hover:scale-110 ${
-            activeWishlisted ? 'heart-pop-active text-[#ff0457]' : 'text-[#8e8e93] hover:text-[#ff0457]'
+            activeWishlisted
+              ? 'heart-pop-active text-[#ff0457]'
+              : 'text-[#8e8e93] hover:text-[#ff0457]'
           }`}
         >
           <Heart

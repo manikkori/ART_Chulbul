@@ -20,7 +20,7 @@ const buildRandomBody = (Bodies, x, y, index = 0) => {
   const fill = SHAPE_COLORS[index % SHAPE_COLORS.length];
   const stroke = fill === '#111827' ? '#000000' : '#ffffff';
   const common = {
-    restitution: 0.62,
+    restitution: 0.65,
     friction: 0.14,
     frictionAir: 0.008,
     density: 0.0022,
@@ -36,7 +36,7 @@ const buildRandomBody = (Bodies, x, y, index = 0) => {
     return Bodies.circle(x, y, 22 + (index % 3) * 6, common);
   }
   if (pick === 1) {
-    return Bodies.rectangle(x, y, 48 + (index % 2) * 14, 48 + (index % 2) * 14, {
+    return Bodies.rectangle(x, y, 48 + (index % 2) * 12, 48 + (index % 2) * 12, {
       ...common,
       chamfer: { radius: 14 },
     });
@@ -48,12 +48,12 @@ const buildRandomBody = (Bodies, x, y, index = 0) => {
     });
   }
   if (pick === 3) {
-    return Bodies.rectangle(x, y, 68, 30, {
+    return Bodies.rectangle(x, y, 66, 28, {
       ...common,
-      chamfer: { radius: 15 },
+      chamfer: { radius: 14 },
     });
   }
-  return Bodies.polygon(x, y, 5, 25 + (index % 2) * 5, {
+  return Bodies.polygon(x, y, 5, 25 + (index % 2) * 4, {
     ...common,
     chamfer: { radius: 8 },
   });
@@ -71,12 +71,12 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    const width = container.clientWidth || 1000;
+    const width = Math.max(container.clientWidth || 800, 300);
     const height = 240;
 
     const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
     const engine = Engine.create({
-      gravity: { x: 0, y: 1.05, scale: 0.001 },
+      gravity: { x: 0, y: 1.0, scale: 0.001 },
     });
     engineRef.current = engine;
 
@@ -88,13 +88,14 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
         height,
         wireframes: false,
         background: 'transparent',
-        pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
       },
     });
+    canvas.width = width;
+    canvas.height = height;
 
     const wallThickness = 60;
     const createBoundaries = (w) => [
-      Bodies.rectangle(w / 2, height + wallThickness / 2 - 2, w + 120, wallThickness, {
+      Bodies.rectangle(w / 2, height + wallThickness / 2 - 4, w + 120, wallThickness, {
         isStatic: true,
         render: { visible: false },
       }),
@@ -109,19 +110,22 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
     ];
 
     let boundaries = createBoundaries(width);
-    const initialCount = width < 640 ? 9 : 14;
+    const initialCount = width < 640 ? 10 : 16;
     const shapes = Array.from({ length: initialCount }, (_, i) => {
       countRef.current += 1;
-      const spreadX = (width * 0.12) + ((width * 0.76) * (i / Math.max(1, initialCount - 1)));
-      const dropY = -30 - (i % 4) * 48;
+      const spreadX = width * 0.1 + width * 0.8 * (i / Math.max(1, initialCount - 1));
+      const dropY = 55 + (i % 4) * 32;
       return buildRandomBody(Bodies, spreadX, dropY, i);
     });
 
     Composite.add(engine.world, [...boundaries, ...shapes]);
 
+    // Pre-settle a few ticks immediately so shapes are visibly alive inside the card
+    for (let tick = 0; tick < 45; tick += 1) {
+      Engine.update(engine, 16.6);
+    }
+
     const mouse = Mouse.create(canvas);
-    mouse.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-    // Allow normal page wheel scrolling over canvas
     mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
     mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
 
@@ -136,27 +140,15 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
     render.mouse = mouse;
 
     const runner = Runner.create();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          Render.run(render);
-          Runner.run(runner, engine);
-        } else {
-          Render.stop(render);
-          Runner.stop(runner);
-        }
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(container);
+    Render.run(render);
+    Runner.run(runner, engine);
 
     const handleResize = () => {
       if (!container || !canvas) return;
-      const nextW = container.clientWidth || 1000;
+      const nextW = Math.max(container.clientWidth || 800, 300);
+      canvas.width = nextW;
       render.bounds.max.x = nextW;
       render.options.width = nextW;
-      render.canvas.width = nextW * Math.min(window.devicePixelRatio || 1, 2);
       Composite.remove(engine.world, boundaries);
       boundaries = createBoundaries(nextW);
       Composite.add(engine.world, boundaries);
@@ -166,7 +158,6 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      observer.disconnect();
       Render.stop(render);
       Runner.stop(runner);
       Composite.clear(engine.world, false);
@@ -183,9 +174,8 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
     const clickX = e.clientX - rect.left;
     const clickY = e.clientY - rect.top;
 
-    // Limit total loose bodies so physics remains crisp at 60fps
     const allBodies = Matter.Composite.allBodies(engine.world).filter((b) => !b.isStatic);
-    if (allBodies.length > 32) {
+    if (allBodies.length > 34) {
       Matter.Composite.remove(engine.world, allBodies[0]);
     }
 
@@ -193,7 +183,7 @@ export const GravityShapesBanner = ({ siteName = "chulbul's art" }) => {
     const body = buildRandomBody(
       Matter.Bodies,
       Math.max(40, Math.min(rect.width - 40, clickX)),
-      Math.max(16, Math.min(rect.height - 60, clickY)),
+      Math.max(20, Math.min(rect.height - 50, clickY)),
       countRef.current
     );
     Matter.Composite.add(engine.world, body);

@@ -16,6 +16,7 @@ import { useSettings } from '../../context/SettingsContext';
 import { formatPrice } from '../../utils/formatters';
 import Input from '../../components/common/Input';
 import ImageUploader from '../../components/common/ImageUploader';
+import { STUDIO_CATEGORIES } from '../../data/studioFallbacks';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 
@@ -76,25 +77,36 @@ export const CustomOrderForm = () => {
   useEffect(() => {
     setPageTitle('Commission Custom Artwork');
 
-    api.get('/categories').then((res) => {
-      if (res.data?.success) {
-        const cats = res.data.data || [];
-        setCategories(cats);
-        const queryCatSlug = searchParams.get('category');
-        if (queryCatSlug) {
-          const match = cats.find((c) => c.slug === queryCatSlug);
-          if (match) {
-            setSelectedCategory(match._id);
-            setMedium(match.name);
-            return;
-          }
-        }
-        if (cats.length > 0) {
-          setSelectedCategory(cats[0]._id);
-          setMedium(cats[0].name);
+    const applyCategories = (list) => {
+      const cats = list && list.length > 0 ? list : STUDIO_CATEGORIES;
+      setCategories(cats);
+      const queryCatSlug = searchParams.get('category');
+      if (queryCatSlug) {
+        const match = cats.find((c) => c.slug === queryCatSlug);
+        if (match) {
+          setSelectedCategory(match._id);
+          setMedium(match.name);
+          return;
         }
       }
-    });
+      if (cats.length > 0) {
+        setSelectedCategory(cats[0]._id);
+        setMedium(cats[0].name);
+      }
+    };
+
+    api
+      .get('/categories')
+      .then((res) => {
+        if (res.data?.success && res.data.data?.length > 0) {
+          applyCategories(res.data.data);
+        } else {
+          applyCategories(STUDIO_CATEGORIES);
+        }
+      })
+      .catch(() => {
+        applyCategories(STUDIO_CATEGORIES);
+      });
 
     const queryArtwork = searchParams.get('artwork');
     if (queryArtwork) {

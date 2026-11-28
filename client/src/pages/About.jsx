@@ -10,6 +10,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
+import { STUDIO_ARTWORKS } from '../data/studioFallbacks';
 import api from '../services/api';
 
 export const About = () => {
@@ -19,9 +20,18 @@ export const About = () => {
 
   useEffect(() => {
     setPageTitle('About the Artist');
-    api.get('/artworks?limit=4').then((res) => {
-      if (res.data?.success) setStripArtworks(res.data.data || []);
-    });
+    api
+      .get('/artworks?limit=4')
+      .then((res) => {
+        if (res.data?.success && res.data.data?.length > 0) {
+          setStripArtworks(res.data.data);
+        } else {
+          setStripArtworks(STUDIO_ARTWORKS.slice(0, 4));
+        }
+      })
+      .catch(() => {
+        setStripArtworks(STUDIO_ARTWORKS.slice(0, 4));
+      });
   }, [setPageTitle]);
 
   const profile = artistProfile || {

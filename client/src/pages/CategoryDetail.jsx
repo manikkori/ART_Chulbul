@@ -7,6 +7,7 @@ import { formatPrice } from '../utils/formatters';
 import ArtworkCard from '../components/common/ArtworkCard';
 import EmptyState from '../components/common/EmptyState';
 import { ArtworkCardSkeleton } from '../components/common/Skeleton';
+import { STUDIO_ARTWORKS, STUDIO_CATEGORIES } from '../data/studioFallbacks';
 import api from '../services/api';
 
 export const CategoryDetail = () => {
@@ -24,13 +25,25 @@ export const CategoryDetail = () => {
       setLoading(true);
       try {
         const res = await api.get(`/categories/${slug}`);
-        if (res.data?.success) {
+        if (res.data?.success && res.data.data?.category) {
           setCategory(res.data.data.category);
           setArtworks(res.data.data.artworks || []);
           setPageTitle(res.data.data.category?.name || 'Medium');
+        } else {
+          const fallbackCat = STUDIO_CATEGORIES.find((c) => c.slug === slug);
+          if (fallbackCat) {
+            setCategory(fallbackCat);
+            setArtworks(STUDIO_ARTWORKS.filter((a) => a.category?.slug === slug));
+            setPageTitle(fallbackCat.name);
+          }
         }
       } catch (err) {
-        console.error('Failed to load category detail:', err);
+        const fallbackCat = STUDIO_CATEGORIES.find((c) => c.slug === slug);
+        if (fallbackCat) {
+          setCategory(fallbackCat);
+          setArtworks(STUDIO_ARTWORKS.filter((a) => a.category?.slug === slug));
+          setPageTitle(fallbackCat.name);
+        }
       } finally {
         setLoading(false);
       }
