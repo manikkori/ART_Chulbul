@@ -5,11 +5,12 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
+    <div className="flex items-center justify-center gap-2 mt-10">
       <button
+        type="button"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="p-2 rounded-full border border-cream-300 text-charcoal-700 hover:bg-cream-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="w-9 h-9 rounded-full bg-white border border-[#e2e2e7] text-[#111827] flex items-center justify-center hover:border-[#111827] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         aria-label="Previous page"
       >
         <ChevronLeft className="w-4 h-4" />
@@ -19,12 +20,13 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         const isCurrent = page === currentPage;
         return (
           <button
+            type="button"
             key={page}
             onClick={() => onPageChange(page)}
-            className={`w-9 h-9 rounded-full text-xs font-semibold transition-all ${
+            className={`w-9 h-9 rounded-full text-[13px] font-semibold transition-all ${
               isCurrent
-                ? 'bg-terracotta-500 text-white shadow-sm'
-                : 'text-charcoal-700 hover:bg-cream-200 border border-cream-200'
+                ? 'bg-[#ff0457] text-white shadow-[0_6px_16px_rgba(255,4,87,0.28)]'
+                : 'bg-white text-[#111827] border border-[#e2e2e7] hover:border-[#111827]'
             }`}
           >
             {page}
@@ -33,9 +35,10 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       })}
 
       <button
+        type="button"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="p-2 rounded-full border border-cream-300 text-charcoal-700 hover:bg-cream-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        className="w-9 h-9 rounded-full bg-white border border-[#e2e2e7] text-[#111827] flex items-center justify-center hover:border-[#111827] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         aria-label="Next page"
       >
         <ChevronRight className="w-4 h-4" />

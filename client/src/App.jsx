@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-import JhankooIntroLoader from './components/common/JhankooIntroLoader';
+import ScribbleStackLoader from './components/common/ScribbleStackLoader';
 import MainLayout from './components/layout/MainLayout';
 import AdminLayout from './components/layout/AdminLayout';
+
+// Public Pages
 import Home from './pages/Home';
 import Gallery from './pages/Gallery';
 import Categories from './pages/Categories';
@@ -22,12 +24,14 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 
+// Customer Private Pages
 import CustomOrderForm from './pages/customer/CustomOrderForm';
 import MyOrders from './pages/customer/MyOrders';
 import OrderDetail from './pages/customer/OrderDetail';
 import Profile from './pages/customer/Profile';
 import Wishlist from './pages/customer/Wishlist';
 
+// Admin Studio Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminOrderDetail from './pages/admin/AdminOrderDetail';
@@ -44,28 +48,32 @@ export const App = () => {
 
   return (
     <>
-      {showIntro && <JhankooIntroLoader onComplete={() => setShowIntro(false)} />}
+      {showIntro && <ScribbleStackLoader onComplete={() => setShowIntro(false)} />}
 
       <Toaster
-        position="top-right"
+        position="top-center"
         toastOptions={{
+          duration: 3200,
           style: {
-            background: '#ffffff',
-            color: '#2d2421',
-            border: '1px solid #ebdcd0',
-            borderRadius: '1rem',
-            fontSize: '0.875rem',
-            boxShadow: '0 4px 20px -2px rgba(45, 36, 33, 0.08)',
+            background: 'rgba(255, 255, 255, 0.94)',
+            backdropFilter: 'blur(14px)',
+            color: '#111827',
+            border: '1px solid #e5e5ea',
+            borderRadius: '120px',
+            padding: '10px 18px',
+            fontSize: '0.84rem',
+            fontWeight: 500,
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.09)',
           },
           success: {
             iconTheme: {
-              primary: '#6d9378',
+              primary: '#ff0457',
               secondary: '#ffffff',
             },
           },
           error: {
             iconTheme: {
-              primary: '#c95d63',
+              primary: '#ef4444',
               secondary: '#ffffff',
             },
           },

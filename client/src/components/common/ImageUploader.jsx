@@ -1,158 +1,174 @@
 import React, { useRef, useState } from 'react';
-import { UploadCloud, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { UploadCloud, X, AlertCircle, Image as ImageIcon } from 'lucide-react';
 
 export const ImageUploader = ({
   files = [],
   onChange,
   maxFiles = 5,
   maxSizeMB = 5,
-  label = 'Upload Reference Photos',
-  description = 'Drag & drop high-resolution photos, or browse (JPG, PNG, WebP up to 5 MB each)'
+  label = 'Upload Reference Images',
+  description = 'JPEG, PNG or WebP (max 5MB per photo)',
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef(null);
+  const inputRef = useRef(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [error, setError] = useState('');
 
-  const validateAndAddFiles = (selectedFiles) => {
+  const handleFiles = (incomingList) => {
+    setError('');
     const validFiles = [];
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxBytes = maxSizeMB * 1024 * 1024;
 
-    if (files.length + selectedFiles.length > maxFiles) {
-      toast.error(`You can upload a maximum of ${maxFiles} reference photos.`);
+    if (files.length + incomingList.length > maxFiles) {
+      setError(`Maximum ${maxFiles} images allowed`);
       return;
     }
 
-    for (const file of selectedFiles) {
-      if (!allowedTypes.includes(file.type)) {
-        toast.error(`"${file.name}" is not a valid format. Please use JPG, PNG, or WebP.`);
-        continue;
+    Array.from(incomingList).forEach((file) => {
+      if (!file.type.startsWith('image/')) {
+        setError(`"${file.name}" is not a valid image`);
+        return;
       }
-      if (file.size > maxSizeMB * 1024 * 1024) {
-        toast.error(`"${file.name}" exceeds ${maxSizeMB} MB limit.`);
-        continue;
+      if (file.size > maxBytes) {
+        setError(`"${file.name}" exceeds ${maxSizeMB}MB limit`);
+        return;
       }
-
-      // Create preview URL
       const previewUrl = URL.createObjectURL(file);
-      validFiles.push({ file, previewUrl, name: file.name, size: file.size });
-    }
+      validFiles.push({
+        file,
+        preview: previewUrl,
+        name: file.name,
+        size: file.size,
+      });
+    });
 
     if (validFiles.length > 0) {
       onChange([...files, ...validFiles]);
     }
   };
 
-  const handleDragOver = (e) => {
+  const handleDrag = (e) => {
     e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setIsDragging(false);
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    setIsDragging(false);
+    e.stopPropagation();
+    setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      validateAndAddFiles(Array.from(e.dataTransfer.files));
+      handleFiles(e.dataTransfer.files);
     }
-  };
-
-  const handleFileInputChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      validateAndAddFiles(Array.from(e.target.files));
-    }
-    // Reset file input so same file can be selected again if removed
-    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const removeFile = (index) => {
-    const updated = [...files];
-    // Revoke object url to free memory
-    URL.revokeObjectURL(updated[index].previewUrl);
-    updated.splice(index, 1);
-    onChange(updated);
+    const newFiles = [...files];
+    const removed = newFiles.splice(index, 1)[0];
+    if (removed?.preview && removed.preview.startsWith('blob:')) {
+      URL.revokeObjectURL(removed.preview);
+    }
+    onChange(newFiles);
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {label && (
-        <div className="flex items-center justify-between">
-          <label className="block text-xs font-semibold uppercase tracking-wider text-charcoal-700">
-            {label} <span className="text-terracotta-600">*</span>
-          </label>
-          <span className="text-xs text-charcoal-400">
-            {files.length} / {maxFiles} images
-          </span>
-        </div>
+        <label className="block text-[13px] font-semibold text-[#111827] tracking-[-0.01em]">
+          {label}
+        </label>
       )}
 
       {/* Drop Zone */}
-      {files.length < maxFiles && (
-        <div
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`
-            border-2 border-dashed rounded-3xl p-8 text-center cursor-pointer transition-all duration-200
-            ${isDragging
-              ? 'border-terracotta-500 bg-terracotta-50/60 scale-[1.01]'
-              : 'border-cream-300 bg-cream-100/50 hover:bg-cream-100 hover:border-terracotta-400'}
-          `}
-        >
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileInputChange}
-            multiple
-            accept="image/jpeg,image/png,image/webp"
-            className="hidden"
-          />
+      <div
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+        onClick={() => inputRef.current?.click()}
+        className={`relative border-2 border-dashed rounded-[20px] p-6 sm:p-8 text-center transition-all duration-200 cursor-pointer ${
+          dragActive
+            ? 'border-[#ff0457] bg-[#ffe5ee]/60 scale-[1.01]'
+            : 'border-[#d4d4d8] bg-[#f8f7fb] hover:border-[#ff0457]/60 hover:bg-[#ffe5ee]/25'
+        }`}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          multiple={maxFiles > 1}
+          accept="image/jpeg,image/png,image/webp,image/jpg"
+          onChange={(e) => {
+            if (e.target.files?.length > 0) {
+              handleFiles(e.target.files);
+              e.target.value = '';
+            }
+          }}
+          className="hidden"
+        />
 
-          <div className="flex flex-col items-center justify-center space-y-3">
-            <div className="w-14 h-14 rounded-full bg-white text-terracotta-500 flex items-center justify-center shadow-sm border border-cream-200">
-              <UploadCloud className="w-7 h-7" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm font-semibold text-charcoal-800">
-                Click to browse or drop your photos here
-              </p>
-              <p className="text-xs text-charcoal-500 max-w-sm mx-auto">
-                {description}
-              </p>
-            </div>
+        <div className="flex flex-col items-center">
+          <div
+            className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-colors ${
+              dragActive ? 'bg-[#ff0457] text-white' : 'bg-white text-[#ff0457] shadow-sm border border-[#eae9ee]'
+            }`}
+          >
+            <UploadCloud className="w-6 h-6" />
           </div>
+          <p className="text-[14px] font-semibold text-[#111827] mb-1">
+            Click to upload <span className="text-[#8e8e93] font-normal">or drag and drop</span>
+          </p>
+          <p className="text-[12px] text-[#8e8e93]">
+            {description} ({files.length}/{maxFiles} uploaded)
+          </p>
+        </div>
+      </div>
+
+      {error && (
+        <div className="flex items-center gap-2 text-xs text-[#ef4444] bg-[#fff1f2] p-3 rounded-xl border border-[#fecdd3]">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
-      {/* Live Thumbnails Preview */}
+      {/* Previews Grid */}
       {files.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-          {files.map((item, idx) => (
-            <div
-              key={idx}
-              className="relative aspect-square rounded-2xl overflow-hidden border border-cream-200 bg-white shadow-sm group"
-            >
-              <img
-                src={item.previewUrl || item.url}
-                alt={item.name || `Upload ${idx + 1}`}
-                className="w-full h-full object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => removeFile(idx)}
-                className="absolute top-2 right-2 w-6 h-6 rounded-full bg-charcoal-900/80 text-white flex items-center justify-center hover:bg-rose-600 transition-colors shadow-sm"
-                aria-label="Remove image"
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 pt-1">
+          {files.map((item, idx) => {
+            const imgUrl = item.preview || item.url || item;
+            return (
+              <div
+                key={idx}
+                className="group relative aspect-square rounded-[14px] overflow-hidden border border-[#eae9ee] bg-[#f8f7fb]"
               >
-                <X className="w-3.5 h-3.5" />
-              </button>
-              <div className="absolute bottom-0 inset-x-0 bg-charcoal-900/60 text-white text-[10px] px-2 py-1 truncate">
-                {item.name || `Photo ${idx + 1}`}
+                {imgUrl ? (
+                  <img
+                    src={imgUrl}
+                    alt={`Preview ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[#a1a1aa]">
+                    <ImageIcon className="w-6 h-6" />
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(idx);
+                  }}
+                  aria-label="Remove image"
+                  className="absolute top-1.5 right-1.5 p-1.5 rounded-full bg-black/75 text-white hover:bg-[#ff0457] transition-all shadow-sm sm:opacity-0 sm:group-hover:opacity-100"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

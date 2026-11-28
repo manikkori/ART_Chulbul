@@ -9,7 +9,7 @@ export const Modal = ({
   subtitle,
   children,
   maxWidth = 'max-w-lg',
-  showClose = true
+  showClose = true,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -17,20 +17,22 @@ export const Modal = ({
         onClose();
       }
     };
+    window.addEventListener('keydown', handleKeyDown);
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
     }
     return () => {
-      document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
     };
   }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -38,38 +40,37 @@ export const Modal = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-charcoal-900/40 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/45 backdrop-blur-md"
           />
 
-          {/* Modal Card */}
+          {/* Modal Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.94, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className={`relative w-full ${maxWidth} bg-white rounded-3xl shadow-xl border border-cream-300 overflow-hidden z-10 my-8`}
+            exit={{ opacity: 0, scale: 0.94, y: 12 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            className={`relative z-10 w-full ${maxWidth} bg-white rounded-[24px] shadow-[0_24px_60px_rgba(0,0,0,0.18)] border border-[#eae9ee] overflow-hidden my-auto`}
           >
             {(title || showClose) && (
-              <div className="flex items-start justify-between p-6 pb-4 border-b border-cream-200">
+              <div className="flex items-start justify-between px-6 pt-6 pb-4 border-b border-[#f0eff4]">
                 <div>
                   {title && (
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal-900">
+                    <h3 className="text-xl font-bold text-[#111827] tracking-[-0.02em]">
                       {title}
                     </h3>
                   )}
                   {subtitle && (
-                    <p className="text-xs sm:text-sm text-charcoal-500 mt-1">
-                      {subtitle}
-                    </p>
+                    <p className="text-[13px] text-[#6e6e73] mt-0.5">{subtitle}</p>
                   )}
                 </div>
                 {showClose && (
                   <button
+                    type="button"
                     onClick={onClose}
-                    className="p-1.5 rounded-full text-charcoal-400 hover:text-charcoal-700 hover:bg-cream-100 transition-colors"
+                    className="w-8 h-8 rounded-full flex items-center justify-center bg-[#f2f1f6] text-[#111827] hover:bg-[#e5e4ea] transition-colors shrink-0 ml-4"
                     aria-label="Close modal"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                   </button>
                 )}
               </div>

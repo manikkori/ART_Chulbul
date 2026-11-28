@@ -4,8 +4,8 @@ import { Loader2 } from 'lucide-react';
 export const Button = ({
   children,
   type = 'button',
-  variant = 'primary', // 'primary', 'dark', 'secondary', 'outline', 'ghost', 'danger', 'white'
-  size = 'md', // 'sm', 'md', 'lg'
+  variant = 'primary', // 'primary' | 'pink' | 'dark' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'white'
+  size = 'md', // 'sm' | 'md' | 'lg'
   loading = false,
   disabled = false,
   className = '',
@@ -14,22 +14,32 @@ export const Button = ({
   onClick,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-montserrat font-bold uppercase tracking-wider transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 disabled:shadow-none disabled:transform-none cursor-pointer';
+  const baseStyles =
+    'inline-flex items-center justify-center rounded-full font-sans font-semibold tracking-[-0.01em] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0457]/40 focus-visible:ring-offset-2 active:scale-[0.97] disabled:opacity-55 disabled:cursor-not-allowed disabled:active:scale-100 select-none';
 
   const variants = {
-    primary: 'bg-[#121212] text-white border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 focus:ring-[#121212]',
-    dark: 'bg-[#121212] text-white border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#ebb0c0] hover:-translate-y-0.5 focus:ring-[#121212]',
-    secondary: 'bg-[#fde8ef] text-[#121212] border-2 border-[#121212] shadow-[2px_2px_0px_#121212] hover:bg-[#f7cbd7] hover:-translate-y-0.5 focus:ring-[#f7cbd7]',
-    outline: 'border-2 border-[#121212] bg-white text-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:bg-[#fff7f9] hover:-translate-y-0.5 focus:ring-[#121212]',
-    ghost: 'bg-transparent text-[#121212] hover:bg-[#fde8ef] focus:ring-[#f7cbd7]',
-    danger: 'bg-rose-500 text-white border-2 border-rose-600 shadow-[3px_3px_0px_#fecdd3] hover:bg-rose-600 hover:-translate-y-0.5 focus:ring-rose-400',
-    white: 'bg-white text-[#121212] border-2 border-[#121212] shadow-[3px_3px_0px_#f7cbd7] hover:shadow-[5px_5px_0px_#f7cbd7] hover:-translate-y-0.5 focus:ring-[#f7cbd7]'
+    primary:
+      'bg-[#111827] text-white border border-[#111827] shadow-[0_6px_18px_rgba(17,24,39,0.14)] hover:bg-black hover:shadow-[0_10px_24px_rgba(17,24,39,0.2)] hover:-translate-y-0.5',
+    pink:
+      'bg-[#ff0457] text-white border border-[#ff0457] shadow-[0_8px_22px_rgba(255,4,87,0.28)] hover:bg-[#d90349] hover:border-[#d90349] hover:shadow-[0_12px_28px_rgba(255,4,87,0.34)] hover:-translate-y-0.5',
+    dark:
+      'bg-[#111827] text-white border border-[#111827] shadow-[0_6px_18px_rgba(17,24,39,0.14)] hover:bg-black hover:-translate-y-0.5',
+    secondary:
+      'bg-[#ffe5ee] text-[#ff0155] border border-[#ffc2d7] hover:bg-[#ffd4e3] hover:-translate-y-0.5',
+    outline:
+      'bg-white text-[#111827] border border-[#e2e2e7] shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:bg-[#f8f7fb] hover:border-[#c9c9d1]',
+    ghost:
+      'bg-transparent text-[#111827] hover:bg-black/[0.05]',
+    danger:
+      'bg-[#ef4444] text-white border border-[#ef4444] shadow-[0_6px_16px_rgba(239,68,68,0.2)] hover:bg-[#dc2626] hover:-translate-y-0.5',
+    white:
+      'bg-white/90 backdrop-blur-md text-[#111827] border border-white shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:bg-white hover:-translate-y-0.5',
   };
 
   const sizes = {
-    sm: 'text-xs px-4 py-1.5 gap-1.5',
-    md: 'text-sm px-6 py-2.5 gap-2',
-    lg: 'text-base px-8 py-3.5 gap-2.5',
+    sm: 'text-[12px] px-4 py-1.5 gap-1.5',
+    md: 'text-[14px] px-6 py-2.5 gap-2',
+    lg: 'text-[15px] px-7 py-3.5 gap-2.5',
   };
 
   return (

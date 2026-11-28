@@ -12,23 +12,23 @@ export const ConfirmDialog = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   confirmVariant = 'danger',
-  loading = false
+  loading = false,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-md" showClose={!loading}>
       <div className="flex flex-col items-center text-center">
-        <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-4 border border-rose-200">
+        <div className="w-12 h-12 rounded-full bg-[#ffe5ee] text-[#ff0457] flex items-center justify-center mb-4">
           <AlertTriangle className="w-6 h-6" />
         </div>
-        <h4 className="font-serif text-xl font-bold text-charcoal-900 mb-2">
+        <h4 className="text-xl font-bold text-[#111827] tracking-[-0.02em] mb-2">
           {title}
         </h4>
-        <p className="text-sm text-charcoal-500 mb-6 leading-relaxed">
+        <p className="text-[13px] text-[#6e6e73] mb-6 leading-relaxed">
           {message}
         </p>
         <div className="flex items-center gap-3 w-full">
           <Button
-            variant="secondary"
+            variant="outline"
             className="flex-1"
             onClick={onClose}
             disabled={loading}
